@@ -7,7 +7,23 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
+
 <body>
+   <style>
+       .navbar-nav .nav-item .nav-link {
+           text-decoration: none;
+           font-weight: normal;
+           color: white;
+           padding: 15px 20px;
+           transition: all 0.3s;
+       }
+
+           .navbar-nav .nav-item .nav-link.active {
+               font-weight: bold;
+               text-decoration: underline;
+               color: #ffd800; /* optional highlight color */
+           }
+   </style>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -16,20 +32,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @*@Html.ActionLink("Capital Knowledge", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
-                <a class="navbar-brand d-flex align-items-center" href="/">
-                    <img src="@Url.Content("~/Content/Logo.png")"
-                         width="250"
-                         height="35"
-                         class="me-2" />
-                    
-                </a>
+                <img src="@Url.Content("~/Content/Logo.png")" />
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Dashboard", "Index", "Home")</li>
-                    <li>@Html.ActionLink("StaffList", "StaffList", "Home")</li>
-                    <li>@Html.ActionLink("DetailList", "DetailList", "Home")</li>
+                <ul class="nav navbar-nav" id="menu">                   
+                    <li class="nav-item"><a class="nav-link" href="/Home/Index">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Home/StaffList">StaffList</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Home/DetailList">DetailList</a></li>
                 </ul>
             </div>
         </div>
@@ -45,5 +54,22 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <script>document.addEventListener("DOMContentLoaded", function () {
+        const menuLinks = document.querySelectorAll("#menu .nav-link");
+        const currentPath = window.location.pathname.toLowerCase();
+
+        menuLinks.forEach(link => {
+            // Check if the link href matches current path
+            if (link.getAttribute("href").toLowerCase() === currentPath) {
+                link.classList.add("active");
+            }
+
+            // Optional: set active on click (for SPA-like effect)
+            link.addEventListener("click", function() {
+                menuLinks.forEach(l => l.classList.remove("active"));
+                this.classList.add("active");
+            });
+        });
+    });</script>
 </body>
 </html>
