@@ -1,0 +1,105 @@
+﻿@model List<EmployeeTrackingSystem.Models.staffViewModel.StaffViewModel>
+
+@{
+    ViewBag.Title = "Staff List";
+}
+<div class="container mt-4">
+
+    @section Buttons {
+        <button type="button" id="btnSearch" class="btn btn-primary">
+            変更
+        </button>
+
+        <button type="submit" class="btn btn-primary">
+            追加
+        </button>
+    }
+    <!-- TABLE AREA -->
+    <table class="table table-bordered" style="margin-top:20px;" id="tableStaff">
+        <thead class="table-dark">
+            <tr>
+                <th>スタッフCD</th>
+                <th>スタッフ名</th>
+                <th>部門名</th>
+                <th>入会日</th>
+                <th>席番号</th>
+                <th>Next 席番号</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model != null && Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.StaffCD</td>
+                        <td>@item.StaffName</td>
+                        <td>@item.DepartmentName</td>
+                        <td>@item.JoinedDate</td>
+                        <td>@item.SeatNo</td>
+
+                        <!-- ✏️ Edit Seat -->
+                        <td>
+                            <input type="number" name="newSeat"
+                                   style="width:80px; " />
+                        </td>
+
+                        <!-- Action -->
+                        <td>
+                            <a href="@Url.Action("DetailList", "Home", new { id = item.StaffCD })"
+                               class="btn btn-info btn-sm">
+                                変更
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="7" class="text-center text-danger">
+                        No data found
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+@section Scripts {
+    <script>
+        $(document).on("click", "#btnSearch", function () {
+
+            // Get dropdown values
+            var dept = $("#department").val();
+            var staff = $("#staff").val();
+
+            // Call controller
+            $.ajax({
+                url: '/Staff/StaffList',
+                type: 'GET',
+                data: {
+                    department: dept,
+                    staff: staff
+                },
+                success: function (result) {
+
+                    // Update table only (no page reload)
+                    $("#tableStaff").html(
+                        $(result).find("#tableStaff").html()
+                    );
+                },
+                error: function () {
+                    alert("Error loading data");
+                }
+            });
+
+        });
+    </script>
+}
+
+
+

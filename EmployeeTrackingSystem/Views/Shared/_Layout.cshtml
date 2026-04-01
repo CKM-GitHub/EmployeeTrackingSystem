@@ -50,7 +50,7 @@
         {
         <div class="row mb-3">
 
-            @using (Html.BeginForm("StaffList", "Staff", FormMethod.Get))
+            @using (Html.BeginForm("null", "null", FormMethod.Get))
             {
                 <div class="col-md-3" style="display:inline-block;">
                     @Html.DropDownList("department", ViewBag.Departments as SelectList,
@@ -61,13 +61,10 @@
                     @Html.DropDownList("staff", ViewBag.StaffNames as SelectList,
                         new { @class = "form-control"  ,id = "staff" })
                 </div>
-
-                
-                   <div class="col-md-4">
-                             @RenderSection("Buttons", required: false)
-                    </div>
+                <div class="col-md-4">
+                         @RenderSection("Buttons", required: false)
+                </div>
              }
-
         </div>
         }
         @RenderBody()
