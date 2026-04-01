@@ -9,21 +9,21 @@
 </head>
 
 <body>
-   <style>
-       .navbar-nav .nav-item .nav-link {
-           text-decoration: none;
-           font-weight: normal;
-           color: white;
-           padding: 15px 20px;
-           transition: all 0.3s;
-       }
+    <style>
+        .navbar-nav .nav-item .nav-link {
+            text-decoration: none;
+            font-weight: normal;
+            color: white;
+            padding: 15px 20px;
+            transition: all 0.3s;
+        }
 
-           .navbar-nav .nav-item .nav-link.active {
-               font-weight: bold;
-               text-decoration: underline;
-               color: #ffd800; /* optional highlight color */
-           }
-   </style>
+            .navbar-nav .nav-item .nav-link.active {
+                font-weight: bold;
+                text-decoration: underline;
+                color: #ffd800; /* optional highlight color */
+            }
+    </style>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -35,41 +35,70 @@
                 <img src="@Url.Content("~/Content/Logo.png")" />
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav" id="menu">                   
+                <ul class="nav navbar-nav" id="menu">
                     <li class="nav-item"><a class="nav-link" href="/Home/Index">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Home/StaffList">StaffList</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Staff/StaffList">Staff List</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Home/DetailList">DetailList</a></li>
                 </ul>
             </div>
         </div>
     </div>
-    <div class="container body-content">
+    <div class="container body-content" style="margin-top:40px;">
+        @if (ViewBag.ShowDropdown == true
+        && ViewBag.Departments != null
+         && ViewBag.StaffNames != null)
+        {
+        <div class="row mb-3">
+
+            @using (Html.BeginForm("StaffList", "Staff", FormMethod.Get))
+            {
+                <div class="col-md-3" style="display:inline-block;">
+                    @Html.DropDownList("department", ViewBag.Departments as SelectList,
+                        new { @class = "form-control" ,id = "department" })
+                </div>
+
+                <div class="col-md-3" style="display:inline-block;">
+                    @Html.DropDownList("staff", ViewBag.StaffNames as SelectList,
+                        new { @class = "form-control"  ,id = "staff" })
+                </div>
+
+                
+                   <div class="col-md-4">
+                             @RenderSection("Buttons", required: false)
+                    </div>
+             }
+
+        </div>
+        }
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+           
         </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
-    <script>document.addEventListener("DOMContentLoaded", function () {
-        const menuLinks = document.querySelectorAll("#menu .nav-link");
-        const currentPath = window.location.pathname.toLowerCase();
 
-        menuLinks.forEach(link => {
-            // Check if the link href matches current path
-            if (link.getAttribute("href").toLowerCase() === currentPath) {
-                link.classList.add("active");
-            }
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const menuLinks = document.querySelectorAll("#menu .nav-link");
+            const currentPath = window.location.pathname.toLowerCase();
 
-            // Optional: set active on click (for SPA-like effect)
-            link.addEventListener("click", function() {
-                menuLinks.forEach(l => l.classList.remove("active"));
-                this.classList.add("active");
+            menuLinks.forEach(link => {
+                // Check if the link href matches current path
+                if (link.getAttribute("href").toLowerCase() === currentPath) {
+                    link.classList.add("active");
+                }
+
+                // Optional: set active on click (for SPA-like effect)
+                link.addEventListener("click", function () {
+                    menuLinks.forEach(l => l.classList.remove("active"));
+                    this.classList.add("active");
+                });
             });
-        });
-    });</script>
+        });</script>
 </body>
 </html>
