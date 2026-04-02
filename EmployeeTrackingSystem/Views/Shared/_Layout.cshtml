@@ -6,6 +6,7 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    
 </head>
 
 <body>
@@ -52,16 +53,18 @@
                 <div class="col-md-3">
                     <div class="col-md-12 form-group">
                         @Html.DropDownList("department", ViewBag.Departments as SelectList,
-                                   new { @class = "form-control" ,id = "department" })<br />
-                        <input type="date" id="fromDate" class="form-control mt-2" placeholder="From Date">
-                    </div>
+                                   new { @class = "form-control" ,id = "department" })
+                        @if (ViewBag.Detail == "Detail")
+                        {<br /><br /><input type="date" id="fromDate" class="form-control mt-2" placeholder="From Date" value="@ViewBag.FromDate">}
+                        </div>
                 </div>
                 <div class="col-md-3">
                     <div class="col-md-12 form-group">
                         @Html.DropDownList("staff", ViewBag.StaffNames as SelectList,
-                                    new { @class = "form-control"  ,id = "staff" })<br />
-                        <input type="date" id="toDate" class="form-control mt-2" placeholder="To Date">
-                    </div>
+                                    new { @class = "form-control"  ,id = "staff" })
+                        @if (ViewBag.Detail == "Detail")
+                        {<br /><br /><input type="date" id="toDate" class="form-control mt-2" placeholder="To Date" value="@ViewBag.ToDate">}
+                        </div>
                 </div>
                 <div class="col-md-4">
                     @RenderSection("Buttons", required: false)
@@ -76,6 +79,11 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 
     <script>

@@ -4,17 +4,12 @@
 }
 @model IEnumerable<EmployeeTrackingSystem.Models.DetailViewModel>
 
-<!-- jQuery FIRST -->
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-
-<!-- DataTables -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
 @section Buttons {
     <button class="btn btn-warning" style="width:100px; font-weight:bold;" onclick="searchData()">検索</button>
     <button class="btn btn-primary" style="width:100px; font-weight:bold;" onclick="exportExcel()">Excel</button>
 }
+
 
 <table id="detailtb" class="table table-striped table-bordered" style="width:100%">
     <thead>
@@ -59,10 +54,13 @@
 }
 
 @section Scripts {
+  
+
     <script type="text/javascript">
 
-            $(document).ready(function () {
-              
+        $(document).ready(function () {
+            $('#department').select2();
+            $('#staff').select2();
         });
 
         function searchData() {
@@ -83,7 +81,7 @@
                     $('#DetailTable').empty(); // Clear current table rows
 
                     // 3. Loop through JSON result
-                    $.each(data, function (i, item) {                        
+                    $.each(data, function (i, item) {
                         items += "<tr>" +
                             "<td>" + (item.StaffName || "") + "</td>" +
                             "<td>" + (item.DepartmentName || "") + "</td>" +

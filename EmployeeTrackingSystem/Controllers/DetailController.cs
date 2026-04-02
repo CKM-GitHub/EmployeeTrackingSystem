@@ -17,17 +17,23 @@ namespace EmployeeTrackingSystem.Controllers
         {
             ViewBag.ShowDropdown = true;
             LoadDropdowns();
+            DateTime now = DateTime.Now;
+            var startDate = new DateTime(now.Year, now.Month, 1);
+            var endDate = startDate.AddMonths(1).AddDays(-1);
+
             var deptParam = new SqlParameter("@Department", (object)DBNull.Value);
             var staffParam = new SqlParameter("@StaffName", (object)DBNull.Value);
-            var frmDate = new SqlParameter("@FrmDate", (object)DBNull.Value);
-            var toDate = new SqlParameter("@ToDate", (object)DBNull.Value);
+            var frmDate = new SqlParameter("@FrmDate", startDate.ToString());
+            var toDate = new SqlParameter("@ToDate", endDate.ToString());
 
             List<DetailViewModel> list = db.Database.SqlQuery<DetailViewModel>(
              "EXEC DetailLoggingSelect @Department, @StaffName, @FrmDate, @ToDate",
              deptParam, staffParam, frmDate, toDate
          ).ToList();
 
-
+            ViewBag.Detail = "Detail";
+            ViewBag.FromDate = startDate.ToString("yyyy-MM-dd");
+            ViewBag.ToDate = endDate.ToString("yyyy-MM-dd");
             return View(list);
         }
 
