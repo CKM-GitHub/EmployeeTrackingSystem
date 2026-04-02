@@ -1,5 +1,6 @@
 ﻿using EmployeeTrackingSystem.Controllers;
 using EmployeeTrackingSystem.Models;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -30,6 +31,7 @@ namespace EmployeeTrackingSystem.Controllers
              "EXEC DetailLogging_Select @Department, @StaffName, @FrmDate, @ToDate",
              deptParam, staffParam, frmDate, toDate
          ).ToList();
+
 
             ViewBag.Detail = "Detail";
             ViewBag.FromDate = startDate.ToString("yyyy-MM-dd");
@@ -63,11 +65,12 @@ namespace EmployeeTrackingSystem.Controllers
                     x.DepartmentName,
                     x.Status,
                     StartDateTime = x.StartDateTime.HasValue
-                        ? x.StartDateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                        ? x.StartDateTime.Value.ToString("yyyy-MM-dd H:mm:ss")
                         : "",
                                     ReturnDateTime = x.ReturnDateTime.HasValue
-                        ? x.ReturnDateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")
-                        : ""
+                        ? x.ReturnDateTime.Value.ToString("yyyy-MM-dd H:mm:ss")
+                        : "",
+                    x.Note
                 });
 
                 return Json(result, JsonRequestBehavior.AllowGet);
@@ -75,6 +78,59 @@ namespace EmployeeTrackingSystem.Controllers
             catch (Exception ex)
             {
                 return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ExportToExcel(string department, string staffname, string fromdate, string todate)
+        {
+            department = department == "All" ? null : department;
+            staffname = staffname == "All" ? null : staffname;
+            fromdate = fromdate == "" ? null : fromdate;
+            todate = todate == "" ? null : todate;
+            // Create SQL parameters to match your Stored Procedure
+            var deptParam = new SqlParameter("@Department", department ?? (object)DBNull.Value);
+            var staffParam = new SqlParameter("@StaffName", staffname ?? (object)DBNull.Value);
+            var frmDate = new SqlParameter("@FrmDate", fromdate ?? (object)DBNull.Value);
+            var toDate = new SqlParameter("@ToDate", todate ?? (object)DBNull.Value);
+
+            // Execute the SP and map results to your Model
+            List<DetailViewModel> list = db.Database.SqlQuery<DetailViewModel>(
+            "EXEC DetailLogging_Select @Department, @StaffName, @FrmDate, @ToDate",
+            deptParam, staffParam, frmDate, toDate
+            ).ToList();
+
+            var result = list.Select(x => new {
+                x.StaffName,
+                x.DepartmentName,
+                x.Status,
+                StartDateTime = x.StartDateTime.HasValue
+                    ? x.StartDateTime.Value.ToString("yyyy-MM-dd H:mm:ss")
+                    : "",
+                ReturnDateTime = x.ReturnDateTime.HasValue
+                    ? x.ReturnDateTime.Value.ToString("yyyy-MM-dd H:mm:ss")
+                    : "",
+                x.Note
+            });
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (var package = new ExcelPackage())
+            {
+                // 3. Create a worksheet
+                var worksheet = package.Workbook.Worksheets.Add("Employees");
+
+                // 4. Load the List into the sheet
+                // Parameters: (Collection, Print Headers, TableStyle)
+                worksheet.Cells["A1"].LoadFromCollection(result, true, OfficeOpenXml.Table.TableStyles.Medium9);
+
+                // Optional: Auto-fit columns
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                // 5. Convert to Byte Array and return file
+                var fileBytes = package.GetAsByteArray();
+                return File(fileBytes,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "DetailListExcel.xlsx");
             }
         }
     }

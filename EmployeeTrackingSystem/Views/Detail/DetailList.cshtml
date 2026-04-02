@@ -54,11 +54,11 @@
 }
 
 @section Scripts {
-  
 
     <script type="text/javascript">
 
         $(document).ready(function () {
+            
             $('#department').select2();
             $('#staff').select2();
         });
@@ -91,10 +91,8 @@
                             "<td>" + (item.Note || "") + "</td>" +
                             "</tr>";
                     });
-
                     // 4. Bind to table
                     $('#DetailTable').html(items);
-
             }
         });
     }
@@ -109,11 +107,38 @@
         return "";
     }
 
-    function exportExcel() {
-        // Redirect to your Controller action that generates a FileResult (Excel)
-        window.location.href = '@Url.Action("ExportToExcel", "Detail")' +
-                               '?dept=' + $('#ddlDepartment').val();
-    }
+
+        function exportExcel() {
+    // Collect all your filter values
+    var filters = {
+        departMent: $('#department').val(),
+        staffName: $('#staff').val(),
+        fromDate: $('#fromDate').val(),
+        toDate: $('#toDate').val()
+    };
+
+    // Create a hidden form dynamically
+    var $form = $('<form>', {
+        action: '@Url.Action("ExportToExcel", "Detail")',
+        method: 'post',
+        data: filters
+    });
+
+    // Add each filter as a hidden input
+    $.each(filters, function(key, value) {
+        $form.append($('<input>', {
+            type: 'hidden',
+            name: key,
+            value: value
+        }));
+    });
+
+    // Append to body, submit, and remove
+    $(document.body).append($form);
+    $form.submit();
+    $form.remove();
+}
+
     </script>
 }
 
