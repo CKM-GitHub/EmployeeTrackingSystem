@@ -45,7 +45,7 @@ namespace EmployeeTrackingSystem.Controllers
             var action = filterContext.ActionDescriptor.ActionName;
 
             if ((controller == "Staff" && action == "StaffList") ||
-                (controller == "Home" && action == "DetailList"))
+                (controller == "Detail" && action == "DetailList"))
             {
                 ViewBag.ShowDropdown = true;
             }

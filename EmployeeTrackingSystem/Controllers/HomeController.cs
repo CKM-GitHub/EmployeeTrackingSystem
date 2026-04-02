@@ -19,13 +19,6 @@ namespace EmployeeTrackingSystem.Controllers
         }
 
         
-        public ActionResult DetailList()
-        {
-            ViewBag.ShowDropdown = true;
-            LoadDropdowns();
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
+       
     }
 }
