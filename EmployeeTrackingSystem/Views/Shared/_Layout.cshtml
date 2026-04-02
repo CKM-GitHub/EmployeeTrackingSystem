@@ -38,7 +38,7 @@
                 <ul class="nav navbar-nav" id="menu">
                     <li class="nav-item"><a class="nav-link" href="/Home/Index">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Staff/StaffList">Staff List</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Home/DetailList">DetailList</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Detail/DetailList">Detail List</a></li>
                 </ul>
             </div>
         </div>
@@ -48,40 +48,36 @@
         && ViewBag.Departments != null
          && ViewBag.StaffNames != null)
         {
-        <div class="row mb-3">
-
-            @using (Html.BeginForm("StaffList", "Staff", FormMethod.Get))
-            {
-                <div class="col-md-3" style="display:inline-block;">
-                    @Html.DropDownList("department", ViewBag.Departments as SelectList,
-                        new { @class = "form-control" ,id = "department" })
-                </div>
-
-                <div class="col-md-3" style="display:inline-block;">
-                    @Html.DropDownList("staff", ViewBag.StaffNames as SelectList,
-                        new { @class = "form-control"  ,id = "staff" })
-                </div>
-
-                
-                   <div class="col-md-4">
-                             @RenderSection("Buttons", required: false)
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="col-md-12 form-group">
+                        @Html.DropDownList("department", ViewBag.Departments as SelectList,
+                                   new { @class = "form-control" ,id = "department" })<br />
+                        <input type="date" id="fromDate" class="form-control mt-2" placeholder="From Date">
                     </div>
-             }
-
-        </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="col-md-12 form-group">
+                        @Html.DropDownList("staff", ViewBag.StaffNames as SelectList,
+                                    new { @class = "form-control"  ,id = "staff" })<br />
+                        <input type="date" id="toDate" class="form-control mt-2" placeholder="To Date">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    @RenderSection("Buttons", required: false)
+                </div>
+            </div>
         }
         @RenderBody()
         <hr />
-        <footer>
-           
-        </footer>
+        <footer></footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 
-    
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const menuLinks = document.querySelectorAll("#menu .nav-link");
