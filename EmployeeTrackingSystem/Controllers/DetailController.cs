@@ -27,7 +27,7 @@ namespace EmployeeTrackingSystem.Controllers
             var toDate = new SqlParameter("@ToDate", endDate.ToString());
 
             List<DetailViewModel> list = db.Database.SqlQuery<DetailViewModel>(
-             "EXEC DetailLoggingSelect @Department, @StaffName, @FrmDate, @ToDate",
+             "EXEC DetailLogging_Select @Department, @StaffName, @FrmDate, @ToDate",
              deptParam, staffParam, frmDate, toDate
          ).ToList();
 
@@ -54,7 +54,7 @@ namespace EmployeeTrackingSystem.Controllers
 
                 // Execute the SP and map results to your Model
                 List<DetailViewModel> list = db.Database.SqlQuery<DetailViewModel>(
-                "EXEC DetailLoggingSelect @Department, @StaffName, @FrmDate, @ToDate",
+                "EXEC DetailLogging_Select @Department, @StaffName, @FrmDate, @ToDate",
                 deptParam, staffParam, frmDate, toDate
                 ).ToList();
 
