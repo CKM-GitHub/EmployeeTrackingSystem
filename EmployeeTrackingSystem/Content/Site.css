@@ -22,3 +22,26 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.scroll-table {
+    width: 100%;
+}
+
+/* Container for the vertical scroll */
+.table-v-scroll {
+    max-height: 600px; /* Set your desired height */
+    overflow-y: auto; /* Enable vertical scroll */
+    overflow-x: auto; /* Prevent horizontal scroll unless needed */
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+    /* Make the header sticky */
+    .table-v-scroll thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background-color: #6990C7; /* Match your header theme (dark) */
+        color: black;
+        border-bottom: 2px solid #32383e;
+    }

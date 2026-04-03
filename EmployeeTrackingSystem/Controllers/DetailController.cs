@@ -44,8 +44,8 @@ namespace EmployeeTrackingSystem.Controllers
         {
             try
             {
-                department = department == "All" ? null : department;
-                staffname = staffname == "All" ? null : staffname;
+                department = department == "All" || department == "" ? null : department;
+                staffname = staffname == "All" || staffname == "" ? null : staffname;
                 fromdate = fromdate == "" ? null : fromdate;
                 todate = todate == "" ? null : todate;
                 // Create SQL parameters to match your Stored Procedure
@@ -130,8 +130,22 @@ namespace EmployeeTrackingSystem.Controllers
                 var fileBytes = package.GetAsByteArray();
                 return File(fileBytes,
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    "DetailListExcel.xlsx");
+                    "DetailListExcel_"+DateTime.Now+".xlsx");
             }
+        }
+
+        [HttpGet]
+        public JsonResult GetStaffByDepartment(string departmentId)
+        {
+            // Replace this with your actual database logic (e.g., db.Staffs.Where...)
+            var staffList = db.T_StaffMaster
+                              .Where(s => s.DepartmentCD == departmentId)
+                              .Select(s => new {
+                                  Value = s.StaffCD,
+                                  Text = s.StaffName
+                              }).ToList();
+
+            return Json(staffList, JsonRequestBehavior.AllowGet);
         }
     }
 }

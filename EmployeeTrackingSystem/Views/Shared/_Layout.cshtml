@@ -102,6 +102,42 @@
                     this.classList.add("active");
                 });
             });
-        });</script>
+        });
+          $("#department").change(function () {
+                var selectedDeptId = $(this).val();
+                var $staffDropdown = $("#staff");
+
+                // Clear the current options and show a placeholder
+                $staffDropdown.empty();
+                $staffDropdown.append('<option value="">Loading...</option>');
+
+                if (selectedDeptId) {
+                    $.ajax({
+                        url: '@Url.Action("GetStaffByDepartment", "Detail")',
+                        type: "GET",
+                        data: { departmentId: selectedDeptId },
+                        success: function (data) {
+                            $staffDropdown.empty();
+                            $staffDropdown.append('<option value="">All</option>');
+                            
+                            // Loop through the JSON data and add options
+                            $.each(data, function (index, item) {
+                                $staffDropdown.append($('<option>', {
+                                    value: item.Value,
+                                    text: item.Text
+                                }));
+                            });
+                        },
+                        error: function () {
+                            alert("Error loading staff members.");
+                        }
+                    });
+                } else {
+                    $staffDropdown.empty();
+                    $staffDropdown.append('<option value="">All</option>');
+                }
+            });
+
+    </script>
 </body>
 </html>
