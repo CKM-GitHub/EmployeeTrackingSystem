@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewBag.Title = "DetailList";
+}
+@model IEnumerable<EmployeeTrackingSystem.Models.DetailViewModel>
+
+
+@section Buttons {
+    <button class="btn" style="background-color:#B58F35; color:white; width:100px; font-weight:bold;" onclick="searchData()">検索</button>
+    <button class="btn btn-primary" style="width:100px; font-weight:bold;" onclick="exportExcel()">Excel</button>
+}
+
+<div class="table-v-scroll table-responsive">
+    <table id="detailtb" class="table table-striped table-hover">
+        <thead>
+            <tr class="table-header">
+                <th>スタッフ名</th>
+                <th>部門名</th>
+                <th style="text-align:center">状態</th>
+                <th>開始日時</th>
+                <th>返却日時</th>
+                <th>備考</th>
+            </tr>
+        </thead>
+        <tbody id="DetailTable">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.StaffName</td>
+                    <td>@item.DepartmentName</td>
+                    <td style="background-color:@GetStatusColor(item.Status)" align="center">@item.Status</td>
+                    <td style="align-items:center">@(item.StartDateTime.HasValue ? item.StartDateTime.Value.ToString("yyyy-MM-dd H:mm:ss") : "")</td>
+                    <td style="align-items:center">@(item.ReturnDateTime.HasValue ? item.ReturnDateTime.Value.ToString("yyyy-MM-dd H:mm:ss") : "")</td>
+                    <td>@item.Note</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@functions {
+    public string GetStatusColor(string status)
+    {
+        switch (status)
+        {
+            case "直行": return "#E6CF25";
+            case "外出": return "#E6CF25";
+            case "休み": return "#FF0011";
+            case "帰宅": return "#545956";
+            case "在席": return "#1FA148";
+            case "会議": return "#BA56CC";
+            default: return "";
+        }
+    }
+}
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            
+            $('#department').select2();
+            $('#staff').select2();
+            
+        });
+
+        function searchData() {
+
+        var searchParams = {
+            departMent: $('#department').val(),
+            staffName: $('#staff').val(),
+            fromDate: $('#fromDate').val(),
+            toDate: $('#toDate').val()
+            };
+
+            $.ajax({
+            url: '@Url.Action("GetFilteredData", "Detail")',
+            type: 'POST',
+                data: searchParams,
+                success: function (data) {
+                    var items = "";
+                    $('#DetailTable').empty(); // Clear current table rows
+
+                    // 3. Loop through JSON result
+                    $.each(data, function (i, item) {
+                        items += "<tr>" +
+                            "<td>" + (item.StaffName || "") + "</td>" +
+                            "<td>" + (item.DepartmentName || "") + "</td>" +
+                            "<td style=background-color:" + getStatusColor(item.Status) + " align = center>" + (item.Status || "") + "</td>" +
+                            "<td>" + (item.StartDateTime || "") + "</td>" +
+                            "<td>" + (item.ReturnDateTime || "") + "</td>" +
+                            "<td>" + (item.Note || "") + "</td>" +
+                            "</tr>";
+                    });
+                    // 4. Bind to table
+                    $('#DetailTable').html(items);
+            }
+        });
+        }
+
+
+        function getStatusColor(status) {
+            if (status == "直行") return "#E6CF25";
+            if (status == "外出") return "#E6CF25";
+            if (status == "休み") return "#FF0011";
+            if (status == "帰宅") return "#545956";
+            if (status == "在席") return "#1FA148";
+            if (status == "会議") return "#BA56CC";
+        return "";
+    }
+
+
+        function exportExcel() {
+    // Collect all your filter values
+    var filters = {
+        departMent: $('#department').val(),
+        staffName: $('#staff').val(),
+        fromDate: $('#fromDate').val(),
+        toDate: $('#toDate').val()
+    };
+
+    // Create a hidden form dynamically
+    var $form = $('<form>', {
+        action: '@Url.Action("ExportToExcel", "Detail")',
+        method: 'post',
+        data: filters
+    });
+
+    // Add each filter as a hidden input
+    $.each(filters, function(key, value) {
+        $form.append($('<input>', {
+            type: 'hidden',
+            name: key,
+            value: value
+        }));
+    });
+
+    // Append to body, submit, and remove
+    $(document.body).append($form);
+    $form.submit();
+    $form.remove();
+}
+
+    </script>
+}
+
