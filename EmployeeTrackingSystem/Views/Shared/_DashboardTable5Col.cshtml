@@ -1,0 +1,209 @@
+﻿@model IEnumerable<EmployeeTrackingSystem.Models.DashboardViewModel>
+
+@if (Model != null && Model.Any())
+{
+    var first = Model.First();
+    int staffCount = 0;
+
+    if (!string.IsNullOrEmpty(first.StaffName1)) { staffCount++; }
+    if (!string.IsNullOrEmpty(first.StaffName2)) { staffCount++; }
+    if (!string.IsNullOrEmpty(first.StaffName3)) { staffCount++; }
+    if (!string.IsNullOrEmpty(first.StaffName4)) { staffCount++; }
+    if (!string.IsNullOrEmpty(first.StaffName5)) { staffCount++; }
+    if (!string.IsNullOrEmpty(first.StaffName6)) { staffCount++; }
+
+    <div class="table-responsive">
+        <table class="board-table">
+            <thead>
+                <tr>
+                    <th colspan="@staffCount">@first.DepartmentName</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var member in Model)
+                {
+                    string statusClass1 = "";
+                    if (member.Status1 == "在席") { statusClass1 = "status-in"; }
+                    else if (member.Status1 == "帰宅") { statusClass1 = "status-out"; }
+                    else if (member.Status1 == "外出") { statusClass1 = "status-off"; }
+                    else if (member.Status1 == "直行") { statusClass1 = "status-off"; }
+                    else if (member.Status1 == "会議") { statusClass1 = "status-meeting"; }
+                    else if (member.Status1 == "休み") { statusClass1 = "status-home"; }
+
+                    string statusClass2 = "";
+                    if (member.Status2 == "在席") { statusClass2 = "status-in"; }
+                    else if (member.Status2 == "帰宅") { statusClass2 = "status-out"; }
+                    else if (member.Status2 == "外出") { statusClass2 = "status-off"; }
+                    else if (member.Status1 == "直行") { statusClass1 = "status-off"; }
+                    else if (member.Status2 == "会議") { statusClass2 = "status-meeting"; }
+                    else if (member.Status2 == "休み") { statusClass2 = "status-home"; }
+
+                    string statusClass3 = "";
+                    if (member.Status3 == "在席") { statusClass3 = "status-in"; }
+                    else if (member.Status3 == "帰宅") { statusClass3 = "status-out"; }
+                    else if (member.Status3 == "外出") { statusClass3 = "status-off"; }
+                    else if (member.Status1 == "直行") { statusClass1 = "status-off"; }
+                    else if (member.Status3 == "会議") { statusClass3 = "status-meeting"; }
+                    else if (member.Status3 == "休み") { statusClass3 = "status-home"; }
+
+                    string statusClass4 = "";
+                    if (member.Status4 == "在席") { statusClass4 = "status-in"; }
+                    else if (member.Status4 == "帰宅") { statusClass4 = "status-out"; }
+                    else if (member.Status4 == "外出") { statusClass4 = "status-off"; }
+                    else if (member.Status1 == "直行") { statusClass1 = "status-off"; }
+                    else if (member.Status4 == "会議") { statusClass4 = "status-meeting"; }
+                    else if (member.Status4 == "休み") { statusClass4 = "status-home"; }
+                   
+
+                    string statusClass5 = "";
+                    if (member.Status5 == "在席") { statusClass5 = "status-in"; }
+                    else if (member.Status5 == "帰宅") { statusClass5 = "status-out"; }
+                    else if (member.Status5 == "外出") { statusClass5 = "status-off"; }
+                    else if (member.Status1 == "直行") { statusClass1 = "status-off"; }
+                    else if (member.Status5 == "会議") { statusClass5 = "status-meeting"; }
+                    else if (member.Status5 == "休み") { statusClass5 = "status-home"; }
+
+
+                <tr>
+                    @if (!string.IsNullOrEmpty(member.StaffName1))
+                    {
+                        <td class="@statusClass1">
+                            <table class="nested-table">
+                                <tr>
+                                    <td colspan="2" class="nested-top staffname">
+                                        <a href="javascript:void(0);"
+                                           class="staff-link"
+                                           data-toggle="modal"
+                                           data-target="#staffModal"
+                                           data-id="@member.StaffCD1">
+                                            @member.StaffName1
+                                            <img src="~/Content/search.png" class="search-icon" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="nested-top date">
+                                        @(string.IsNullOrEmpty(member.ReturnDatetime1)? "": member.ReturnDatetime1.Substring(0, 10))
+                                    </td>
+
+                                    <td class="nested-top note">@(member.Note1 ?? "")</td>
+                                </tr>
+                            </table>
+                        </td>
+                    }
+                    @if (!string.IsNullOrEmpty(member.StaffName2))
+                    {
+                        <td class="@statusClass2">
+                            <table class="nested-table">
+                                <tr>
+                                    <td colspan="2" class="nested-top staffname">
+                                        <a href="javascript:void(0);"
+                                           class="staff-link"
+                                           data-toggle="modal"
+                                           data-target="#staffModal"
+                                           data-id="@member.StaffCD2">
+                                            @member.StaffName2
+                                            <img src="~/Content/search.png" class="search-icon" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="nested-top date">@(member.ReturnDatetime2 ?? "")</td>
+                                    <td class="nested-top note">@(member.Note2 ?? "")</td>
+                                </tr>
+                            </table>
+                        </td>
+                    }
+                    @if (!string.IsNullOrEmpty(member.StaffName3))
+                    {
+                        <td class="@statusClass3">
+                            <table class="nested-table">
+                                <tr>
+                                    <td colspan="2" class="nested-top staffname">
+                                        <a href="javascript:void(0);"
+                                           class="staff-link"
+                                           data-toggle="modal"
+                                           data-target="#staffModal"
+                                           data-id="@member.StaffCD3">
+                                            @member.StaffName3
+                                            <img src="~/Content/search.png" class="search-icon" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="nested-top date">@(member.ReturnDatetime3 ?? "")</td>
+                                    <td class="nested-top note">@(member.Note3 ?? "")</td>
+                                </tr>
+                            </table>
+                        </td>
+                    }
+                    @if (!string.IsNullOrEmpty(member.StaffName4))
+                    {
+                        <td class="@statusClass4">
+                            <table class="nested-table">
+                                <tr>
+                                    <td colspan="2" class="nested-top staffname">
+                                        <a href="javascript:void(0);"
+                                           class="staff-link"
+                                           data-toggle="modal"
+                                           data-target="#staffModal"
+                                           data-id="@member.StaffCD4">
+                                            @member.StaffName4
+                                            <img src="~/Content/search.png" class="search-icon" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="nested-top date">@(member.ReturnDatetime4 ?? "")</td>
+                                    <td class="nested-top note">@(member.Note4 ?? "")</td>
+                                </tr>
+                            </table>
+                        </td>
+                    }
+                    @if (!string.IsNullOrEmpty(member.StaffName5))
+                    {
+                        <td class="@statusClass5">
+                            <table class="nested-table">
+                                <tr>
+                                    <td colspan="2" class="nested-top staffname">
+                                        <a href="javascript:void(0);"
+                                           class="staff-link"
+                                           data-toggle="modal"
+                                           data-target="#staffModal"
+                                           data-id="@member.StaffCD5">
+                                            @member.StaffName5
+                                            <img src="~/Content/search.png" class="search-icon" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="nested-top date">@(member.ReturnDatetime5 ?? "")</td>
+                                    <td class="nested-top note">@(member.Note5 ?? "")</td>
+                                </tr>
+                            </table>
+                        </td>
+                    }
+                    @if (!string.IsNullOrEmpty(member.StaffName6))
+                    {
+
+                        <td class="@statusClass5">
+                            <table class="nested-table">
+                                <tr>
+                                    <td colspan="2" class="nested-top staffname">
+                                        <a href="javascript:void(0);"
+                                           class="staff-link"
+                                           data-toggle="modal"
+                                           data-target="#staffModal"
+                                           data-id="@member.StaffCD6">
+                                            @member.StaffName6
+                                            <img src="~/Content/search.png" class="search-icon" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="nested-top date">@(member.ReturnDatetime6 ?? "")</td>
+                                    <td class="nested-top note">@(member.Note6 ?? "")</td>
+                                </tr>
+                            </table>
+                        </td>
+                    }
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

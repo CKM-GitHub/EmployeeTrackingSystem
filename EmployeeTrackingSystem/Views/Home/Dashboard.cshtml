@@ -1,0 +1,311 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<head>
+    <meta charset="utf-8" />
+    <title>Board Members</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/Content/dashboard.css" />
+</head>
+<div class="container-fluid py-3 custom-margin-top">
+    <!-- Header row -->
+    <div class="row align-items-center mb-3">
+        <!-- Title -->
+        <div class="col-md-4 col-sm-12">
+            <div class="main-title-bar text-center text-md-start">
+                今の出席状況概要
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="col-md-8 col-sm-12">
+            <div class="d-flex flex-wrap gap-3 justify-content-md-end justify-content-center">
+                <span><span class="status-icon status-in"></span> 在席</span>
+                <span><span class="status-icon status-off"></span> 帰宅</span>
+                <span><span class="status-icon status-away"></span> 外出／直</span>
+                <span><span class="status-icon status-meeting"></span> 会議</span>
+                <span><span class="status-icon status-home"></span> 休み</span>
+            </div>
+        </div>
+    </div>
+
+    @model EmployeeTrackingSystem.Models.DashboardTablesViewModel
+
+    <div class="tables-container">
+        <div class="row">
+            <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table1)</div>
+            <div class="col-md-8 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table2)</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table3)</div>
+            <div class="col-md-8 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table4)</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table5)</div>
+            <div class="col-md-8 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table6)</div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table7)</div>
+        </div>
+    </div>
+
+
+
+</div>
+
+@*staffname click popup*@
+<div class="modal fade" id="staffModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="staffForm">
+                <input type="hidden" id="StaffCd" name="StaffCd" />
+                <div class="modal-header">
+                    <h5 class="modal-title">Data入力</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- 在席 -->
+                    <div class="form-group">
+                        <label><input type="radio" name="Status" value="在席" /> 在席</label>
+
+                    </div>
+                    <!-- 帰宅 -->
+                    <div class="form-group">
+                        <label><input type="radio" name="Status" value="帰宅" /> 帰宅</label>
+                    </div>
+
+                    <!-- 外出 -->
+                    <div class="form-group status-option">
+                        <label class="status-label"><input type="radio" name="Status" value="外出" /> 外出</label>
+                        <div class='input-group date' id='datetimepicker-out'>
+                            <input type='text' name="ReturnDateTime-out" class="form-control" placeholder="ReturnDateTime" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                        <input type="text" id="Note-out" name="Note-out" class="form-control status-input" placeholder="Note" />
+                    </div>
+                    <!-- 会議 -->
+                    <div class="form-group status-option">
+                        <label class="status-label"><input type="radio" name="Status" value="会議" /> 会議</label>
+                        <div class='input-group date' id='datetimepicker-meeting'>
+                            <input type='text' name="ReturnDateTime-meeting" class="form-control" placeholder="ReturnDateTime" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                        <input type="text" id="Note-meeting" name="Note" class="form-control status-input" placeholder="Note" />
+                    </div>
+                    <!-- 休み -->
+                    <div class="form-group status-option">
+                        <label class="status-label"><input type="radio" name="Status" value="休み" /> 休み</label>
+                        <input type="text" id="Note-leave" style="width:100% !important" name="Note" class="form-control status-input" placeholder="Note" />
+                    </div>
+                    <!-- 直行 -->
+                    <div class="form-group status-option">
+                        <label class="status-label"><input type="radio" name="Status" value="直行" /> 直行</label>
+                        <div class='input-group date' id='datetimepicker-visit'>
+                            <input type='text' name="ReturnDateTime-visit" class="form-control" placeholder="ReturnDateTime" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                        <input type="text" id="Note-visit" name="Note" class="form-control status-input" placeholder="Note" />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">登録</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*searchicon click popup*@
+<div class="modal fade" id="searchModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <!-- wider for table layout -->
+        <div class="modal-content">
+            <form id="scheduleForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">予定の登録</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <table class="table table-bordered schedule-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Example rows -->
+                            <tr>
+                                <td>2026-03-24</td>
+                                <td>
+                                    <label><input type="radio" name="status_0324" value="在席" /> 在席</label>
+                                    <label><input type="radio" name="status_0324" value="休み" /> 休み</label>
+                                    <label><input type="radio" name="status_0324" value="会議" /> 会議</label>
+                                    <!-- add more as needed -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2026-03-25</td>
+                                <td>
+                                    <label><input type="radio" name="status_0325" value="在席" /> 在席</label>
+                                    <label><input type="radio" name="status_0325" value="休み" /> 休み</label>
+                                    <label><input type="radio" name="status_0325" value="会議" /> 会議</label>
+                                </td>
+                            </tr>
+                            <!-- repeat for each date -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">登録</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script>
+        $(document).on("click", ".staff-link", function () {
+            $("#StaffCd").val($(this).data("id")); // staffcd from link
+            //// Optionally pre-fill status/date/note if editing
+            //// Example: pre-fill ReturnDate if available
+            //var returnDate = $(this).data("returndate");
+            //if (returnDate) {
+            //    $('#ReturnDate-out').data("DateTimePicker").date(moment(returnDate));
+            //}
+        });
+        $("#staffForm").on("submit", function (e) {
+            e.preventDefault();
+
+            // Get selected status
+            var status = $("input[name='Status']:checked").val();
+
+            // Pick the right date/note field based on status
+            var returnDateTime = null;
+            var note = null;
+
+            if (status === "外出") {
+                returnDateTime = $("input[name='ReturnDateTime-out']").val();
+                note = $("#Note-out").val();
+            } else if (status === "会議") {
+                returnDateTime = $("input[name='ReturnDateTime-meeting']").val();
+                note = $("#Note-meeting").val();
+            } else if (status === "休み") {
+                note = $("#Note-leave").val();
+            } else if (status === "直行") {
+                returnDateTime = $("input[name='ReturnDateTime-visit']").val();
+                note = $("#Note-visit").val();
+            }
+            // StaffCd from hidden field or link
+            var staffCd = $("#StaffCd").val();
+
+            // Build payload
+            var payload = {
+                StaffCd: staffCd,
+                Status: status,
+                ReturnDateTime: returnDateTime,
+                Note: note
+            };
+
+            $.ajax({
+                url: '/Home/SaveStaff',
+                type: 'POST',
+                data: payload,
+                success: function () {
+                    $("#staffModal").modal("hide");
+                    location.reload();
+                },
+                error: function () {
+                    alert("Error saving staff info.");
+                }
+            });
+        });
+
+
+        $(document).on("click", ".search-icon", function () {
+            var staffId = $(this).data("id"); // make sure <img> has data-id
+            $("#scheduleForm").find("input[name='StaffId']").val(staffId);
+
+            // Show the modal
+            $("#searchModal").modal("show");
+        });
+        $("#scheduleForm").on("submit", function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/Dashboard/SaveSchedule',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function () {
+                    $("#searchModal").modal("hide");
+                    location.reload();
+                }
+            });
+        });
+
+ 
+
+        // When staffModal is shown, initialize the datetimepicker
+        $('#staffModal').on('shown.bs.modal', function () {
+            $('#datetimepicker-out').datetimepicker({
+                format: 'YYYY/MM/DD HH:mm:ss',
+                showClear: true,
+                showClose: true,
+                widgetParent: '#staffModal',
+                minDate: moment().startOf('day') // disable all dates before today
+            });
+            $('#datetimepicker-meeting').datetimepicker({
+                format: 'YYYY/MM/DD HH:mm:ss',
+                showClear: true,
+                showClose: true,
+                widgetParent: '#staffModal',
+                minDate: moment().startOf('day') // disable all dates before today
+            });
+            $('#datetimepicker-visit').datetimepicker({
+                format: 'YYYY/MM/DD HH:mm:ss',
+                showClear: true,
+                showClose: true,
+                widgetParent: '#staffModal',
+                minDate: moment().startOf('day') // disable all dates before today
+            });
+        });
+
+        $(document).on("change", "input[name='Status']", function () {
+            
+            // Clear all required attributes first
+            $("#staffModal .status-option input[type='text']").prop("required", false);
+
+            // Add required attributes based on selected radio
+            var selected = $(this).val();
+            
+            if (selected === "外出") {
+                $("input[name='ReturnDateTime-out']").prop("required", true);
+                $("#Note-out").prop("required", true);
+            } else if (selected === "会議") {
+                $("input[name='ReturnDateTime-meeting']").prop("required", true);
+                $("#Note-meeting").prop("required", true);
+            } else if (selected === "休み") {
+                $("#Note-leave").prop("required", true);
+            } else if (selected === "直行") {
+                $("input[name='ReturnDateTime-visit']").prop("required", true);
+                $("#Note-visit").prop("required", true);
+            }
+        });
+
+    </script>
+}
