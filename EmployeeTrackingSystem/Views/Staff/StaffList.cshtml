@@ -331,7 +331,7 @@
 
                         <div class="form-row">
                             <label>スタッフCD</label>
-                            <input type="text" id="StaffCD" name="StaffCD" readonly style="background-color:lightgray" required />
+                            <input type="text" id="StaffCD" name="StaffCD" readonly style="background-color:lightgray;width:80px;" required />
                             <span class="text-danger" id="errStaffCD"></span>
                         </div>
 
@@ -390,6 +390,7 @@
                         <div class="form-row">
                             <label style="height: 55px !important;">リマーク</label>
                             <textarea name="Remark" rows="2" style=" height: 60px !important;"></textarea>
+                            <span class="text-danger" id="errRemark"></span>
                         </div>
 
                         <div class="form-row">
@@ -495,10 +496,12 @@
                         <div class="form-row">
                             <label style=" height: 55px !important;">リマーク</label>
                             <textarea name="Remark" rows="2" style=" height: 60px !important;"></textarea>
+                            <span class="text-danger" id="errRemark"></span>
                         </div>
                         <div class="form-row">
                             <label>席番号</label>
                             <input type="text" name="SeatNo" class="short-input" oninput="this.value = this.value.replace(/\D/g,'')" style="width:50px;" />
+                            <span class="text-danger" id="errSeatNo"></span>
                         </div>
                         <div class="form-actions">
                             <button type="button" class="btn-cancel" data-dismiss="modal">取消</button>
@@ -570,7 +573,7 @@
             text-align: center;
         }
     #tableStaff button {
-        width: 80px;
+        width: 70px;
         font-size: 11px;
         padding: 2px 6px;
     }
@@ -612,6 +615,9 @@
             box-sizing: border-box;
             border-radius: 4px;
         }
+    .form-actions button {
+        margin: 0 10px;
+    }
 
     .short-input {
         width: 50px; /* class for short input width */
@@ -681,6 +687,7 @@
     .text-danger {
         color: red;
         font-size: 11px;
+        margin:0;
     }
 
     
