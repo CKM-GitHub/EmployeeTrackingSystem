@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -6,7 +7,7 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    
+
 </head>
 
 <body>
@@ -53,7 +54,7 @@
                 <div class="col-md-3">
                     <div class="col-md-12 form-group">
                         @Html.DropDownList("department", ViewBag.Departments as SelectList,
-                                   new { @class = "form-control" ,id = "department" })
+                                   new { @class = "form-control", id = "department" })
                         @if (ViewBag.Detail == "Detail")
                         {<br /><br /><input type="date" id="fromDate" class="form-control mt-2" placeholder="From Date" value="@ViewBag.FromDate">}
                     </div>
@@ -61,12 +62,12 @@
                 <div class="col-md-3">
                     <div class="col-md-12 form-group">
                         @Html.DropDownList("staff", ViewBag.StaffNames as SelectList,
-                                    new { @class = "form-control"  ,id = "staff" })
+                                    new { @class = "form-control", id = "staff" })
                         @if (ViewBag.Detail == "Detail")
                         {<br /><br /><input type="date" id="toDate" class="form-control mt-2" placeholder="To Date" value="@ViewBag.ToDate">}
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     @RenderSection("Buttons", required: false)
                 </div>
             </div>
@@ -81,10 +82,10 @@
     @RenderSection("scripts", required: false)
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    
+
     <!-- Select2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-   
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const menuLinks = document.querySelectorAll("#menu .nav-link");
@@ -119,7 +120,7 @@
                         success: function (data) {
                             $staffDropdown.empty();
                             $staffDropdown.append('<option value="">All</option>');
-                            
+
                             // Loop through the JSON data and add options
                             $.each(data, function (index, item) {
                                 $staffDropdown.append($('<option>', {

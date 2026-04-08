@@ -3,148 +3,100 @@
 @{
     ViewBag.Title = "Staff List";
 }
-<<<<<<< HEAD
-<!-- jQuery FIRST -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!--  Bootstrap CSS -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
-
-<!--  Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
-
-<!-- Main-->
-<div class="row align-items-center  container mt-4">
+<div class="container mt-2">
 
     @section Buttons {
-        <div style="width: 100%; display: flex; justify-content: flex-end;">
+        <div class="d-flex mb-2">
             <button type="button" id="btnSearch" class="btn btn-warning btn-fixed me-2">
                 変更
             </button>
-            @*<button type="button" id="btnSearch" class="btn btn-warning btn-fixed me-2 w-100 w-md-auto">
-                    変更
-                </button>*@
-
-            @*<button type="submit" class="btn btn-primary btn-fixed me-2 w-100 w-md-auto">
-                    追加
-                </button>*@
             <button type="button" class="btn btn-primary btn-fixed" data-toggle="modal" data-target="#addModal">
                 追加
             </button>
         </div>
     }
+
     <!-- TABLE AREA -->
-    <table class="table table-striped table-bordered" style="margin-top:20px;" id="tableStaff">
-=======
-<div class="container mt-4">
+    <div class="table-warpper table-v-scroll table-responsive">
 
-    @section Buttons {
-        <button type="button" id="btnSearch" class="btn btn-primary">
-            変更
-        </button>
+        <table class="table table-striped table-hover" id="tableStaff">
+            <thead class="table-dark">
+                <tr class="table-header">
+                    <th>スタッフCD</th>
+                    <th>スタッフ名</th>
+                    <th>部門名</th>
+                    <th style="text-align:center">入会日</th>
+                    <th style="text-align:center">席番号</th>
+                    <th style="text-align:center">
+                        Next <br />
+                        席番号
+                    </th>
+                    <th>Action</th>
+                </tr>
+            </thead>
 
-        <button type="submit" class="btn btn-primary">
-            追加
-        </button>
-    }
-    <!-- TABLE AREA -->
-    <table class="table table-bordered" style="margin-top:20px;" id="tableStaff">
->>>>>>> origin/main
-        <thead class="table-dark">
-            <tr>
-                <th>スタッフCD</th>
-                <th>スタッフ名</th>
-                <th>部門名</th>
-                <th>入会日</th>
-                <th>席番号</th>
-<<<<<<< HEAD
-                <th>
-                    Next
-                    席番号
-                </th>
-=======
-                <th>Next 席番号</th>
->>>>>>> origin/main
-                <th>Action</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @if (Model != null && Model.Count > 0)
-            {
-                foreach (var item in Model)
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-right"> @item.StaffCD</td>
+                            <td class="text-right">@item.StaffName</td>
+                            <td class="text-right">
+                                @item.DepartmentName
+                                <input type="hidden" class="deptCD" value="@item.DepartmentCD" />
+                            </td>
+                            <td class="text-center">
+                                @(item.JoinedDate.HasValue? item.JoinedDate.Value.ToString("yyyy/MM/dd")
+    : "")
+                            </td>
+                            <td class="text-center">@item.SeatNo</td>
+                            <td class="text-center">
+                                <input type="text" class="newSeat"
+                                       oninput="this.value = this.value.replace(/\D/g,'')"
+                                       onpaste="event.preventDefault();"
+                                       style="text-align: center;" />
+                            </td>
+                            <td>
+                                <button class="btn btn-primary" onclick="openEditPopup(this)">
+                                    変更
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td>@item.StaffCD</td>
-                        <td>@item.StaffName</td>
-<<<<<<< HEAD
-                        <td>
-                            @item.DepartmentName
-                            <input type="hidden" class="deptCD" value="@item.DepartmentCD" />
-                        </td>
-                        <td>@item.JoinedDate</td>
-                        <td>@item.SeatNo</td>
-                        <td>
-                            <input type="number" class="newSeat" style="width:50px; " />
-                        </td>
-                        <td>
-                            <button class="btn btn-primary" onclick="openEditPopup(this)">
-                                変更
-                            </button>
-=======
-                        <td>@item.DepartmentName</td>
-                        <td>@item.JoinedDate</td>
-                        <td>@item.SeatNo</td>
-
-                        <!-- ✏️ Edit Seat -->
-                        <td>
-                            <input type="number" name="newSeat"
-                                   style="width:80px; " />
-                        </td>
-
-                        <!-- Action -->
-                        <td>
-                            <a href="@Url.Action("DetailList", "Home", new { id = item.StaffCD })"
-                               class="btn btn-info btn-sm">
-                                変更
-                            </a>
->>>>>>> origin/main
+                        <td colspan="7" class="text-center text-danger">
+                            No data found
                         </td>
                     </tr>
                 }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="7" class="text-center text-danger">
-                        No data found
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
 
-<<<<<<< HEAD
-    <button type="button" class="btn btn-primary" onclick="updateSeat()">
-        修正
-    </button>
+
+    </div>
+
+    <div>
+        <button type="button"
+                class="btn btn-primary"
+                style="display:block; margin-left:auto; margin-right:23px;margin-top:8px; width:100px;"
+                onclick="updateSeat()">
+            席を変わる
+        </button>
+    </div>
+
 </div>
-
 <!--btnSearch-->
-=======
-</div>
-
->>>>>>> origin/main
-@section Scripts {
+@section scripts {
     <script>
         $(document).on("click", "#btnSearch", function () {
 
-            // Get dropdown values
             var dept = $("#department").val();
             var staff = $("#staff").val();
-
-            // Call controller
             $.ajax({
                 url: '/Staff/StaffList',
                 type: 'GET',
@@ -153,11 +105,6 @@
                     staff: staff
                 },
                 success: function (result) {
-<<<<<<< HEAD
-=======
-
-                    // Update table only (no page reload)
->>>>>>> origin/main
                     $("#tableStaff").html(
                         $(result).find("#tableStaff").html()
                     );
@@ -166,295 +113,15 @@
                     alert("Error loading data");
                 }
             });
-
         });
     </script>
-}
 
-<<<<<<< HEAD
-<!--UpdateSeat-->
-<script>
-    function updateSeat() {
-
-        let rows = document.querySelectorAll("#tableStaff tbody tr");
-
-        let dataList = [];
-
-        rows.forEach(row => {
-
-            let seatInput = row.querySelector(".newSeat");
-
-            if (seatInput && seatInput.value !== "") {
-
-                let StaffCD = row.cells[0].innerText.trim();
-                let SeatNo = seatInput.value;
-                let DepartmentCD = row.querySelector(".deptCD").value;
-
-                dataList.push({
-                    StaffCD: StaffCD,
-                    SeatNo: SeatNo,
-                    DepartmentCD: DepartmentCD
-                });
-            }
-        });
-
-        //  No data check
-        if (dataList.length === 0) {
-            alert("No seat entered");
-            return;
-        }
-
-        console.log(dataList); // debug
-
-        //  AJAX send
-        $.ajax({
-            url: '/Staff/UpdateSeat',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(dataList),
-            success: function (res) {
-                alert(res);
-                location.reload(); // refresh
-            },
-            error: function (err) {
-                alert("Error: " + err.responseText);
-            }
-        });
-    }
-</script>
-<!--Update-->
-<div class="modal fade" id="editModal" tabindex="-1">
-    <div class="modal-dialog" style="max-width:400px;">
-        <div class="modal-content">
-            <!-- Header -->
-            <div class="modal-header">
-                <div class="modal-title">スタッフ修正</div>
-            </div> <!-- Body -->
-            <div class="modal-body">
-                @using (Html.BeginForm("Update", "Staff", FormMethod.Post, new { id = "editForm" }))
-                {
-                    @Html.AntiForgeryToken()
-                    <div class="form-container">
-
-                        <div class="form-row">
-                            <label>スタッフCD</label>
-                            <input type="text" id="StaffCD" name="StaffCD" readonly style="background-color:lightgray" />
-                        </div>
-
-                        <div class="form-row">
-                            <label>スタッフ名</label>
-                            <input type="text" id="StaffName" name="StaffName" readonly />
-                        </div>
-
-                        <div class="form-row">
-                            <label>部門CD</label>
-                            @Html.DropDownList("DepartmentCD", ViewBag.Departments as SelectList)
-                            @*,
-                                new { @class = "form-control" }))*@
-                        </div>
-
-                        <div class="form-row">
-                            <label>位置</label>
-                            <input type="text" name="Position" />
-                        </div>
-
-                        <div class="form-row">
-                            <label>メール</label>
-                            <input type="text" name="Email" />
-                        </div>
-
-                        <div class="form-row">
-                            <label>電話番号</label>
-                            <input type="text" name="PhoneNo" />
-                        </div>
-
-                        <div class="form-row">
-                            <label>入会日</label>
-                            <input type="date" name="JoinedDate" />
-                        </div>
-
-                        <div class="form-row">
-                            <label>従業員の種類</label>
-                            <select name="EmployeeType">
-                                <option>Full Time</option>
-                                <option>Part Time</option>
-                            </select>
-                        </div>
-
-                        <div class="form-row">
-                            <label>登録済み</label>
-                            <div class="radio-group">
-                                <label><input type="radio" name="Enroll" value="true" checked /> Active</label>
-                                <label><input type="radio" name="Enroll" value="false" /> InActive</label>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <label>リマーク</label>
-                            <textarea name="Remark"></textarea>
-                        </div>
-
-                        <div class="form-row">
-                            <label>席番号</label>
-                            <input type="number" id="SeatNo" name="SeatNo" style="width:100px;" readonly />
-                        </div>
-
-                        <!-- Buttons -->
-                        <div class="form-actions">
-                            <button type="button" class="btn-cancel" data-dismiss="modal">取消</button>
-                            <button type="submit" class="btn-submit">修正</button>
-                        </div>
-
-                    </div>
-                }
-            </div>
-
-
-        </div>
-    </div>
-</div>
-<script>
-    function openEditPopup(btn) {
-
-        let row = btn.closest("tr");
-
-        let StaffCD = row.cells[0].innerText.trim();
-        let StaffName = row.cells[1].innerText.trim();
-        let SeatNo = row.cells[4].innerText.trim();
-
-        // ✅ set values FIRST
-        document.getElementById("StaffCD").value = StaffCD;
-        document.getElementById("StaffName").value = StaffName;
-        document.getElementById("SeatNo").value = SeatNo;
-
-        // ✅ THEN show modal
-        $('#editModal').modal('show');
-    }
-</script>
-<script>
-    $('#editForm').submit(function (e) {
-        $.ajax({
-            url: '/Staff/Update',
-            type: 'POST',
-            data: $(this).serialize(),
-            success: function (res) {
-
-                if (res.success) {
-                    alert(res.message);
-                    $('#editModal').modal('hide');
-                    location.reload();
-                } else {
-                    alert("Error: " + res.message);
-                }
-            },
-            error: function (err) {
-                alert("Error: " + err.responseText);
-            }
-        });
-    });
-</script>
-
-<!-- ADD-->
-<div class="modal fade" id="addModal" tabindex="-1">
-    <div class="modal-dialog" style="max-width:400px;">
-        <div class="modal-content">
-            <!-- Header -->
-            <div class="modal-header">
-                <div class="modal-title">スタッフ追加</div>
-            </div> <!-- Body -->
-            <div class="modal-body">
-                @using (Html.BeginForm("Create", "Staff", FormMethod.Post, new { id = "addForm" }))
-                {
-                    @Html.AntiForgeryToken()
-                    <div class="form-container">
-
-                        <div class="form-row">
-                            <label>スタッフCD</label>
-                            <input type="text" name="StaffCD" />
-                            <div class="error" id="errStaffCD"></div>
-                        </div>
-
-                        <div class="form-row">
-                            <label>スタッフ名</label>
-                            <input type="text" name="StaffName" />
-                        </div>
-
-                        <div class="form-row">
-                            <label>部門CD</label>
-                            @Html.DropDownList("DepartmentCD", ViewBag.Departments as SelectList)
-                            @*,
-                                new { @class = "form-control" }))*@
-                        </div>
-
-                        <div class="form-row">
-                            <label>位置</label>
-                            <input type="text" name="Position" />
-                        </div>
-
-                        <div class="form-row">
-                            <label>メール</label>
-                            <input type="text" name="Email" />
-                        </div>
-
-                        <div class="form-row">
-                            <label>電話番号</label>
-                            <input type="text" name="PhoneNo" />
-                        </div>
-
-                        <div class="form-row">
-                            <label>入会日</label>
-                            <input type="date" name="JoinedDate" />
-                        </div>
-
-                        <div class="form-row">
-                            <label>従業員の種類</label>
-                            <select name="EmployeeType">
-                                <option>Full Time</option>
-                                <option>Part Time</option>
-                            </select>
-                        </div>
-
-                        <div class="form-row">
-                            <label>登録済み</label>
-                            <div class="radio-group">
-                                <label><input type="radio" name="Enroll" value="true" checked /> Active</label>
-                                <label><input type="radio" name="Enroll" value="false" /> InActive</label>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <label>リマーク</label>
-                            <textarea name="Remark"></textarea>
-                        </div>
-
-                        <div class="form-row">
-                            <label>席番号</label>
-                            <input type="number" name="SeatNo" style="width:100px;" />
-                        </div>
-
-                        <!-- Buttons -->
-                        <div class="form-actions">
-                            <button type="button" class="btn-cancel" data-dismiss="modal">取消</button>
-                            <button type="submit" class="btn-submit">登録</button>
-                        </div>
-
-                    </div>
-                }
-            </div>
-
-
-        </div>
-    </div>
-</div>
-
-<script id="ajaxsave02">
-    $("#addForm").on("submit", function (e) {
-        e.preventDefault(); //
-
-        $(".error").text(""); // clear old errors
+    <!--addForm-->
+    <script id="ajaxsave02">
+        $("#addForm").on("submit", function (e) {
+            e.preventDefault();
+            $(".text-danger").text("");// clear old errors
         var enrollValue = $("input[name='Enroll']:checked").val();
-
-
         $.ajax({
             url: '@Url.Action("Create", "Staff")',
             type: 'POST',
@@ -464,30 +131,17 @@
 
                 if (res.success) {
                     alert("登録成功しました");
-
-                    // close modal
                     $("#addModal").modal('hide');
-
-                    // reload page (or refresh table)
                     location.reload();
                 }
                 else {
-                    //  show field errors
-                    if (res.field === "StaffCD") {
-                        $("#errStaffCD").text(res.message);
+                    if (res.errors) {
+                        res.errors.forEach(function (err) {
+                            var fieldName = err.field.replace("model.", "");
+                            $('#addForm #err' + fieldName).text(err.message);
+                        });
                     }
-                    else if (res.field === "StaffName") {
-                        $("#errStaffName").text(res.message);
-                    }
-                    else if (res.field === "DepartmentCD") {
-                        $("#errDepartmentCD").text(res.message);
-                    }
-                    else if (res.field === "Email") {
-                        $("#errEmail").text(res.message);
-                    }
-                    else {
-                        alert(res.message);
-                    }
+
                 }
             },
 
@@ -495,13 +149,436 @@
                 alert("エラーが発生しました");
             }
         });
-    });
+        });
+
+
+        $('#addModal .btn-cancel').on('click', function () {
+            var form = $('#addForm')[0];
+            form.reset();                // reset all form fields
+            $('.text-danger').text('');        // clear error messages
+            $('#addForm input, #addForm select, #addForm textarea').removeClass('is-invalid');
+        });
+
+    </script>
+
+    <!--editForm-->
+    <script>
+        $(document).ready(function () {
+
+            $('#editForm').submit(function (e) {
+                e.preventDefault(); //
+                $(".text-danger").text("");
+                $.ajax({
+                    url: '/Staff/Update',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (res) {
+                        if (res.success) {
+                            alert(res.message);
+                            $('#editModal').modal('hide');
+                            location.reload();
+
+                        } else {
+                            if (res.errors) {
+                                res.errors.forEach(function (err) {
+                                    $("#err" + err.field).text(err.message);
+                                });
+                            }
+
+                        }
+                    },
+                    error: function () {
+                        alert("エラーが発生しました");
+                    }
+                });
+
+            });
+
+        });
+
+
+        $('#editModal .btn-cancel').on('click', function () {
+            var form = $('#editForm')[0];
+            form.reset();                // reset all form fields
+            $('.text-danger').text('');        // clear error messages
+            $('#editForm input, #editForm select, #editForm textarea').removeClass('is-invalid');
+        });
+    </script>
+}
+
+<!--UpdateSeat-->
+<script>
+
+    function updateSeat() {
+        let rows = document.querySelectorAll("#tableStaff tbody tr");
+        let dataList = [];
+        let seatMap = {}; // {DepartmentCD: {SeatNo: StaffCD } }
+        let swaps = [];   
+
+        // Step 1: Build current seat map and collect inputs
+        rows.forEach(row => {
+            let seatInput = row.querySelector(".newSeat");
+            if (seatInput && seatInput.value !== "") {
+                let StaffCD = row.cells[0].innerText.trim();
+                let SeatNo = seatInput.value.trim();
+                let DepartmentCD = row.querySelector(".deptCD").value;
+
+                // Initialize department in seatMap
+                if (!seatMap[DepartmentCD]) seatMap[DepartmentCD] = {};
+
+                // Check for conflicts
+                if (seatMap[DepartmentCD][SeatNo]) {
+                    // Already assigned, prepare for potential swap
+                    swaps.push({
+                        StaffCD1: StaffCD,
+                        StaffCD2: seatMap[DepartmentCD][SeatNo],
+                        Seat1: SeatNo,
+                        Seat2: rows[rowIndexByStaff(DepartmentCD, seatMap[DepartmentCD][SeatNo], rows)].cells[4].innerText.trim()
+                    });
+                }
+
+                seatMap[DepartmentCD][SeatNo] = StaffCD;
+
+                dataList.push({
+                    StaffCD: StaffCD,
+                    SeatNo: SeatNo,
+                    DepartmentCD: DepartmentCD
+                });
+            }
+        });
+
+        // Step 2: Detect duplicates outside swaps
+        let duplicateFound = false;
+        Object.keys(seatMap).forEach(dept => {
+            let seats = seatMap[dept];
+            let seen = {};
+            for (let seat in seats) {
+                if (seen[seat]) {
+                    duplicateFound = true;
+                    alert(`Seat ${seat} in Department ${dept} is duplicated. Correct before submitting.`);
+                    return;
+                }
+                seen[seat] = true;
+            }
+        });
+        if (duplicateFound) return;
+
+        // Step 3: Perform swaps in table for visual feedback
+        swaps.forEach(s => {
+            let row1 = getRowByStaff(s.StaffCD1, rows);
+            let row2 = getRowByStaff(s.StaffCD2, rows);
+
+            let temp = row1.cells[4].innerText;
+            row1.cells[4].innerText = row2.cells[4].innerText;
+            row2.cells[4].innerText = temp;
+
+            // Update the newSeat input values as well
+            row1.querySelector(".newSeat").value = row1.cells[4].innerText;
+            row2.querySelector(".newSeat").value = row2.cells[4].innerText;
+        });
+
+        
+        if (dataList.length === 0) {
+            alert("No seat entered");
+            return;
+        }
+
+        $.ajax({
+            url: '/Staff/UpdateSeat',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(dataList),
+            success: function (res) {
+                alert(res);
+                location.reload(); // refresh table
+            },
+            error: function (err) {
+                alert("Error: " + err.responseText);
+            }
+        });
+
+        //  get row by StaffCD
+        function getRowByStaff(staffCD, allRows) {
+            for (let r of allRows) {
+                if (r.cells[0].innerText.trim() === staffCD) return r;
+            }
+            return null;
+        }
+
+        // : get row index by StaffCD in a department
+        function rowIndexByStaff(deptCD, staffCD, allRows) {
+            for (let i = 0; i < allRows.length; i++) {
+                let row = allRows[i];
+                if (row.querySelector(".deptCD").value === deptCD && row.cells[0].innerText.trim() === staffCD) return i;
+            }
+            return -1;
+        }
+    }
+
 </script>
+<!--Update-->
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog" style="max-width:500px;">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header">
+                <div class="modal-title">スタッフ修正</div>
+            </div> <!-- Body -->
+            <div class="modal-body">
+                <form id="editForm">
+                    @Html.AntiForgeryToken()
+                    <div class="form-container">
+
+                        <div class="form-row">
+                            <label>スタッフCD</label>
+                            <input type="text" id="StaffCD" name="StaffCD" readonly style="background-color:lightgray" required />
+                            <span class="text-danger" id="errStaffCD"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <label>スタッフ名</label>
+                            <input type="text" id="StaffName" name="StaffName" />
+                            <span class="text-danger" id="errStaffName"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <label>部門CD</label>
+                            @Html.DropDownList("DepartmentCD", ViewBag.Departments as SelectList)
+
+                            <span class="text-danger" id="errDepartmentCD"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <label>位置</label>
+                            <input type="text" name="Position" />
+                            <span class="text-danger" id="errPosition"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <label>メール</label>
+                            <input type="text" name="Email" />
+                            <span class="text-danger" id="errEmail"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <label>電話番号</label>
+                            <input type="text" name="PhoneNo" />
+                            <span class="text-danger" id="errPhoneNo"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <label>入会日</label>
+                            <input type="date" name="JoinedDate" />
+                        </div>
+
+                        <div class="form-row">
+                            <label>従業員の種類</label>
+                            <select name="EmployeeType">
+                                <option>Full Time</option>
+                                <option>Part Time</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <label>登録済み</label>
+                            <div class="radio-group">
+                                <label>  <input type="radio" name="Enroll" value="true" checked /> Active</label>
+                                <label><input type="radio" name="Enroll" value="false" /> InActive</label>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <label style="height: 55px !important;">リマーク</label>
+                            <textarea name="Remark" rows="2" style=" height: 60px !important;"></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <label>席番号</label>
+                            <input type="number" id="SeatNo" name="SeatNo" style="width:50px;background-color:lightgray" readonly />
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="form-actions">
+                            <button type="button" class="btn-cancel" data-dismiss="modal">取消</button>
+                            <button type="submit" class="btn-submit">修正</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function openEditPopup(btn) {
+
+        let row = btn.closest("tr");
+
+        document.getElementById("StaffCD").value = row.cells[0].innerText;
+        document.getElementById("StaffName").value = row.cells[1].innerText;
+        document.getElementById("SeatNo").value = row.cells[4].innerText;
+
+        $('#editModal').modal('show');
+    }
+
+</script>
+<!-- ADD-->
+<div class="modal fade" id="addModal" tabindex="-1">
+    <div class="modal-dialog" style="max-width:500px;">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header">
+                <div class="modal-title">スタッフ追加</div>
+            </div> <!-- Body -->
+            <div class="modal-body">
+                <form id="addForm">
+                    @Html.AntiForgeryToken()
+                    <div class="form-container">
+
+                        <div class="form-row">
+                            <label>スタッフCD</label>
+                            <input type="text" style="width:80px;" name="StaffCD" />
+                            <span class="text-danger" id="errStaffCD"></span>
+
+                        </div>
+                        <div class="form-row">
+                            <label>スタッフ名</label>
+                            <input type="text" name="StaffName" />
+                            <span class="text-danger" id="errStaffName"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <label>部門CD</label>
+                            @Html.DropDownList("DepartmentCD", ViewBag.Departments as SelectList)
+                            @*,
+                                new { @class = "form-control" }))*@
+                            <span class="text-danger" id="errDepartmentCD"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <label>位置</label>
+                            <input type="text" name="Position" />
+                            <span class="text-danger" id="errPosition"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <label>メール</label>
+                            <input type="text" name="Email" />
+                            <span class="text-danger" id="errEmail"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <label>電話番号</label>
+                            <input type="text" name="PhoneNo" />
+                            <span class="text-danger" id="errPhoneNo"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <label>入会日</label>
+                            <input type="date" name="JoinedDate" />
+                        </div>
+
+                        <div class="form-row">
+                            <label>従業員の種類</label>
+                            <select name="EmployeeType">
+                                <option>Full Time</option>
+                                <option>Part Time</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label>登録済み</label>
+                            <div class="radio-group">
+                                <label>  <input type="radio" name="Enroll" value="true" checked>Active</label>
+                                <label>  <input type="radio" name="Enroll" value="false">InActive</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label style=" height: 55px !important;">リマーク</label>
+                            <textarea name="Remark" rows="2" style=" height: 60px !important;"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <label>席番号</label>
+                            <input type="text" name="SeatNo" class="short-input" oninput="this.value = this.value.replace(/\D/g,'')" style="width:50px;" />
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn-cancel" data-dismiss="modal">取消</button>
+                            <button type="submit" class="btn-submit">登録</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <style>
+
+    .table-wrapper {
+        max-height: 400px; /* max height */
+        overflow-y: auto; /* vertical scroll */
+        overflow-x: auto; /* horizontal scroll if needed */
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    #tableStaff {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 13px; /* smaller font for compact look */
+    }
+
+    #tableStaff th, #tableStaff td {
+            padding: 6px 10px;
+            white-space: nowrap; /* prevent text wrap on small screens */
+        }
+
+    #tableStaff td.text-center {
+                text-align: center;
+            }
+
+     #tableStaff td.text-right {
+                text-align: left;
+            }
+
+    #tableStaff th {
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            height: 29px;
+            vertical-align: middle;
+        }
+
+    #tableStaff tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+    #tableStaff th, #tableStaff td {
+            padding: 1px 2px;
+        }
+
+    #tableStaff input.newSeat {
+            width: 40px !important;
+        }
+
+    #tableStaff td:last-child,
+    #tableStaff th:last-child {
+            width: 100px; /* adjust as needed */
+            white-space: nowrap; /* keep button on one line */
+            text-align: center;
+        }
+    #tableStaff button {
+        width: 80px;
+        font-size: 11px;
+        padding: 2px 6px;
+    }
+
     .btn-fixed {
         width: 100px;
         font-weight: bold;
-        margin-left: 10px;
+        margin-left: 15px;
     }
 
     .btn-group-custom {
@@ -509,42 +586,58 @@
     }
 
     .form-container {
-        width: 100%;
-        max-width: 320px;
+        width: 500px;
+        margin: 0 auto; /* keep center baseline */
     }
 
     .form-row {
         display: flex;
         align-items: center;
-        /*margin-bottom:0.5px;*/
+        gap: 10px;
+        margin-bottom: 6px;
     }
 
-        .form-row label {
-            width: 100px; /* fixed label width */
-            font-size: 12px;
+    .form-row > label {
+            width: 120px;
             text-align: right;
-            padding-right: 8px;
         }
 
-        .form-row input,
-        .form-row select,
-        .form-row textarea {
-            flex: 1;
-            height: 28px;
-            /*padding-right: 20px;*/
-            /*background-color: #DAF2D0;*/
-            border: 1px solid #3d4740;
+    .form-row input:not([type="radio"]),
+    .form-row select,
+    .form-row textarea {
+        height: 28px;
+        width: 170px;
+            border: 2px solid #3d4740;
             background-color: #DAF2D0;
             box-sizing: border-box;
+            border-radius: 4px;
         }
 
-    textarea {
-        height: 100px;
+    .short-input {
+        width: 50px; /* class for short input width */
+    }
+
+    .radio-group input[type="radio"] {
+        vertical-align: middle;
+        margin-top: 0;
     }
 
     .radio-group {
+        flex: 1;
         display: flex;
-        gap: 3px;
+        gap: 2px;
+        padding-left: 0;
+    }
+
+    .radio-group label {
+        width: auto;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+    }
+
+    textarea {
+        height: 100px;
     }
 
     .form-actions {
@@ -568,10 +661,9 @@
         padding: 6px 20px;
     }
 
-
     .modal-body {
         display: flex;
-        justify-content: center; /* ✅ center horizontally */
+        justify-content: center; /**/
         background-color: #DAF2D0;
     }
 
@@ -582,16 +674,18 @@
 
     .modal-title {
         font-size: 14px;
+        height: 25px;
+        align-content: center;
     }
 
-    .error {
+    .text-danger {
         color: red;
         font-size: 11px;
     }
+
+    
 </style>
 
 
-=======
->>>>>>> origin/main
 
 
