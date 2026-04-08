@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="EmployeeTrackingDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="T_Department">
+          <Key>
+            <PropertyRef Name="DepartmentCD" />
+          </Key>
+          <Property Name="DepartmentCD" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="DepartmentName" Type="varchar" MaxLength="30" />
+          <Property Name="InsertDateTime" Type="datetime" />
+          <Property Name="UpdateDateTime" Type="datetime" />
+          <Property Name="DeleteDateTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="T_Logging">
+          <Key>
+            <PropertyRef Name="SEQ" />
+          </Key>
+          <Property Name="SEQ" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DepartmentCD" Type="varchar" MaxLength="3" />
+          <Property Name="StaffCD" Type="varchar" MaxLength="5" />
+          <Property Name="Status" Type="varchar" MaxLength="10" />
+          <Property Name="StartDateTime" Type="datetime" />
+          <Property Name="ReturnDateTime" Type="datetime" />
+          <Property Name="Note" Type="nvarchar" MaxLength="200" />
+          <Property Name="InsertDateTime" Type="datetime" />
+          <Property Name="DeleteDateTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="T_Plan">
+          <Key>
+            <PropertyRef Name="PlanID" />
+          </Key>
+          <Property Name="PlanID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StaffCD" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="PlanDate" Type="datetime" Nullable="false" />
+          <Property Name="Note" Type="varchar" MaxLength="200" />
+          <Property Name="InsertDateTime" Type="datetime" />
+          <Property Name="UpdateDateTime" Type="datetime" />
+          <Property Name="DeleteDateTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="T_StaffMaster">
+          <Key>
+            <PropertyRef Name="StaffCD" />
+          </Key>
+          <Property Name="StaffCD" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="StaffName" Type="nvarchar" MaxLength="50" />
+          <Property Name="DepartmentCD" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="Position" Type="varchar" MaxLength="20" />
+          <Property Name="Email" Type="nvarchar" MaxLength="30" />
+          <Property Name="PhoneNo" Type="varchar" MaxLength="15" />
+          <Property Name="JoinedDate" Type="datetime" />
+          <Property Name="EmployeeType" Type="varchar" MaxLength="20" />
+          <Property Name="Enroll" Type="bit" Nullable="false" />
+          <Property Name="Remark" Type="nvarchar" MaxLength="200" />
+          <Property Name="Status" Type="varchar" MaxLength="10" />
+          <Property Name="StartDateTime" Type="datetime" />
+          <Property Name="ReturnDateTime" Type="datetime" />
+          <Property Name="Note" Type="nvarchar" MaxLength="200" />
+          <Property Name="SeatNo" Type="int" />
+          <Property Name="InsertDateTime" Type="datetime" />
+          <Property Name="UpdateDateTime" Type="datetime" />
+          <Property Name="DeleteDateTime" Type="datetime" />
+        </EntityType>
+        <EntityContainer Name="EmployeeTrackingDBModelStoreContainer">
+          <EntitySet Name="T_Department" EntityType="Self.T_Department" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_Logging" EntityType="Self.T_Logging" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_Plan" EntityType="Self.T_Plan" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_StaffMaster" EntityType="Self.T_StaffMaster" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EmployeeTrackingDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="T_Department">
+          <Key>
+            <PropertyRef Name="DepartmentCD" />
+          </Key>
+          <Property Name="DepartmentCD" Type="String" MaxLength="3" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DepartmentName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="InsertDateTime" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDateTime" Type="DateTime" Precision="3" />
+          <Property Name="DeleteDateTime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="T_Logging">
+          <Key>
+            <PropertyRef Name="SEQ" />
+          </Key>
+          <Property Name="SEQ" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DepartmentCD" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="StaffCD" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="StartDateTime" Type="DateTime" Precision="3" />
+          <Property Name="ReturnDateTime" Type="DateTime" Precision="3" />
+          <Property Name="Note" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="InsertDateTime" Type="DateTime" Precision="3" />
+          <Property Name="DeleteDateTime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="T_Plan">
+          <Key>
+            <PropertyRef Name="PlanID" />
+          </Key>
+          <Property Name="PlanID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StaffCD" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PlanDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Note" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="InsertDateTime" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDateTime" Type="DateTime" Precision="3" />
+          <Property Name="DeleteDateTime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="T_StaffMaster">
+          <Key>
+            <PropertyRef Name="StaffCD" />
+          </Key>
+          <Property Name="StaffCD" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="StaffName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DepartmentCD" Type="String" MaxLength="3" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Position" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="JoinedDate" Type="DateTime" Precision="3" />
+          <Property Name="EmployeeType" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Enroll" Type="Boolean" Nullable="false" />
+          <Property Name="Remark" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="StartDateTime" Type="DateTime" Precision="3" />
+          <Property Name="ReturnDateTime" Type="DateTime" Precision="3" />
+          <Property Name="Note" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="SeatNo" Type="Int32" />
+          <Property Name="InsertDateTime" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDateTime" Type="DateTime" Precision="3" />
+          <Property Name="DeleteDateTime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityContainer Name="EmployeeTrackingDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="T_Department" EntityType="Self.T_Department" />
+          <EntitySet Name="T_Logging" EntityType="Self.T_Logging" />
+          <EntitySet Name="T_Plan" EntityType="Self.T_Plan" />
+          <EntitySet Name="T_StaffMaster" EntityType="Self.T_StaffMaster" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EmployeeTrackingDBModelStoreContainer" CdmEntityContainer="EmployeeTrackingDBEntities">
+          <EntitySetMapping Name="T_Department">
+            <EntityTypeMapping TypeName="EmployeeTrackingDBModel.T_Department">
+              <MappingFragment StoreEntitySet="T_Department">
+                <ScalarProperty Name="DepartmentCD" ColumnName="DepartmentCD" />
+                <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
+                <ScalarProperty Name="InsertDateTime" ColumnName="InsertDateTime" />
+                <ScalarProperty Name="UpdateDateTime" ColumnName="UpdateDateTime" />
+                <ScalarProperty Name="DeleteDateTime" ColumnName="DeleteDateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Logging">
+            <EntityTypeMapping TypeName="EmployeeTrackingDBModel.T_Logging">
+              <MappingFragment StoreEntitySet="T_Logging">
+                <ScalarProperty Name="SEQ" ColumnName="SEQ" />
+                <ScalarProperty Name="DepartmentCD" ColumnName="DepartmentCD" />
+                <ScalarProperty Name="StaffCD" ColumnName="StaffCD" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="StartDateTime" ColumnName="StartDateTime" />
+                <ScalarProperty Name="ReturnDateTime" ColumnName="ReturnDateTime" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="InsertDateTime" ColumnName="InsertDateTime" />
+                <ScalarProperty Name="DeleteDateTime" ColumnName="DeleteDateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Plan">
+            <EntityTypeMapping TypeName="EmployeeTrackingDBModel.T_Plan">
+              <MappingFragment StoreEntitySet="T_Plan">
+                <ScalarProperty Name="PlanID" ColumnName="PlanID" />
+                <ScalarProperty Name="StaffCD" ColumnName="StaffCD" />
+                <ScalarProperty Name="PlanDate" ColumnName="PlanDate" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="InsertDateTime" ColumnName="InsertDateTime" />
+                <ScalarProperty Name="UpdateDateTime" ColumnName="UpdateDateTime" />
+                <ScalarProperty Name="DeleteDateTime" ColumnName="DeleteDateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_StaffMaster">
+            <EntityTypeMapping TypeName="EmployeeTrackingDBModel.T_StaffMaster">
+              <MappingFragment StoreEntitySet="T_StaffMaster">
+                <ScalarProperty Name="StaffCD" ColumnName="StaffCD" />
+                <ScalarProperty Name="StaffName" ColumnName="StaffName" />
+                <ScalarProperty Name="DepartmentCD" ColumnName="DepartmentCD" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="PhoneNo" ColumnName="PhoneNo" />
+                <ScalarProperty Name="JoinedDate" ColumnName="JoinedDate" />
+                <ScalarProperty Name="EmployeeType" ColumnName="EmployeeType" />
+                <ScalarProperty Name="Enroll" ColumnName="Enroll" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="StartDateTime" ColumnName="StartDateTime" />
+                <ScalarProperty Name="ReturnDateTime" ColumnName="ReturnDateTime" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="SeatNo" ColumnName="SeatNo" />
+                <ScalarProperty Name="InsertDateTime" ColumnName="InsertDateTime" />
+                <ScalarProperty Name="UpdateDateTime" ColumnName="UpdateDateTime" />
+                <ScalarProperty Name="DeleteDateTime" ColumnName="DeleteDateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="なし" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

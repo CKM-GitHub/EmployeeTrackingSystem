@@ -1,6 +1,17 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
+<style>
+    input,
+    select,
+    textarea {
+        max-width: 400px;
+    }
+    .text-end {
+        text-align: center;
+        max-width: 80px;
+    }
+</style>
 <head>
     <meta charset="utf-8" />
     <title>Board Members</title>
@@ -131,45 +142,28 @@
         <div class="modal-content">
             <form id="scheduleForm">
                 <div class="modal-header">
-                    <h5 class="modal-title">予定の登録</h5>
+                    <h5 class="modal-title">予定の登録 &nbsp;&nbsp;&nbsp; <span id="displayStaffName"></span></h5>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="modal-body">
-                    <table class="table table-bordered schedule-table">
+                <div class="modal-body table-v-scroll table-responsive" style="height:550px;">
+                    <table class="table table-bordered schedule-table" id="Plantable" >
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>Status</th>
+                                <th style="display:none">ID</th>
+                                <th>予定日</th>
+                                <th>備考</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Example rows -->
-                            <tr>
-                                <td>2026-03-24</td>
-                                <td>
-                                    <label><input type="radio" name="status_0324" value="在席" /> 在席</label>
-                                    <label><input type="radio" name="status_0324" value="休み" /> 休み</label>
-                                    <label><input type="radio" name="status_0324" value="会議" /> 会議</label>
-                                    <!-- add more as needed -->
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2026-03-25</td>
-                                <td>
-                                    <label><input type="radio" name="status_0325" value="在席" /> 在席</label>
-                                    <label><input type="radio" name="status_0325" value="休み" /> 休み</label>
-                                    <label><input type="radio" name="status_0325" value="会議" /> 会議</label>
-                                </td>
-                            </tr>
-                            <!-- repeat for each date -->
+                           
                         </tbody>
                     </table>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button type="submit" class="btn btn-primary">登録</button>
+                    <button type="button" Onclick="SavePlanData()" class="btn btn-primary">登録</button>
                 </div>
             </form>
         </div>
@@ -239,12 +233,46 @@
 
 
         $(document).on("click", ".search-icon", function () {
-            var staffId = $(this).data("id"); // make sure <img> has data-id
-            $("#scheduleForm").find("input[name='StaffId']").val(staffId);
-
+            var staffId = $(this).attr('id');
             // Show the modal
             $("#searchModal").modal("show");
+            var name = $(this).data('staffname');
+          
+            // 2. Insert the name into the span inside the modal
+            $('#displayStaffName').text(name);
+
+            $.ajax({
+                url: '@Url.Action("GetPlanData", "Home")',              
+                type: 'POST',
+                dataType: 'json',  
+                data: { id: staffId },
+                success: function (data) {
+                    var jsonData = JSON.parse(data);
+                    var rows = '';
+                    $('#Plantable tbody').empty();
+
+                    $.each(jsonData, function (i, item) {                                          
+                        rows += '<tr>'         
+                            + '<td style="display:none">' + (staffId || "") + '</td>'
+                            + '<td class="text-end">' + (formatDate(item.DateValue)|| "") + '</td>'
+                            + '<td><input type="text" value="' + (item.Note || "") + '" class="form-control" /></td>'
+                            + '</tr>';
+                    });
+
+                    $('#Plantable tbody').append(rows);
+                }
+            });
         });
+
+        function formatDate(dateString) {
+            var date = new Date(dateString);
+            var day = ("0" + date.getDate()).slice(-2);
+            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+            var year = date.getFullYear();
+            return year+'年'+ month + '月' + day + '日';
+           // return year + "/" + month + "/" + day;
+        }
+
         $("#scheduleForm").on("submit", function (e) {
             e.preventDefault();
             $.ajax({
@@ -306,6 +334,36 @@
                 $("#Note-visit").prop("required", true);
             }
         });
+
+        function SavePlanData() {
+
+            var list = [];
+
+            $('#Plantable tbody tr').each(function () {
+                var staffid = $(this).find('td:eq(0)').text(); 
+                var date = $(this).find('td:eq(1)').text();   // Date column
+                var note = $(this).find('input').val();       // Input value
+
+                list.push({
+                    StaffCD: staffid,
+                    PlanDate: date,
+                    Note: note
+                });
+            });
+
+            console.log(list); // check data
+
+            // send to server
+            $.ajax({
+                url: '/Home/SavePlanData',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(list),
+                success: function (res) {
+                    alert('登録しました。');
+                }
+            });
+        }
 
     </script>
 }

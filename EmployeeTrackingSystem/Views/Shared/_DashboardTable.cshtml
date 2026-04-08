@@ -51,7 +51,11 @@
                                        data-date="@(string.IsNullOrEmpty(member.ReturnDatetime1) ? "" : member.ReturnDatetime1.Substring(0, 10))"
                                        data-note="@(member.Note1 ?? "")">
                                         @member.StaffName1
-                                        <img src="~/Content/search.png" class="search-icon" />
+                                    </a>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<img src="~/Content/search.png" class="search-icon" id="@member.StaffCD1" 
+                                                                     data-staffname="@member.StaffName1" 
+                                                                    />
+                                        
                                 </td>
                             </tr>
                             <tr>
@@ -77,7 +81,9 @@
                                    data-target="#staffModal"
                                    data-id="@member.StaffCD2">
                                     @member.StaffName2
-                                    <img src="~/Content/search.png" class="search-icon" />
+                                </a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<img src="~/Content/search.png" class="search-icon" id="@member.StaffCD2"
+                                                             data-staffname="@member.StaffName2" />
                             </td>
                         </tr>
                         <tr>

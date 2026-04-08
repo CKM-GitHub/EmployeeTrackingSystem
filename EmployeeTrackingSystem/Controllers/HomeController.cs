@@ -14,7 +14,7 @@ namespace EmployeeTrackingSystem.Controllers
     public class HomeController : Controller
     {
         public string conStr = ConfigurationManager.ConnectionStrings["SQLConnection"].ConnectionString;
-
+        private EmployeeTrackingDBEntities db = new EmployeeTrackingDBEntities();
         public ActionResult Dashboard()
         {
             //var members = new List<DashboardViewModel>
@@ -96,6 +96,34 @@ namespace EmployeeTrackingSystem.Controllers
             return Json(new { success = true });
         }
 
+        [HttpPost]
+        public JsonResult GetPlanData(string id)
+        {
+            try
+            {
+                // Create SQL parameters to match your Stored Procedure
+                
+
+                DataTable dt = new DataTable();
+                var newCon = new SqlConnection(conStr);              
+                var staffCDPara = new SqlParameter("@StaffCD", id ?? (object)DBNull.Value);
+                using (var adapt = new SqlDataAdapter("Select_Plan_Data", newCon))
+                {
+                    newCon.Open();
+                    adapt.SelectCommand.CommandType = CommandType.StoredProcedure;
+                    if (staffCDPara != null)
+                        adapt.SelectCommand.Parameters.Add(staffCDPara);
+                    adapt.Fill(dt);
+                    newCon.Close();
+                }                
+                return Json(JsonConvert.SerializeObject(dt), JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public ActionResult StaffList()
         {
             ViewBag.Message = "Your application description page.";
@@ -108,6 +136,44 @@ namespace EmployeeTrackingSystem.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        [HttpPost]
+        public JsonResult SavePlanData(List<PlanViewModel> list)
+        {
+            foreach (var item in list)
+            {
+                var existingRecord = db.T_Plan.FirstOrDefault(p => p.PlanDate == item.PlanDate && p.StaffCD == item.StaffCD);
+                if (existingRecord != null)
+                {
+                    if (string.IsNullOrEmpty(item.Note))
+                    {
+                        db.T_Plan.Remove(existingRecord);
+                    }
+                    else
+                    {
+                        // UPDATE: Record exists, just change the remark
+                        existingRecord.Note = item.Note;
+                        existingRecord.UpdateDateTime = DateTime.Now;
+                    }
+                }
+
+                else if (item.Note != null)
+                {
+                    // Example: save to DB
+                    db.T_Plan.Add(new T_Plan
+                    {
+                        StaffCD = item.StaffCD,
+                        PlanDate = item.PlanDate,
+                        Note = item.Note,
+                        InsertDateTime = DateTime.Now
+                    });
+                }
+            }
+            db.SaveChanges();
+
+
+            return Json(new { success = true });
         }
     }
 }
