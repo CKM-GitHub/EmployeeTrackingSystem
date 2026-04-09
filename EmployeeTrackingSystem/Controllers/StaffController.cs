@@ -36,7 +36,7 @@ namespace EmployeeTrackingSystem.Controllers
                              }).ToList();
 
             //  Filter Department
-            if (!string.IsNullOrEmpty(department) && department != "All")
+            if (!string.IsNullOrEmpty(department) )
             {
                 staffList = staffList
                     .Where(x => x.DepartmentCD == department)
@@ -44,7 +44,7 @@ namespace EmployeeTrackingSystem.Controllers
             }
 
             //  Filter Staff
-            if (!string.IsNullOrEmpty(staff) && staff != "All")
+            if (!string.IsNullOrEmpty(staff))
             {
                 staffList = staffList
                     .Where(x => x.StaffCD == staff)
@@ -145,7 +145,7 @@ namespace EmployeeTrackingSystem.Controllers
         {
             ModelState.Remove("StaffCD");
             ModelState.Remove("StaffName");
-
+            ModelState.Remove("DepartmentCD");
 
 
             if (!ModelState.IsValid)
@@ -172,8 +172,10 @@ namespace EmployeeTrackingSystem.Controllers
                 if (model.StaffName != null)
                     staff.StaffName = model.StaffName;
 
-                if (model.DepartmentCD != null )
+                if (model.DepartmentCD != null)
                     staff.DepartmentCD = model.DepartmentCD;
+
+               
 
                 if (!string.IsNullOrEmpty(model.Position))
                     staff.Position = model.Position;

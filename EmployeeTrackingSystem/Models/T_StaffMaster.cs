@@ -7,7 +7,7 @@ namespace EmployeeTrackingSystem.Models
     public partial class T_StaffMaster
     {
         [Required(ErrorMessage = "スタッフCDは必須です")]
-        [StringLength(5, MinimumLength = 3, ErrorMessage = "Staff Code must be between 3 and 5 characters")]
+        [StringLength(5, MinimumLength = 1, ErrorMessage = "Staff Code must be between 1 and 5 characters")]
         public string StaffCD { get; set; }
 
         [Required(ErrorMessage = "スタッフ名は必須です")]

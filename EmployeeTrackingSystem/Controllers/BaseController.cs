@@ -14,13 +14,14 @@ namespace EmployeeTrackingSystem.Controllers
         protected void LoadDropdowns()
         {
             var departments = db.T_Department
+                 .Where(d => d.DeleteDateTime == null)
                 .Select(d => new
                 {
                     Value = d.DepartmentCD,
                     Text = d.DepartmentName
                 }).ToList();
 
-            departments.Insert(0, new { Value = "All", Text = "All" });
+            departments.Insert(0, new { Value = "", Text = "" });
 
             ViewBag.Departments = new SelectList(departments, "Value", "Text");
 
@@ -31,7 +32,7 @@ namespace EmployeeTrackingSystem.Controllers
                     Text = s.StaffName
                 }).ToList();
 
-            staffs.Insert(0, new { Value = "All", Text = "All" });
+            staffs.Insert(0, new { Value = "", Text = "" });
 
             ViewBag.StaffNames = new SelectList(staffs, "Value", "Text");
         }
