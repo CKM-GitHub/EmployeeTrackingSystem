@@ -17,30 +17,31 @@ namespace EmployeeTrackingSystem.Controllers
         private EmployeeTrackingDBEntities db = new EmployeeTrackingDBEntities();
         public ActionResult Dashboard()
         {
-            //var members = new List<DashboardViewModel>
-            //{
-            //    new DashboardViewModel { Role = "社長 (President)", Name = "高間さん (Mr. Takama)" },
-            //    new DashboardViewModel { Role = "取締役 (Director)", Name = "林宏一さん (Mr. Koichi Hayashi)" },
-            //    new DashboardViewModel { Role = "Name", Name = "Example Member" }
-            //};
-
-            //return View(members);
-                                                                    
-            // Example pseudo-code
             string json1 = Get_DashboardInformation(2, "D01");
             List<DashboardViewModel> table1 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json1);
             string json2 = Get_DashboardInformation(5, "D02");
             List<DashboardViewModel> table2 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json2);
             string json3 = Get_DashboardInformation(2, "D03");
             List<DashboardViewModel> table3 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json3);
-            string json4 = Get_DashboardInformation(5, "D04");
+            string json4 = Get_DashboardInformation(2, "D04");
             List<DashboardViewModel> table4 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json4);
-            string json5 = Get_DashboardInformation(2, "D05");
+            string json5 = Get_DashboardInformation(3, "D05");
             List<DashboardViewModel> table5 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json5);
-            string json6 = Get_DashboardInformation(5, "D06");
+            string json6 = Get_DashboardInformation(2, "D06");
             List<DashboardViewModel> table6 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json6);
-            string json7 = Get_DashboardInformation(6, "D07");
+            string json7 = Get_DashboardInformation(5, "D07");
             List<DashboardViewModel> table7 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json7);
+            string json8 = Get_DashboardInformation(5, "D08");
+            List<DashboardViewModel> table8 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json8);
+
+            string json_shop1 = Get_DashboardInformation(2, "S01");
+            List<DashboardViewModel> tableshop1 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json_shop1);
+
+            string json_shop2 = Get_DashboardInformation(2, "S02");
+            List<DashboardViewModel> tableshop2 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json_shop2);
+
+            string json_shop3 = Get_DashboardInformation(2, "S03");
+            List<DashboardViewModel> tableshop3 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json_shop3);
 
             var model = new DashboardTablesViewModel
             {
@@ -50,9 +51,13 @@ namespace EmployeeTrackingSystem.Controllers
                 Table4 = table4,
                 Table5 = table5,
                 Table6 = table6,
-                Table7 = table7
-            };
+                Table7 = table7,
+                Table8 = table8,
 
+                Table9 = tableshop1,
+                Table10 = tableshop2,
+                Table11 = tableshop3
+            };
 
             return View(model);
         }
@@ -82,28 +87,89 @@ namespace EmployeeTrackingSystem.Controllers
             return dt;
         }
         [HttpPost]
-        public ActionResult SaveStaff(string StaffCd, string Status, string ReturnDateTime, string Note)
+        public ActionResult SaveStaff(string DepartmentCD, string StaffCd, string Status, string ReturnDateTime, string Note)
         {
             var staffRecord = new DashboardViewModel
             {
+                DepartmentCD = DepartmentCD,
                 StaffCD1 = StaffCd,
                 Status1 = Status,
                 ReturnDatetime1 = ReturnDateTime,
                 Note1 = Note
             };
-           
+            Boolean insertflag = true;
+            if (!string.IsNullOrEmpty(Status))
+            {
+                insertflag = Dashobard_StaffName_Click_Save(staffRecord);
+                if (insertflag)
+                {
+                    TempData["Message"] = "Update Successfully!!";
+                }
+                else
+                {
+                    TempData["Message"] = "Update Failed!!";
+                }
+            }
+            else
+            {
+                insertflag = false;
+                TempData["Message"] = "Plz choose at least one status to update!!";
+            }
+            return Json(new { success = insertflag, message = TempData["Message"] });
+        }
+        public Boolean Dashobard_StaffName_Click_Save(DashboardViewModel model)
+        {
+            try
+            {
+                DataTable dtinfo = new DataTable();
+                SqlParameter[] prms = new SqlParameter[5];
 
-            return Json(new { success = true });
+
+
+                prms[0] = new SqlParameter("@DepartmentCD", SqlDbType.VarChar) { Value = model.DepartmentCD };
+                prms[1] = new SqlParameter("@StaffCD", SqlDbType.VarChar) { Value = model.StaffCD1 };
+
+                if (!String.IsNullOrWhiteSpace(model.Status1))
+                    prms[2] = new SqlParameter("@Status", SqlDbType.NVarChar) { Value = model.Status1 };
+                else
+                    prms[2] = new SqlParameter("@Status", SqlDbType.NVarChar) { Value = DBNull.Value };
+
+                if (!String.IsNullOrWhiteSpace(model.ReturnDatetime1))
+                    prms[3] = new SqlParameter("@ReturnDatetime", SqlDbType.VarChar) { Value = model.ReturnDatetime1 };
+                else
+                    prms[3] = new SqlParameter("@ReturnDatetime", SqlDbType.VarChar) { Value = DBNull.Value };
+
+                if (!String.IsNullOrWhiteSpace(model.Note1))
+                    prms[4] = new SqlParameter("@Note", SqlDbType.NVarChar) { Value = model.Note1 };
+                else
+                    prms[4] = new SqlParameter("@Note", SqlDbType.NVarChar) { Value = DBNull.Value };
+
+
+
+                InsertUpdateDeleteData("Dashobard_StaffName_Insert", prms);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
+        public void InsertUpdateDeleteData(string sSQL, params SqlParameter[] para)
+        {
+            var newCon = new SqlConnection(conStr);
+            SqlCommand cmd = new SqlCommand(sSQL, newCon);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddRange(para);
+            cmd.Connection.Open();
+            cmd.ExecuteNonQuery();
+            cmd.Connection.Close();
+        }
         [HttpPost]
         public JsonResult GetPlanData(string id)
         {
             try
             {
-                // Create SQL parameters to match your Stored Procedure
-                
-
                 DataTable dt = new DataTable();
                 var newCon = new SqlConnection(conStr);              
                 var staffCDPara = new SqlParameter("@StaffCD", id ?? (object)DBNull.Value);

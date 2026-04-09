@@ -304,6 +304,7 @@
     <Content Include="Views\Home\Dashboard.cshtml" />
     <Content Include="Views\Shared\_DashboardTable.cshtml" />
     <Content Include="Views\Shared\_DashboardTable5Col.cshtml" />
+    <Content Include="Views\Shared\_DashboardTable3Col.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

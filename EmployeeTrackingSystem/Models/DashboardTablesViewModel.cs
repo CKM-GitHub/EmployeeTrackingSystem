@@ -14,5 +14,9 @@ namespace EmployeeTrackingSystem.Models
         public IEnumerable<DashboardViewModel> Table5 { get; set; }
         public IEnumerable<DashboardViewModel> Table6 { get; set; }
         public IEnumerable<DashboardViewModel> Table7 { get; set; }
+        public IEnumerable<DashboardViewModel> Table8 { get; set; }
+        public IEnumerable<DashboardViewModel> Table9 { get; set; }
+        public IEnumerable<DashboardViewModel> Table10 { get; set; }
+        public IEnumerable<DashboardViewModel> Table11 { get; set; }
     }
 }

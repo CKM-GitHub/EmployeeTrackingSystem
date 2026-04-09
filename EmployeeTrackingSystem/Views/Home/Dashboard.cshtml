@@ -1,17 +1,6 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
-<style>
-    input,
-    select,
-    textarea {
-        max-width: 400px;
-    }
-    .text-end {
-        text-align: center;
-        max-width: 80px;
-    }
-</style>
 <head>
     <meta charset="utf-8" />
     <title>Board Members</title>
@@ -19,16 +8,13 @@
     <link rel="stylesheet" href="~/Content/dashboard.css" />
 </head>
 <div class="container-fluid py-3 custom-margin-top">
-    <!-- Header row -->
     <div class="row align-items-center mb-3">
-        <!-- Title -->
         <div class="col-md-4 col-sm-12">
             <div class="main-title-bar text-center text-md-start">
                 今の出席状況概要
             </div>
         </div>
 
-        <!-- Legend -->
         <div class="col-md-8 col-sm-12">
             <div class="d-flex flex-wrap gap-3 justify-content-md-end justify-content-center">
                 <span><span class="status-icon status-in"></span> 在席</span>
@@ -46,23 +32,34 @@
         <div class="row">
             <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table1)</div>
             <div class="col-md-8 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table2)</div>
+            <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table9)</div>
         </div>
         <div class="row">
             <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table3)</div>
-            <div class="col-md-8 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table4)</div>
+            <div class="col-md-8 col-sm-12">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        @Html.Partial("_DashboardTable", Model.Table4)
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        @Html.Partial("_DashboardTable3Col", Model.Table5)
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table10)</div>
         </div>
         <div class="row">
-            <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table5)</div>
-            <div class="col-md-8 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table6)</div>
-        </div>
-        <div class="row">
+            <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table6)</div>
             <div class="col-md-8 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table7)</div>
+            <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table11)</div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table8)</div>
         </div>
     </div>
-
-
-
 </div>
+
+
 
 @*staffname click popup*@
 <div class="modal fade" id="staffModal" tabindex="-1" role="dialog">
@@ -70,6 +67,7 @@
         <div class="modal-content">
             <form id="staffForm">
                 <input type="hidden" id="StaffCd" name="StaffCd" />
+                <input type="hidden" id="DepartmentCd" name="DepartmentCd" />
                 <div class="modal-header">
                     <h5 class="modal-title">Data入力</h5>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -134,7 +132,6 @@
         </div>
     </div>
 </div>
-
 @*searchicon click popup*@
 <div class="modal fade" id="searchModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -147,7 +144,7 @@
                 </div>
 
                 <div class="modal-body table-v-scroll table-responsive" style="height:550px;">
-                    <table class="table table-bordered schedule-table" id="Plantable" >
+                    <table class="table table-bordered schedule-table" id="Plantable">
                         <thead>
                             <tr>
                                 <th style="display:none">ID</th>
@@ -156,7 +153,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                           
                         </tbody>
                     </table>
                 </div>
@@ -176,21 +172,43 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script>
         $(document).on("click", ".staff-link", function () {
-            $("#StaffCd").val($(this).data("id")); // staffcd from link
-            //// Optionally pre-fill status/date/note if editing
-            //// Example: pre-fill ReturnDate if available
-            //var returnDate = $(this).data("returndate");
-            //if (returnDate) {
-            //    $('#ReturnDate-out').data("DateTimePicker").date(moment(returnDate));
-            //}
+            $("#StaffCd").val($(this).data("sid")); // staffcd from link
+            $("#DepartmentCd").val($(this).data("did")); // DepartmentCD from link
         });
+
+        // When staffModal is shown, initialize the datetimepicker
+        $('#staffModal').on('shown.bs.modal', function () {
+            $('#datetimepicker-out').datetimepicker({
+                format: 'YYYY/MM/DD HH:mm:ss',
+                showClear: true,
+                showClose: true,
+                widgetParent: '#staffModal',
+                minDate: moment().startOf('day'), // disable all dates before today
+                widgetPositioning: {
+                    horizontal: 'left',
+                    vertical: 'bottom'
+                }
+            });
+            $('#datetimepicker-meeting').datetimepicker({
+                format: 'YYYY/MM/DD HH:mm:ss',
+                showClear: true,
+                showClose: true,
+                widgetParent: '#staffModal',
+                minDate: moment().startOf('day') // disable all dates before today
+            });
+            $('#datetimepicker-visit').datetimepicker({
+                format: 'YYYY/MM/DD HH:mm:ss',
+                showClear: true,
+                showClose: true,
+                widgetParent: '#staffModal',
+                minDate: moment().startOf('day') // disable all dates before today
+            });
+        });
+       
         $("#staffForm").on("submit", function (e) {
             e.preventDefault();
 
-            // Get selected status
             var status = $("input[name='Status']:checked").val();
-
-            // Pick the right date/note field based on status
             var returnDateTime = null;
             var note = null;
 
@@ -206,12 +224,13 @@
                 returnDateTime = $("input[name='ReturnDateTime-visit']").val();
                 note = $("#Note-visit").val();
             }
-            // StaffCd from hidden field or link
-            var staffCd = $("#StaffCd").val();
 
-            // Build payload
+            var staffCD = $("#StaffCd").val();
+            var departmentCD = $("#DepartmentCd").val();
+
             var payload = {
-                StaffCd: staffCd,
+                DepartmentCD: departmentCD,
+                StaffCd: staffCD,
                 Status: status,
                 ReturnDateTime: returnDateTime,
                 Note: note
@@ -221,38 +240,60 @@
                 url: '/Home/SaveStaff',
                 type: 'POST',
                 data: payload,
-                success: function () {
+                success: function (response) {
+                    alert(response.message);
                     $("#staffModal").modal("hide");
                     location.reload();
                 },
                 error: function () {
-                    alert("Error saving staff info.");
+                    alert("An error occurred while saving.");
                 }
             });
         });
 
+        $(document).on("change", "input[name='Status']", function () {
+
+            // Clear all required attributes first
+            $("#staffModal .status-option input[type='text']").prop("required", false);
+
+            // Add required attributes based on selected radio
+            var selected = $(this).val();
+
+            if (selected === "外出") {
+                $("input[name='ReturnDateTime-out']").prop("required", true);
+                $("#Note-out").prop("required", true);
+            } else if (selected === "会議") {
+                $("input[name='ReturnDateTime-meeting']").prop("required", true);
+                $("#Note-meeting").prop("required", true);
+            } else if (selected === "休み") {
+                $("#Note-leave").prop("required", true);
+            } else if (selected === "直行") {
+                $("input[name='ReturnDateTime-visit']").prop("required", true);
+                $("#Note-visit").prop("required", true);
+            }
+        });
 
         $(document).on("click", ".search-icon", function () {
             var staffId = $(this).attr('id');
             // Show the modal
             $("#searchModal").modal("show");
             var name = $(this).data('staffname');
-          
+
             // 2. Insert the name into the span inside the modal
             $('#displayStaffName').text(name);
 
             $.ajax({
-                url: '@Url.Action("GetPlanData", "Home")',              
+                url: '@Url.Action("GetPlanData", "Home")',
                 type: 'POST',
-                dataType: 'json',  
+                dataType: 'json',
                 data: { id: staffId },
                 success: function (data) {
                     var jsonData = JSON.parse(data);
                     var rows = '';
                     $('#Plantable tbody').empty();
 
-                    $.each(jsonData, function (i, item) {                                          
-                        rows += '<tr>'         
+                    $.each(jsonData, function (i, item) {
+                        rows += '<tr>'
                             + '<td style="display:none">' + (staffId || "") + '</td>'
                             + '<td class="text-end">' + (formatDate(item.DateValue)|| "") + '</td>'
                             + '<td><input type="text" value="' + (item.Note || "") + '" class="form-control" /></td>'
@@ -285,62 +326,13 @@
                 }
             });
         });
-
- 
-
-        // When staffModal is shown, initialize the datetimepicker
-        $('#staffModal').on('shown.bs.modal', function () {
-            $('#datetimepicker-out').datetimepicker({
-                format: 'YYYY/MM/DD HH:mm:ss',
-                showClear: true,
-                showClose: true,
-                widgetParent: '#staffModal',
-                minDate: moment().startOf('day') // disable all dates before today
-            });
-            $('#datetimepicker-meeting').datetimepicker({
-                format: 'YYYY/MM/DD HH:mm:ss',
-                showClear: true,
-                showClose: true,
-                widgetParent: '#staffModal',
-                minDate: moment().startOf('day') // disable all dates before today
-            });
-            $('#datetimepicker-visit').datetimepicker({
-                format: 'YYYY/MM/DD HH:mm:ss',
-                showClear: true,
-                showClose: true,
-                widgetParent: '#staffModal',
-                minDate: moment().startOf('day') // disable all dates before today
-            });
-        });
-
-        $(document).on("change", "input[name='Status']", function () {
-            
-            // Clear all required attributes first
-            $("#staffModal .status-option input[type='text']").prop("required", false);
-
-            // Add required attributes based on selected radio
-            var selected = $(this).val();
-            
-            if (selected === "外出") {
-                $("input[name='ReturnDateTime-out']").prop("required", true);
-                $("#Note-out").prop("required", true);
-            } else if (selected === "会議") {
-                $("input[name='ReturnDateTime-meeting']").prop("required", true);
-                $("#Note-meeting").prop("required", true);
-            } else if (selected === "休み") {
-                $("#Note-leave").prop("required", true);
-            } else if (selected === "直行") {
-                $("input[name='ReturnDateTime-visit']").prop("required", true);
-                $("#Note-visit").prop("required", true);
-            }
-        });
-
+       
         function SavePlanData() {
 
             var list = [];
 
             $('#Plantable tbody tr').each(function () {
-                var staffid = $(this).find('td:eq(0)').text(); 
+                var staffid = $(this).find('td:eq(0)').text();
                 var date = $(this).find('td:eq(1)').text();   // Date column
                 var note = $(this).find('input').val();       // Input value
 
