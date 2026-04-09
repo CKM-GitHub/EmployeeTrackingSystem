@@ -1,8 +1,7 @@
-﻿@model List<EmployeeTrackingSystem.Models.staffViewModel.StaffViewModel>
+﻿@using EmployeeTrackingSystem.Models
+@model List<staffViewModel>
 
-@{
-    ViewBag.Title = "Staff List";
-}
+@{ ViewBag.Title = "Staff List"; }
 <div class="container mt-2">
 
     @section Buttons {
@@ -46,6 +45,12 @@
                             <td class="text-right">
                                 @item.DepartmentName
                                 <input type="hidden" class="deptCD" value="@item.DepartmentCD" />
+                                <input type="hidden" class="position" value="@item.Position" />
+                                <input type="hidden" class="email" value="@item.Email" />
+                                <input type="hidden" class="phoneNo" value="@item.PhoneNo" />
+                                <input type="hidden" class="remark" value="@item.Remark" />
+                                <input type="hidden" class="employeetype" value="@item.EmployeeType" />
+                                <input type="hidden" class="enroll" value="@item.Enroll.ToString().ToLower()" />
                             </td>
                             <td class="text-center">
                                 @(item.JoinedDate.HasValue? item.JoinedDate.Value.ToString("yyyy/MM/dd")
@@ -58,8 +63,9 @@
                                        onpaste="event.preventDefault();"
                                        style="text-align: center;" />
                             </td>
+
                             <td>
-                                <button class="btn btn-primary" onclick="openEditPopup(this)">
+                                <button class="btn btn-primary">
                                     変更
                                 </button>
                             </td>
@@ -81,160 +87,201 @@
     </div>
 
     <div>
-        <button type="button"
+        <button type="button" id="btnUpdateSeat"
                 class="btn btn-primary"
-                style="display:block; margin-left:auto; margin-right:23px;margin-top:8px; width:100px;"
-                onclick="updateSeat()">
+                style="display:block; margin-left:auto; margin-right:23px;margin-top:8px; width:100px;">
             席を変わる
         </button>
     </div>
 
 </div>
-<!--btnSearch-->
+
 @section scripts {
     <script>
-        $(document).on("click", "#btnSearch", function () {
+$(document).ready(function () {
 
-            var dept = $("#department").val();
-            var staff = $("#staff").val();
+
+    // =====================
+    // StaffCD ENTER CHECK (Add Form)
+    // =====================
+    $(document).on("keydown", "#addForm input[name='StaffCD']", function (e) {
+
+        if (e.key === "Enter") {
+            e.preventDefault();
+
+            let staffCD = $(this).val().trim();
+            $("#addForm #errStaffCD").text("");
+
+            //  Required check
+            if (staffCD === "") {
+                $("#addForm #errStaffCD").text("このスタッフCDは");
+                return;
+            }
+
+            //  Duplicate check
             $.ajax({
-                url: '/Staff/StaffList',
+                url: '/Staff/CheckStaffCD',
                 type: 'GET',
-                data: {
-                    department: dept,
-                    staff: staff
-                },
-                success: function (result) {
-                    $("#tableStaff").html(
-                        $(result).find("#tableStaff").html()
-                    );
+                data: { staffCD: staffCD },
+                success: function (res) {
+                    if (res.exists) {
+                        $("#addForm #errStaffCD").text("このスタッフCDは既に存在します");
+                    } else {
+                        // move to next field
+                        $("#addForm input[name='StaffName']").focus();
+                    }
                 },
                 error: function () {
-                    alert("Error loading data");
+                    //alert("Error checking StaffCD");
                 }
             });
-        });
-    </script>
+        }
+    });
 
-    <!--addForm-->
-    <script id="ajaxsave02">
-        $("#addForm").on("submit", function (e) {
-            e.preventDefault();
-            $(".text-danger").text("");// clear old errors
-        var enrollValue = $("input[name='Enroll']:checked").val();
+    // =====================
+    // SEARCH
+    // =====================
+    $(document).on("click", "#btnSearch", function () {
+        var dept = $("#department").val();
+        var staff = $("#staff").val();
+
+        $.ajax({
+            url: '/Staff/StaffList',
+            type: 'GET',
+            data: { department: dept, staff: staff },
+            success: function (result) {
+                $("#tableStaff tbody").html($(result).find("#tableStaff tbody").html());
+            },
+            error: function () {
+               // alert("Error loading data");
+            }
+        });
+    });
+
+    // =====================
+    // ADD FORM
+    // =====================
+    $(document).on("submit", "#addForm", function (e) {
+        e.preventDefault();
+        $(".text-danger").text("");
+
         $.ajax({
             url: '@Url.Action("Create", "Staff")',
             type: 'POST',
             data: $(this).serialize(),
-
             success: function (res) {
-
                 if (res.success) {
                     alert("登録成功しました");
                     $("#addModal").modal('hide');
                     location.reload();
-                }
-                else {
-                    if (res.errors) {
-                        res.errors.forEach(function (err) {
-                            var fieldName = err.field.replace("model.", "");
-                            $('#addForm #err' + fieldName).text(err.message);
-                        });
-                    }
-
+                } else if (res.errors) {
+                    res.errors.forEach(function (err) {
+                        var fieldName = err.field.replace("model.", "");
+                        $('#addForm #err' + fieldName).text(err.message);
+                    });
                 }
             },
+            error: function () {
+               // alert("エラーが発生しました");
+            }
+        });
+    });
 
+    // Add modal cancel
+    $(document).on("click", "#addModal .btn-cancel", function () {
+        $('#addForm')[0].reset();
+        $('.text-danger').text('');
+    });
+
+    // =====================
+    // OPEN EDIT MODAL
+    // =====================
+    $(document).on("click", "#tableStaff tbody .btn-primary", function () {
+
+        let row = $(this).closest("tr");
+
+        $("#StaffCD").val(row.find("td").eq(0).text().trim());
+        $("#StaffName").val(row.find("td").eq(1).text().trim());
+        $("#DepartmentCD").val(row.find(".deptCD").val());
+        $("#Position").val(row.find(".position").val());
+        $("#Email").val(row.find(".email").val());
+        $("#PhoneNo").val(row.find(".phoneNo").val());
+        $("#Remark").val(row.find(".remark").val());
+        $("#EmployeeType").val(row.find(".employeetype").val());
+
+        let joinedText = row.find("td").eq(3).text().trim();
+        $("#JoinedDate").val(joinedText ? joinedText.replace(/\//g, "-") : "");
+
+        $("#SeatNo").val(row.find("td").eq(4).text().trim());
+
+        let enrollVal = row.find(".enroll").val();
+        $("#editModal input[name='Enroll'][value='" + enrollVal + "']").prop("checked", true);
+
+        $('#editModal').modal('show');
+
+        setTimeout(() => $("#StaffName").focus(), 300);
+    });
+
+    // =====================
+    // EDIT FORM
+    // =====================
+    $(document).on("submit", "#editForm", function (e) {
+        e.preventDefault();
+        $(".text-danger").text("");
+
+        $.ajax({
+            url: '/Staff/Update',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function (res) {
+                if (res.success) {
+                    alert(res.message);
+                    $('#editModal').modal('hide');
+                    location.reload();
+                } else if (res.errors) {
+                    res.errors.forEach(function (err) {
+                        $("#err" + err.field).text(err.message);
+                    });
+                }
+            },
             error: function () {
                 alert("エラーが発生しました");
             }
         });
-        });
+    });
 
+    // Edit modal cancel
+    $(document).on("click", "#editModal .btn-cancel", function () {
+        $('#editForm')[0].reset();
+        $('.text-danger').text('');
+    });
 
-        $('#addModal .btn-cancel').on('click', function () {
-            var form = $('#addForm')[0];
-            form.reset();                // reset all form fields
-            $('.text-danger').text('');        // clear error messages
-            $('#addForm input, #addForm select, #addForm textarea').removeClass('is-invalid');
-        });
+    // =====================
+    // UPDATE SEAT
+    // =====================
+    $(document).on("click", "#btnUpdateSeat", function () {
 
-    </script>
-
-    <!--editForm-->
-    <script>
-        $(document).ready(function () {
-
-            $('#editForm').submit(function (e) {
-                e.preventDefault(); //
-                $(".text-danger").text("");
-                $.ajax({
-                    url: '/Staff/Update',
-                    type: 'POST',
-                    data: $(this).serialize(),
-                    success: function (res) {
-                        if (res.success) {
-                            alert(res.message);
-                            $('#editModal').modal('hide');
-                            location.reload();
-
-                        } else {
-                            if (res.errors) {
-                                res.errors.forEach(function (err) {
-                                    $("#err" + err.field).text(err.message);
-                                });
-                            }
-
-                        }
-                    },
-                    error: function () {
-                        alert("エラーが発生しました");
-                    }
-                });
-
-            });
-
-        });
-
-
-        $('#editModal .btn-cancel').on('click', function () {
-            var form = $('#editForm')[0];
-            form.reset();                // reset all form fields
-            $('.text-danger').text('');        // clear error messages
-            $('#editForm input, #editForm select, #editForm textarea').removeClass('is-invalid');
-        });
-    </script>
-}
-
-<!--UpdateSeat-->
-<script>
-
-    function updateSeat() {
-        let rows = document.querySelectorAll("#tableStaff tbody tr");
+        let rows = $("#tableStaff tbody tr");
         let dataList = [];
-        let seatMap = {}; // {DepartmentCD: {SeatNo: StaffCD } }
-        let swaps = [];   
+        let seatMap = {};
+        let duplicateFound = false;
 
-        // Step 1: Build current seat map and collect inputs
-        rows.forEach(row => {
-            let seatInput = row.querySelector(".newSeat");
-            if (seatInput && seatInput.value !== "") {
-                let StaffCD = row.cells[0].innerText.trim();
-                let SeatNo = seatInput.value.trim();
-                let DepartmentCD = row.querySelector(".deptCD").value;
+        rows.each(function () {
+            let row = $(this);
+            let seatInput = row.find(".newSeat");
 
-                // Initialize department in seatMap
+            if (seatInput.val() !== "") {
+
+                let StaffCD = row.find("td").eq(0).text().trim();
+                let SeatNo = seatInput.val().trim();
+                let DepartmentCD = row.find(".deptCD").val();
+
                 if (!seatMap[DepartmentCD]) seatMap[DepartmentCD] = {};
 
-                // Check for conflicts
                 if (seatMap[DepartmentCD][SeatNo]) {
-                    // Already assigned, prepare for potential swap
-                    swaps.push({
-                        StaffCD1: StaffCD,
-                        StaffCD2: seatMap[DepartmentCD][SeatNo],
-                        Seat1: SeatNo,
-                        Seat2: rows[rowIndexByStaff(DepartmentCD, seatMap[DepartmentCD][SeatNo], rows)].cells[4].innerText.trim()
-                    });
+                    duplicateFound = true;
+                    alert(`Seat ${SeatNo} in Department ${DepartmentCD} is duplicated.`);
+                    return false;
                 }
 
                 seatMap[DepartmentCD][SeatNo] = StaffCD;
@@ -247,39 +294,8 @@
             }
         });
 
-        // Step 2: Detect duplicates outside swaps
-        let duplicateFound = false;
-        Object.keys(seatMap).forEach(dept => {
-            let seats = seatMap[dept];
-            let seen = {};
-            for (let seat in seats) {
-                if (seen[seat]) {
-                    duplicateFound = true;
-                    alert(`Seat ${seat} in Department ${dept} is duplicated. Correct before submitting.`);
-                    return;
-                }
-                seen[seat] = true;
-            }
-        });
-        if (duplicateFound) return;
-
-        // Step 3: Perform swaps in table for visual feedback
-        swaps.forEach(s => {
-            let row1 = getRowByStaff(s.StaffCD1, rows);
-            let row2 = getRowByStaff(s.StaffCD2, rows);
-
-            let temp = row1.cells[4].innerText;
-            row1.cells[4].innerText = row2.cells[4].innerText;
-            row2.cells[4].innerText = temp;
-
-            // Update the newSeat input values as well
-            row1.querySelector(".newSeat").value = row1.cells[4].innerText;
-            row2.querySelector(".newSeat").value = row2.cells[4].innerText;
-        });
-
-        
-        if (dataList.length === 0) {
-            alert("No seat entered");
+        if (duplicateFound || dataList.length === 0) {
+            if (dataList.length === 0) alert("No seat entered");
             return;
         }
 
@@ -290,32 +306,19 @@
             data: JSON.stringify(dataList),
             success: function (res) {
                 alert(res);
-                location.reload(); // refresh table
+                location.reload();
             },
             error: function (err) {
-                alert("Error: " + err.responseText);
+               // alert("Error: " + err.responseText);
             }
         });
 
-        //  get row by StaffCD
-        function getRowByStaff(staffCD, allRows) {
-            for (let r of allRows) {
-                if (r.cells[0].innerText.trim() === staffCD) return r;
-            }
-            return null;
-        }
+    });
 
-        // : get row index by StaffCD in a department
-        function rowIndexByStaff(deptCD, staffCD, allRows) {
-            for (let i = 0; i < allRows.length; i++) {
-                let row = allRows[i];
-                if (row.querySelector(".deptCD").value === deptCD && row.cells[0].innerText.trim() === staffCD) return i;
-            }
-            return -1;
-        }
-    }
+});
+    </script>
+}
 
-</script>
 <!--Update-->
 <div class="modal fade" id="editModal" tabindex="-1">
     <div class="modal-dialog" style="max-width:500px;">
@@ -343,37 +346,37 @@
 
                         <div class="form-row">
                             <label>部門CD</label>
-                            @Html.DropDownList("DepartmentCD", ViewBag.Departments as SelectList)
+                            @Html.DropDownList("DepartmentCD", ViewBag.Departments as SelectList, new { @class = "form-control DepartmentCD" })
 
                             <span class="text-danger" id="errDepartmentCD"></span>
                         </div>
 
                         <div class="form-row">
                             <label>位置</label>
-                            <input type="text" name="Position" />
+                            <input type="text" name="Position" id="Position" />
                             <span class="text-danger" id="errPosition"></span>
                         </div>
 
                         <div class="form-row">
                             <label>メール</label>
-                            <input type="text" name="Email" />
+                            <input type="text" name="Email" id="Email" />
                             <span class="text-danger" id="errEmail"></span>
                         </div>
 
                         <div class="form-row">
                             <label>電話番号</label>
-                            <input type="text" name="PhoneNo" />
+                            <input type="text" name="PhoneNo" id="PhoneNo" />
                             <span class="text-danger" id="errPhoneNo"></span>
                         </div>
 
                         <div class="form-row">
                             <label>入会日</label>
-                            <input type="date" name="JoinedDate" />
+                            <input type="date" id="JoinedDate" name="JoinedDate" />
                         </div>
 
                         <div class="form-row">
                             <label>従業員の種類</label>
-                            <select name="EmployeeType">
+                            <select name="EmployeeType" class="form-control EmployeeType" id="EmployeeType">
                                 <option>Full Time</option>
                                 <option>Part Time</option>
                             </select>
@@ -389,7 +392,7 @@
 
                         <div class="form-row">
                             <label style="height: 55px !important;">リマーク</label>
-                            <textarea name="Remark" rows="2" style=" height: 60px !important;"></textarea>
+                            <textarea name="Remark" id="Remark" rows="2" style=" height: 60px !important;"></textarea>
                             <span class="text-danger" id="errRemark"></span>
                         </div>
 
@@ -410,19 +413,7 @@
         </div>
     </div>
 </div>
-<script>
-    function openEditPopup(btn) {
 
-        let row = btn.closest("tr");
-
-        document.getElementById("StaffCD").value = row.cells[0].innerText;
-        document.getElementById("StaffName").value = row.cells[1].innerText;
-        document.getElementById("SeatNo").value = row.cells[4].innerText;
-
-        $('#editModal').modal('show');
-    }
-
-</script>
 <!-- ADD-->
 <div class="modal fade" id="addModal" tabindex="-1">
     <div class="modal-dialog" style="max-width:500px;">
@@ -438,13 +429,13 @@
 
                         <div class="form-row">
                             <label>スタッフCD</label>
-                            <input type="text" style="width:80px;" name="StaffCD" />
+                            <input type="text" style="width:80px;" name="StaffCD" data-required="true" data-ajax-check="/Staff/CheckStaffCD" />
                             <span class="text-danger" id="errStaffCD"></span>
 
                         </div>
                         <div class="form-row">
                             <label>スタッフ名</label>
-                            <input type="text" name="StaffName" />
+                            <input type="text" name="StaffName" data-required="true" />
                             <span class="text-danger" id="errStaffName"></span>
                         </div>
 
@@ -464,7 +455,7 @@
 
                         <div class="form-row">
                             <label>メール</label>
-                            <input type="text" name="Email" />
+                            <input type="text" name="Email" data-required="true" data-validate="email" />
                             <span class="text-danger" id="errEmail"></span>
                         </div>
 
@@ -532,20 +523,20 @@
         font-size: 13px; /* smaller font for compact look */
     }
 
-    #tableStaff th, #tableStaff td {
+        #tableStaff th, #tableStaff td {
             padding: 6px 10px;
             white-space: nowrap; /* prevent text wrap on small screens */
         }
 
-    #tableStaff td.text-center {
+            #tableStaff td.text-center {
                 text-align: center;
             }
 
-     #tableStaff td.text-right {
+            #tableStaff td.text-right {
                 text-align: left;
             }
 
-    #tableStaff th {
+        #tableStaff th {
             color: white;
             position: sticky;
             top: 0;
@@ -554,29 +545,30 @@
             vertical-align: middle;
         }
 
-    #tableStaff tbody tr:nth-child(even) {
+        #tableStaff tbody tr:nth-child(even) {
             background-color: #f2f2f2;
         }
 
-    #tableStaff th, #tableStaff td {
+        #tableStaff th, #tableStaff td {
             padding: 1px 2px;
         }
 
-    #tableStaff input.newSeat {
+        #tableStaff input.newSeat {
             width: 40px !important;
         }
 
-    #tableStaff td:last-child,
-    #tableStaff th:last-child {
+        #tableStaff td:last-child,
+        #tableStaff th:last-child {
             width: 100px; /* adjust as needed */
             white-space: nowrap; /* keep button on one line */
             text-align: center;
         }
-    #tableStaff button {
-        width: 70px;
-        font-size: 11px;
-        padding: 2px 6px;
-    }
+
+        #tableStaff button {
+            width: 70px;
+            font-size: 11px;
+            padding: 2px 6px;
+        }
 
     .btn-fixed {
         width: 100px;
@@ -600,21 +592,22 @@
         margin-bottom: 6px;
     }
 
-    .form-row > label {
+        .form-row > label {
             width: 120px;
             text-align: right;
         }
 
-    .form-row input:not([type="radio"]),
-    .form-row select,
-    .form-row textarea {
-        height: 28px;
-        width: 170px;
+        .form-row input:not([type="radio"]),
+        .form-row select,
+        .form-row textarea {
+            height: 28px;
+            width: 170px;
             border: 2px solid #3d4740;
             background-color: #DAF2D0;
             box-sizing: border-box;
             border-radius: 4px;
         }
+
     .form-actions button {
         margin: 0 10px;
     }
@@ -635,12 +628,12 @@
         padding-left: 0;
     }
 
-    .radio-group label {
-        width: auto;
-        display: flex;
-        align-items: center;
-        gap: 2px;
-    }
+        .radio-group label {
+            width: auto;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
 
     textarea {
         height: 100px;
@@ -687,10 +680,8 @@
     .text-danger {
         color: red;
         font-size: 11px;
-        margin:0;
+        margin: 0;
     }
-
-    
 </style>
 
 

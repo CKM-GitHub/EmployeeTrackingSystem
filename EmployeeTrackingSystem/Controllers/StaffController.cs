@@ -18,14 +18,21 @@ namespace EmployeeTrackingSystem.Controllers
             var staffList = (from s in db.T_StaffMaster
                              join d in db.T_Department
                              on s.DepartmentCD equals d.DepartmentCD
-                             select new StaffViewModel
+                             select new staffViewModel
                              {
                                  StaffCD = s.StaffCD,
                                  StaffName = s.StaffName,
                                  DepartmentCD = s.DepartmentCD,
                                  JoinedDate   =s.JoinedDate,
                                  DepartmentName = d.DepartmentName,
-                                 SeatNo = s.SeatNo
+                                 SeatNo = s.SeatNo,
+                                 Position =s.Position,
+                                 PhoneNo =s.PhoneNo,
+                                 Email =s.Email,
+                                 Enroll =s.Enroll,
+                                 Remark =s.Remark,
+                                 EmployeeType =s.EmployeeType
+
                              }).ToList();
 
             //  Filter Department
@@ -54,45 +61,38 @@ namespace EmployeeTrackingSystem.Controllers
         {
             using (var db = new EmployeeTrackingDBEntities())
             {
-                // 1️⃣ StaffCD required
-                if (string.IsNullOrWhiteSpace(model.StaffCD))
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        errors = new[] {
-                    new { field = "StaffCD", message = "スタッフCDは必須です" }
-                }
-                    });
-                }
+                //  StaffCD required
+                //if (string.IsNullOrWhiteSpace(model.StaffCD))
+                //{
+                //    return Json(new
+                //    {
+                //        success = false,
+                //        errors = new[] {
+                //    new { field = "StaffCD", message = "スタッフCDは必須です" }
+                //}
+                //    });
+                //}
 
-                // 2️⃣ Duplicate check
-                if (db.T_StaffMaster.Any(x => x.StaffCD == model.StaffCD))
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        errors = new[] {
-                    new { field = "StaffCD", message = "このスタッフCDは既に存在します" }
-                }
-                    });
-                }
+                // Duplicate check
+                
 
-                // 3️⃣ StaffName required
-                if (string.IsNullOrWhiteSpace(model.StaffName))
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        errors = new[] {
-                    new { field = "StaffName", message = "スタッフ名は必須です" }
-                }
-                    });
-                }
+                //// StaffName required
+                //if (string.IsNullOrWhiteSpace(model.StaffName))
+                //{
+                //    return Json(new
+                //    {
+                //        success = false,
+                //        errors = new[] {
+                //    new { field = "StaffName", message = "スタッフ名は必須です" }
+                //}
+                //    });
+                //}
 
-                // 4️⃣ Other ModelState validation (optional)
+                // Other ModelState validation (optional)
                 if (!ModelState.IsValid)
                 {
+                    
+
                     var errors = ModelState
                         .Where(x => x.Value.Errors.Count > 0)
                         .Select(x => new {
@@ -103,7 +103,17 @@ namespace EmployeeTrackingSystem.Controllers
                     return Json(new { success = false, errors = errors });
                 }
 
-                // 5️⃣ Seat duplicate
+                if (db.T_StaffMaster.Any(x => x.StaffCD == model.StaffCD))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        errors = new[] {
+                    new { field = "StaffCD", message = "このスタッフCDは既に存在します" }
+                }
+                    });
+                }
+                // Seat duplicate
                 bool isExist = db.T_StaffMaster.Any(x =>
                     x.DepartmentCD == model.DepartmentCD &&
                     x.SeatNo == model.SeatNo);
@@ -119,7 +129,7 @@ namespace EmployeeTrackingSystem.Controllers
                     });
                 }
 
-                // ✅ Save
+                //  Save
                 model.InsertDateTime = DateTime.Now;
                 db.T_StaffMaster.Add(model);
                 db.SaveChanges();
@@ -132,7 +142,12 @@ namespace EmployeeTrackingSystem.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult Update(T_StaffMaster model)
-        { 
+        {
+            ModelState.Remove("StaffCD");
+            ModelState.Remove("StaffName");
+
+
+
             if (!ModelState.IsValid)
             {
                 var errors = ModelState
@@ -184,39 +199,26 @@ namespace EmployeeTrackingSystem.Controllers
                     staff.Remark = model.Remark;
 
                 staff.UpdateDateTime = DateTime.Now;
-
-                //staff.DepartmentCD = model.DepartmentCD;
-                //staff.Position = model.Position;
-                //staff.Email = model.Email;
-                //staff.PhoneNo = model.PhoneNo;
-                //staff.JoinedDate = model.JoinedDate;
-                //staff.EmployeeType = model.EmployeeType;
-                //staff.Enroll = model.Enroll;
-                //staff.Remark = model.Remark;
-                //staff.UpdateDateTime = DateTime.Now;
-
                 db.SaveChanges();
-                return Json(new { success = true, message = "Updated successfully" });
-               /* return Content("Update OK"); /*/
+                return Json(new { success = true, message = "登録が完了しました。" });
             }
             catch (Exception ex)
             {
                return Json(new { success = false, message = "Update failed" });
             }
         }
-
         [HttpPost]
-        public ActionResult UpdateSeat( List<StaffViewModel> list)
+        public ActionResult UpdateSeat(List<staffViewModel> list)
         {
             try
             {
-                // Step 1: Load all relevant staff
+                // 1. Load all relevant staff in affected departments
                 var deptCDs = list.Select(x => x.DepartmentCD).Distinct().ToList();
                 var staffInDepartments = db.T_StaffMaster
-                    .Where(x => deptCDs.Contains(x.DepartmentCD))
+                    .Where(s => deptCDs.Contains(s.DepartmentCD))
                     .ToList();
 
-                // Step 2: Build in-memory seat map
+                // 2. Build current seat map (Department -> Seat -> Staff)
                 var seatMap = staffInDepartments
                     .Where(s => s.SeatNo.HasValue)
                     .GroupBy(s => s.DepartmentCD)
@@ -225,7 +227,7 @@ namespace EmployeeTrackingSystem.Controllers
                         g => g.ToDictionary(s => s.SeatNo.Value, s => s.StaffCD)
                     );
 
-                // Step 3: Process updates
+                // 3. Apply changes in memory
                 foreach (var model in list)
                 {
                     if (!seatMap.ContainsKey(model.DepartmentCD))
@@ -233,30 +235,30 @@ namespace EmployeeTrackingSystem.Controllers
 
                     var deptSeats = seatMap[model.DepartmentCD];
 
-                    // Check if target seat is used by another staff
-                    if (deptSeats.ContainsKey(model.SeatNo.Value))
+                    // Remove current staff seat temporarily
+                    var currentStaff = staffInDepartments.FirstOrDefault(s => s.StaffCD == model.StaffCD);
+                    if (currentStaff?.SeatNo != null)
                     {
-                        var otherStaffCD = deptSeats[model.SeatNo.Value];
+                        deptSeats.Remove(currentStaff.SeatNo.Value);
+                    }
 
-                        if (otherStaffCD != model.StaffCD)
+                    // Check if the new seat is already assigned to another staff NOT in this batch
+                    if (deptSeats.TryGetValue(model.SeatNo.Value, out string existingStaff))
+                    {
+                        var inBatch = list.Any(x => x.StaffCD == existingStaff);
+                        if (!inBatch)
                         {
-                            // Check if the other staff is also swapping in this batch
-                            var otherModel = list.FirstOrDefault(x => x.StaffCD == otherStaffCD);
-                            if (otherModel == null || otherModel.SeatNo == model.SeatNo)
-                            {
-                                return Content($"Error: Seat {model.SeatNo} in Department {model.DepartmentCD} is already used by {otherStaffCD}");
-                            }
+                            return Content($"Error: Seat {model.SeatNo} in Department {model.DepartmentCD} is already assigned to {existingStaff}");
                         }
                     }
 
-                    // Update seat map in memory
-                    var staffCurrentSeat = staffInDepartments.FirstOrDefault(s => s.StaffCD == model.StaffCD)?.SeatNo;
-                    if (staffCurrentSeat.HasValue)
-                        deptSeats.Remove(staffCurrentSeat.Value);
-
+                    // Assign new seat in memory map
                     deptSeats[model.SeatNo.Value] = model.StaffCD;
+                }
 
-                    // Update DB object
+                // 4. Save changes
+                foreach (var model in list)
+                {
                     var staff = staffInDepartments.FirstOrDefault(s => s.StaffCD == model.StaffCD);
                     if (staff != null)
                     {
@@ -273,6 +275,13 @@ namespace EmployeeTrackingSystem.Controllers
                 return Content("Error: " + ex.Message);
             }
         }
-        
+
+        public JsonResult CheckStaffCD(string staffCD)
+        {
+            bool exists = db.T_StaffMaster.Any(x => x.StaffCD == staffCD);
+
+            return Json(new { exists = exists }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
