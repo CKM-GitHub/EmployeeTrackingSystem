@@ -8,7 +8,7 @@
     --status-meeting: #f0a3dd; /*会議*/
     --status-home: #eb888f; /*休み*/
     /* header color*/
-    --header-orange: #f4b084;
+    --header-color: #cbebf7;
     /* Layout Colors */
     --bg-main: #ddebf7;
     --bg-header-dark: #003b4b;
@@ -38,24 +38,24 @@ body {
     margin-right: 5px;
 }
 
-.status-meeting {
-    background-color: var(--status-meeting);
-}
-
 .status-in {
     background-color: var(--status-present);
-}
-
-.status-away {
-    background-color: var(--status-away);
 }
 
 .status-off {
     background-color: var(--status-off);
 }
 
+.status-away {
+    background-color: var(--status-away);
+}
+
 .status-home {
     background-color: var(--status-home);
+}
+
+.status-meeting {
+    background-color: var(--status-meeting);
 }
 
 .main-title-bar {
@@ -79,7 +79,7 @@ body {
 }
 
     .board-table th {
-        background-color: var(--header-orange);
+        background-color: var(--header-color);
         text-align: left;
         padding: 10px;
         border: 1px solid #000000;
@@ -111,6 +111,15 @@ body {
             border-right: none;
             padding: 4px;
             text-align: left;
+            white-space: normal; /* allow wrapping */
+            word-wrap: break-word; /* break long words if needed */
+            word-break: break-word; /* ensures wrapping even without spaces */
+            max-width: 200px; /* optional: limit width so wrapping happens */
+        }
+
+        .nested-table td.date,
+        .nested-table td.note {
+            font-size: 11px;
         }
     /* Remove outer edges */
     .nested-table tr:first-child td {
@@ -136,6 +145,16 @@ body {
 .nested-table tr {
     height: 40px; /* adjust as needed */
 }
+/* Remove gutter spacing between columns */
+.row.no-gap {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+    .row.no-gap > [class*="col-"] {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
 
 .staff-link {
     color: var(--text-main);
@@ -373,6 +392,7 @@ body {
 #searchModal textarea {
     max-width: 400px;
 }
+
 .bootstrap-datetimepicker-widget {
     z-index: 2000 !important; /* higher than modal */
 }
@@ -431,3 +451,14 @@ body {
     color: #333;
 }
 /* */
+.shop-options {
+    display: inline-block; /* keep radios inline */
+    margin-left: 15px; /* spacing after 在席 */
+    border: 1px solid #000; /* single border around all radios */
+    padding: 5px 10px; /* space inside border */
+    border-radius: 4px; /* optional rounded corners */
+}
+
+    .shop-options label {
+        margin-right: 15px; /* spacing between radios */
+    }

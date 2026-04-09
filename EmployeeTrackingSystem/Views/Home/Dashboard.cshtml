@@ -17,12 +17,12 @@
 
         <div class="col-md-8 col-sm-12">
             @*<div class="d-flex flex-wrap gap-3 justify-content-md-end justify-content-center">
-            <span><span class="status-icon status-in"></span> 在席</span>
-            <span><span class="status-icon status-off"></span> 帰宅</span>
-            <span><span class="status-icon status-away"></span> 外出／直</span>
-            <span><span class="status-icon status-meeting"></span> 会議</span>
-            <span><span class="status-icon status-home"></span> 休み</span>
-        </div>*@
+                    <span><span class="status-icon status-in"></span> 在席</span>
+                    <span><span class="status-icon status-off"></span> 帰宅</span>
+                    <span><span class="status-icon status-away"></span> 外出／直</span>
+                    <span><span class="status-icon status-meeting"></span> 会議</span>
+                    <span><span class="status-icon status-home"></span> 休み</span>
+                </div>*@
             <div class="status-legend">
                 <div class="status-item">
                     <span class="dot at-desk"></span>
@@ -52,31 +52,31 @@
 
     <div class="tables-container">
         <div class="row">
-            <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table1)</div>
-            <div class="col-md-8 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table2)</div>
-            <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table9)</div>
+            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table1)</div>
+            <div class="col-md-6 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table2)</div>
+            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table9)</div>
         </div>
         <div class="row">
-            <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table3)</div>
-            <div class="col-md-8 col-sm-12">
-                <div class="row">
-                    <div class="col-md-6 col-sm-12">
+            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table3)</div>
+            <div class="col-md-6 col-sm-12">
+                <div class="row no-gap">
+                    <div class="col-md-5 col-sm-12">
                         @Html.Partial("_DashboardTable", Model.Table4)
                     </div>
-                    <div class="col-md-6 col-sm-12">
+                    <div class="col-md-7 col-sm-12">
                         @Html.Partial("_DashboardTable3Col", Model.Table5)
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table10)</div>
+            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table10)</div>
         </div>
         <div class="row">
-            <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table6)</div>
-            <div class="col-md-8 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table7)</div>
-            <div class="col-md-4 col-sm-12">@Html.Partial("_DashboardTable", Model.Table11)</div>
+            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table6)</div>
+            <div class="col-md-6 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table7)</div>
+            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table11)</div>
         </div>
         <div class="row">
-            <div class="col-md-8 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table8)</div>
+            <div class="col-md-6 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table8)</div>
         </div>
     </div>
 </div>
@@ -98,12 +98,16 @@
                 <div class="modal-body">
                     <!-- 在席 -->
                     <div class="form-group">
-                        <label><input type="radio" name="Status" value="在席" /> 在席</label>
-
+                        <label><input type="radio" name="Status" value="在席" /> 在席</label>                       
                     </div>
                     <!-- 帰宅 -->
                     <div class="form-group">
                         <label><input type="radio" name="Status" value="帰宅" /> 帰宅</label>
+                        <div id="shop-options" class="shop-options" style="display:none;">
+                            <label><input type="radio" name="Shop" value="S01" /> Shop1</label>
+                            <label><input type="radio" name="Shop" value="S02" /> Shop2</label>
+                            <label><input type="radio" name="Shop" value="S03" /> Shop3</label>
+                        </div>
                     </div>
 
                     <!-- 外出 -->
@@ -126,12 +130,12 @@
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
                         </div>
-                        <input type="text" id="Note-meeting" name="Note" class="form-control status-input" placeholder="Note" />
+                        <input type="text" id="Note-meeting" name="Note-meeting" class="form-control status-input" placeholder="Note" />
                     </div>
                     <!-- 休み -->
                     <div class="form-group status-option">
                         <label class="status-label"><input type="radio" name="Status" value="休み" /> 休み</label>
-                        <input type="text" id="Note-leave" style="width:100% !important" name="Note" class="form-control status-input" placeholder="Note" />
+                        <input type="text" id="Note-leave" style="width:100% !important" name="Note-leave" class="form-control status-input" placeholder="Note" />
                     </div>
                     <!-- 直行 -->
                     <div class="form-group status-option">
@@ -142,7 +146,7 @@
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
                         </div>
-                        <input type="text" id="Note-visit" name="Note" class="form-control status-input" placeholder="Note" />
+                        <input type="text" id="Note-visit" name="Note-visit" class="form-control status-input" placeholder="Note" />
                     </div>
                 </div>
 
@@ -194,8 +198,47 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script>
         $(document).on("click", ".staff-link", function () {
+            // Clear all inputs in the modal form
+            $("#staffForm")[0].reset();
+
+            // Also clear hidden fields explicitly
+            $("#StaffCd").val("");
+            $("#DepartmentCd").val("");
+
             $("#StaffCd").val($(this).data("sid")); // staffcd from link
             $("#DepartmentCd").val($(this).data("did")); // DepartmentCD from link
+
+            // Radio button (Status)
+            var status = $(this).data("status");
+            $("input[name='Status'][value='" + status + "']").prop("checked", true);
+
+            var returnDate = $(this).data("returndatetime");
+            var note = $(this).data("note");
+
+            // Disable all ReturnDateTime and Note inputs by default
+            $("input[name^='ReturnDateTime']").prop("disabled", true).val("");
+            $("input[id^='Note']").prop("disabled", true).val("");
+
+            if (status === "外出") {
+                $("input[name='ReturnDateTime-out']").prop("disabled", false).val(returnDate);
+                $("input[name='Note-out']").prop("disabled", false).val(note);
+            } else if (status === "会議") {
+                $("input[name='ReturnDateTime-meeting']").prop("disabled", false).val(returnDate);
+                $("input[name='Note-meeting']").prop("disabled", false).val(note);
+            } else if (status === "休み") {
+                $("input[name='Note-leave']").prop("disabled", false).val(note);
+            } else if (status === "直行") {
+                $("input[name='ReturnDateTime-visit']").val(returnDate);
+                $("input[name='Note-visit']").prop("disabled", false).val(note);
+            }
+            // Show Shop radios only for Shop01, Shop02, Shop03 departments
+            var dept = $(this).data("did");
+            if (dept === "S01" || dept === "S02" || dept === "S03") {
+                $("#shop-options").show();
+                $("input[name='Shop'][value='" + dept + "']").prop("checked", true);
+            } else {
+                $("#shop-options").hide();
+            }
         });
 
         // When staffModal is shown, initialize the datetimepicker
@@ -226,11 +269,13 @@
                 minDate: moment().startOf('day') // disable all dates before today
             });
         });
-       
+
         $("#staffForm").on("submit", function (e) {
             e.preventDefault();
 
             var status = $("input[name='Status']:checked").val();
+            var shopCD = $("input[name='Shop']:checked").val();
+            alert(shopCD)
             var returnDateTime = null;
             var note = null;
 
@@ -275,23 +320,25 @@
 
         $(document).on("change", "input[name='Status']", function () {
 
-            // Clear all required attributes first
-            $("#staffModal .status-option input[type='text']").prop("required", false);
-
             // Add required attributes based on selected radio
             var selected = $(this).val();
 
+            // First clear and disable all ReturnDateTime and Note inputs
+            $("input[name^='ReturnDateTime']").val("").prop("required", false).prop("disabled", true);
+            $("input[id^='Note']").val("").prop("required", false).prop("disabled", true);
+
+            // Enable only the inputs for the selected status
             if (selected === "外出") {
-                $("input[name='ReturnDateTime-out']").prop("required", true);
-                $("#Note-out").prop("required", true);
+                $("input[name='ReturnDateTime-out']").prop("disabled", false).prop("required", true);
+                $("#Note-out").prop("disabled", false).prop("required", true);
             } else if (selected === "会議") {
-                $("input[name='ReturnDateTime-meeting']").prop("required", true);
-                $("#Note-meeting").prop("required", true);
+                $("input[name='ReturnDateTime-meeting']").prop("disabled", false).prop("required", true);
+                $("#Note-meeting").prop("disabled", false).prop("required", true);
             } else if (selected === "休み") {
-                $("#Note-leave").prop("required", true);
+                $("#Note-leave").prop("disabled", false).prop("required", true);
             } else if (selected === "直行") {
-                $("input[name='ReturnDateTime-visit']").prop("required", true);
-                $("#Note-visit").prop("required", true);
+                $("input[name='ReturnDateTime-visit']").prop("disabled", false).prop("required", true);
+                $("#Note-visit").prop("disabled", false).prop("required", true);
             }
         });
 
@@ -348,7 +395,7 @@
                 }
             });
         });
-       
+
         function SavePlanData() {
 
             var list = [];
