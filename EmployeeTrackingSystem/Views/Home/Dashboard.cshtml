@@ -16,12 +16,34 @@
         </div>
 
         <div class="col-md-8 col-sm-12">
-            <div class="d-flex flex-wrap gap-3 justify-content-md-end justify-content-center">
-                <span><span class="status-icon status-in"></span> 在席</span>
-                <span><span class="status-icon status-off"></span> 帰宅</span>
-                <span><span class="status-icon status-away"></span> 外出／直</span>
-                <span><span class="status-icon status-meeting"></span> 会議</span>
-                <span><span class="status-icon status-home"></span> 休み</span>
+            @*<div class="d-flex flex-wrap gap-3 justify-content-md-end justify-content-center">
+            <span><span class="status-icon status-in"></span> 在席</span>
+            <span><span class="status-icon status-off"></span> 帰宅</span>
+            <span><span class="status-icon status-away"></span> 外出／直</span>
+            <span><span class="status-icon status-meeting"></span> 会議</span>
+            <span><span class="status-icon status-home"></span> 休み</span>
+        </div>*@
+            <div class="status-legend">
+                <div class="status-item">
+                    <span class="dot at-desk"></span>
+                    <span class="label">在席</span>
+                </div>
+                <div class="status-item">
+                    <span class="dot left-office"></span>
+                    <span class="label">帰宅</span>
+                </div>
+                <div class="status-item">
+                    <span class="dot out-of-office"></span>
+                    <span class="label">外出／直行</span>
+                </div>
+                <div class="status-item">
+                    <span class="dot in-meeting"></span>
+                    <span class="label">会議</span>
+                </div>
+                <div class="status-item">
+                    <span class="dot day-off"></span>
+                    <span class="label">休み</span>
+                </div>
             </div>
         </div>
     </div>

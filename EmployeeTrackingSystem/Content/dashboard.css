@@ -376,3 +376,58 @@ body {
 .bootstrap-datetimepicker-widget {
     z-index: 2000 !important; /* higher than modal */
 }
+
+/*20260409 added by ttw*/
+/* Container for the whole bar */
+.status-legend {
+    display: flex;
+    gap: 15px; /* Spacing between items */
+    align-items: center;
+    /*background-color: #e6f2ff;*/ /* Light blue background from your image */
+    padding: 10px;
+    font-family: sans-serif;
+}
+
+/* Container for each dot + text pair */
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Spacing between dot and text */
+}
+
+/* The Base Circle Design */
+.dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid #333; /* Dark border as seen in your image */
+    display: inline-block;
+}
+
+/* Specific Colors based on classes */
+.at-desk {
+    background-color: #c2f0c2;
+}
+/* Light Green */
+.left-office {
+    background-color: #808080;
+}
+/* Grey */
+.out-of-office {
+    background-color: #f0e68c;
+}
+/* Pale Yellow */
+.in-meeting {
+    background-color: #ffb3e6;
+}
+/* Pink */
+.day-off {
+    background-color: #ff9999;
+}
+/* Red/Salmon */
+
+.label {
+    font-size: 14px;
+    color: #333;
+}
+/* */
