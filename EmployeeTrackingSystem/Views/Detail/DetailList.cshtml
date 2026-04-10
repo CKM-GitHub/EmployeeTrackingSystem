@@ -58,13 +58,12 @@
 
     <script type="text/javascript">
 
-        $(document).ready(function () {
-            
+        $(document).ready(function () {            
             $('#department').select2();
-            $('#staff').select2();
-            
+            $('#staff').select2();                 
         });
 
+        
         function searchData() {
 
         var searchParams = {
@@ -95,8 +94,8 @@
                     });
                     // 4. Bind to table
                     $('#DetailTable').html(items);
-            }
-        });
+                }   
+            });
         }
 
 
@@ -112,35 +111,35 @@
 
 
         function exportExcel() {
-    // Collect all your filter values
-    var filters = {
+        // Collect all your filter values
+        var filters = {
         departMent: $('#department').val(),
         staffName: $('#staff').val(),
         fromDate: $('#fromDate').val(),
         toDate: $('#toDate').val()
-    };
+        };
 
-    // Create a hidden form dynamically
-    var $form = $('<form>', {
+        // Create a hidden form dynamically
+         var $form = $('<form>', {
         action: '@Url.Action("ExportToExcel", "Detail")',
         method: 'post',
         data: filters
-    });
+        });
 
-    // Add each filter as a hidden input
-    $.each(filters, function(key, value) {
-        $form.append($('<input>', {
-            type: 'hidden',
-            name: key,
-            value: value
-        }));
-    });
+        // Add each filter as a hidden input
+        $.each(filters, function(key, value) {
+            $form.append($('<input>', {
+                type: 'hidden',
+                name: key,
+                value: value
+            }));
+        });
 
-    // Append to body, submit, and remove
-    $(document.body).append($form);
-    $form.submit();
-    $form.remove();
-}
+         // Append to body, submit, and remove
+         $(document.body).append($form);
+         $form.submit();
+         $form.remove();
+        }
 
     </script>
 }

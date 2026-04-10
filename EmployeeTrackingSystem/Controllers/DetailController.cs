@@ -84,8 +84,8 @@ namespace EmployeeTrackingSystem.Controllers
         [HttpPost]
         public ActionResult ExportToExcel(string department, string staffname, string fromdate, string todate)
         {
-            department = department == "All" ? null : department;
-            staffname = staffname == "All" ? null : staffname;
+            department = (department == "All" || department == "") ? null : department;
+            staffname = (staffname == "All" || staffname == "") ? null : staffname;
             fromdate = fromdate == "" ? null : fromdate;
             todate = todate == "" ? null : todate;
             // Create SQL parameters to match your Stored Procedure

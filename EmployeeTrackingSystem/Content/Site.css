@@ -29,7 +29,7 @@ textarea {
 
 /* Container for the vertical scroll */
 .table-v-scroll {
-    max-height: 600px; /* Set your desired height */
+    max-height: 700px; /* Set your desired height */
     overflow-y: auto; /* Enable vertical scroll */
     overflow-x: auto; /* Prevent horizontal scroll unless needed */
     border: 1px solid #dee2e6;
@@ -45,3 +45,4 @@ textarea {
         color: black;
         border-bottom: 2px solid #32383e;
     }
+
