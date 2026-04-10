@@ -100,43 +100,101 @@
     <script>
 $(document).ready(function () {
 
-
     // =====================
-    // StaffCD ENTER CHECK (Add Form)
+    // DATEPICKER: Add & Edit
     // =====================
-    $(document).on("keydown", "#addForm input[name='StaffCD']", function (e) {
+    function initDatePickers() {
+        $("#JoinedDate").datepicker({
+            dateFormat: "yy/mm/dd"
+        });
+        $("#JoinedDateAdd").datepicker({
+            dateFormat: "yy/mm/dd"
+        });
 
-        if (e.key === "Enter") {
+        // Auto open on focus
+        $(document).on("focus", "#JoinedDate, #JoinedDateAdd", function () {
+            $(this).datepicker("show");
+        });
+
+        // Optional: default today date in Add modal
+        if (!$("#JoinedDateAdd").val()) {
+            $("#JoinedDateAdd").val($.datepicker.formatDate('yy/mm/dd', new Date()));
+        }
+    }
+
+    initDatePickers();
+   $(document).ready(function () {
+
+     // =====================
+    // Enter key validation
+    // =====================
+
+    var requiredFields = ["StaffCD", "StaffName", "DepartmentCD"];
+    $('#addForm input, #addForm select, #addForm textarea').on('keypress', function (e) {
+        if (e.which === 13) { // Enter key
             e.preventDefault();
 
-            let staffCD = $(this).val().trim();
-            $("#addForm #errStaffCD").text("");
+            var $this = $(this);
+            var fieldName = $this.attr('name');
 
-            //  Required check
-            if (staffCD === "") {
-                $("#addForm #errStaffCD").text("このスタッフCDは");
-                return;
-            }
-
-            //  Duplicate check
-            $.ajax({
-                url: '/Staff/CheckStaffCD',
-                type: 'GET',
-                data: { staffCD: staffCD },
-                success: function (res) {
-                    if (res.exists) {
-                        $("#addForm #errStaffCD").text("このスタッフCDは既に存在します");
-                    } else {
-                        // move to next field
-                        $("#addForm input[name='StaffName']").focus();
-                    }
-                },
-                error: function () {
-                    //alert("Error checking StaffCD");
+            // =====  Check required fields =====
+            requiredFields.forEach(function (name) {
+                var value = $("#addForm [name='" + name + "']").val().trim();
+                if (value === "") {
+                    $("#addForm #err" + name).text("*");
+                } else {
+                    $("#addForm #err" + name).text(""); // clear if filled
                 }
             });
+
+            // ===== StaffCD duplicate check =====
+            if (fieldName === "StaffCD") {
+                var staffCD = $this.val().trim();
+                if (staffCD !== "") {
+                    $.ajax({
+                        url: '/Staff/CheckStaffCD',
+                        type: 'GET',
+                        data: { staffCD: staffCD },
+                        success: function (res) {
+                            if (res.exists) {
+                                $("#addForm #errStaffCD").text("このスタッフCDは既に存在します");
+                            } else {
+                                moveToNextField($this);
+                            }
+                        },
+                        error: function () {
+                            console.error("Error checking StaffCD");
+                        }
+                    });
+                    return; // stop here, next field move handled in AJAX
+                } else {
+                    return; // stop, empty StaffCD already shows error
+                }
+            }
+            // =====  Move to next field if no error =====
+            moveToNextField($this);
         }
     });
+
+    // ===== Clear error when typing =====
+    $('#addForm input, #addForm select, #addForm textarea').on('input', function () {
+        var fieldName = $(this).attr('name');
+        $("#addForm #err" + fieldName).text(""); // only clear current field's error
+    });
+
+    // ===== Helper to move focus =====
+    function moveToNextField($current) {
+        var $fields = $('#addForm').find('input, select, textarea').filter(':visible');
+        var index = $fields.index($current);
+        if (index + 1 < $fields.length) {
+            $fields.eq(index + 1).focus();
+        } else {
+            $('#addForm button[type="submit"]').focus();
+        }
+       }
+
+   });
+
 
     // =====================
     // SEARCH
@@ -210,7 +268,8 @@ $(document).ready(function () {
         $("#EmployeeType").val(row.find(".employeetype").val());
 
         let joinedText = row.find("td").eq(3).text().trim();
-        $("#JoinedDate").val(joinedText ? joinedText.replace(/\//g, "-") : "");
+        $("#JoinedDate").val(joinedText ? joinedText.replace(/\//g, "/") : "");
+
 
         $("#SeatNo").val(row.find("td").eq(4).text().trim());
 
@@ -315,6 +374,7 @@ $(document).ready(function () {
 
     });
 
+
 });
     </script>
 }
@@ -334,7 +394,7 @@ $(document).ready(function () {
 
                         <div class="form-row">
                             <label>スタッフCD</label>
-                            <input type="text" id="StaffCD" name="StaffCD" readonly style="background-color:lightgray;width:80px;" required />
+                            <input type="text" id="StaffCD" name="StaffCD" readonly style="background-color:lightgray;width:80px;" />
                             <span class="text-danger" id="errStaffCD"></span>
                         </div>
 
@@ -371,7 +431,7 @@ $(document).ready(function () {
 
                         <div class="form-row">
                             <label>入会日</label>
-                            <input type="date" id="JoinedDate" name="JoinedDate" />
+                            <input type="text" id="JoinedDate" name="JoinedDate" placeholder="yyyy/MM/dd" />
                         </div>
 
                         <div class="form-row">
@@ -429,13 +489,13 @@ $(document).ready(function () {
 
                         <div class="form-row">
                             <label>スタッフCD</label>
-                            <input type="text" style="width:80px;" name="StaffCD" data-required="true" data-ajax-check="/Staff/CheckStaffCD" />
+                            <input type="text" style="width:80px;" name="StaffCD"  data-ajax-check="/Staff/CheckStaffCD" />
                             <span class="text-danger" id="errStaffCD"></span>
 
                         </div>
                         <div class="form-row">
                             <label>スタッフ名</label>
-                            <input type="text" name="StaffName" data-required="true" />
+                            <input type="text" name="StaffName"  />
                             <span class="text-danger" id="errStaffName"></span>
                         </div>
 
@@ -467,7 +527,7 @@ $(document).ready(function () {
 
                         <div class="form-row">
                             <label>入会日</label>
-                            <input type="date" name="JoinedDate" />
+                            <input type="text" name="JoinedDate" id="JoinedDateAdd" placeholder="yyyy/MM/dd" />
                         </div>
 
                         <div class="form-row">
@@ -678,7 +738,7 @@ $(document).ready(function () {
 
     .text-danger {
         color: red;
-        font-size: 11px;
+        font-size: 12px;
         margin: 0;
     }
 </style>
