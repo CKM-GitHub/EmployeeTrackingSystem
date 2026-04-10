@@ -453,7 +453,7 @@ body {
 /* */
 .shop-options {
     display: inline-block; /* keep radios inline */
-    margin-left: 15px; /* spacing after 在席 */
+    margin-left: 4px; /* spacing after 在席 */
     border: 1px solid #000; /* single border around all radios */
     padding: 5px 10px; /* space inside border */
     border-radius: 4px; /* optional rounded corners */

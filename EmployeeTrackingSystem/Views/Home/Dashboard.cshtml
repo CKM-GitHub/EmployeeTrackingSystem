@@ -104,9 +104,9 @@
                     <div class="form-group">
                         <label><input type="radio" name="Status" value="帰宅" /> 帰宅</label>
                         <div id="shop-options" class="shop-options" style="display:none;">
-                            <label><input type="radio" name="Shop" value="S01" /> Shop1</label>
-                            <label><input type="radio" name="Shop" value="S02" /> Shop2</label>
-                            <label><input type="radio" name="Shop" value="S03" /> Shop3</label>
+                            <label><input type="radio" name="Shop" value="S01" /> ShopA</label>
+                            <label><input type="radio" name="Shop" value="S02" /> ShopB</label>
+                            <label><input type="radio" name="Shop" value="S03" /> ShopC</label>
                         </div>
                     </div>
 
@@ -228,7 +228,7 @@
             } else if (status === "休み") {
                 $("input[name='Note-leave']").prop("disabled", false).val(note);
             } else if (status === "直行") {
-                $("input[name='ReturnDateTime-visit']").val(returnDate);
+                $("input[name='ReturnDateTime-visit']").prop("disabled", false).val(returnDate);
                 $("input[name='Note-visit']").prop("disabled", false).val(note);
             }
             // Show Shop radios only for Shop01, Shop02, Shop03 departments
@@ -274,8 +274,8 @@
             e.preventDefault();
 
             var status = $("input[name='Status']:checked").val();
-            var shopCD = $("input[name='Shop']:checked").val();
-            alert(shopCD)
+            var currentShop = $("input[name='Shop']:checked").val();
+            
             var returnDateTime = null;
             var note = null;
 
@@ -300,7 +300,8 @@
                 StaffCd: staffCD,
                 Status: status,
                 ReturnDateTime: returnDateTime,
-                Note: note
+                Note: note,
+                CurrentShop: currentShop
             };
 
             $.ajax({

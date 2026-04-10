@@ -87,7 +87,7 @@ namespace EmployeeTrackingSystem.Controllers
             return dt;
         }
         [HttpPost]
-        public ActionResult SaveStaff(string DepartmentCD, string StaffCd, string Status, string ReturnDateTime, string Note)
+        public ActionResult SaveStaff(string DepartmentCD, string StaffCd, string Status, string ReturnDateTime, string Note, string CurrentShop)
         {
             var staffRecord = new DashboardViewModel
             {
@@ -95,7 +95,8 @@ namespace EmployeeTrackingSystem.Controllers
                 StaffCD1 = StaffCd,
                 Status1 = Status,
                 ReturnDatetime1 = ReturnDateTime,
-                Note1 = Note
+                Note1 = Note,
+                CurrentShop= CurrentShop
             };
             Boolean insertflag = true;
             if (!string.IsNullOrEmpty(Status))
@@ -122,7 +123,7 @@ namespace EmployeeTrackingSystem.Controllers
             try
             {
                 DataTable dtinfo = new DataTable();
-                SqlParameter[] prms = new SqlParameter[5];
+                SqlParameter[] prms = new SqlParameter[6];
 
 
 
@@ -143,6 +144,11 @@ namespace EmployeeTrackingSystem.Controllers
                     prms[4] = new SqlParameter("@Note", SqlDbType.NVarChar) { Value = model.Note1 };
                 else
                     prms[4] = new SqlParameter("@Note", SqlDbType.NVarChar) { Value = DBNull.Value };
+                
+                if (!String.IsNullOrWhiteSpace(model.CurrentShop))
+                    prms[5] = new SqlParameter("@CurrentShop", SqlDbType.NVarChar) { Value = model.CurrentShop };
+                else
+                    prms[5] = new SqlParameter("@CurrentShop", SqlDbType.NVarChar) { Value = DBNull.Value };
 
 
 

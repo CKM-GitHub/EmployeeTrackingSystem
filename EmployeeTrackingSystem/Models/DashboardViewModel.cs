@@ -42,6 +42,7 @@ namespace EmployeeTrackingSystem.Models
 
         public string DepartmentCD { get; set; }
         public string DepartmentName { get; set; }
+        public string CurrentShop { get; set; }
 
     }
 }
