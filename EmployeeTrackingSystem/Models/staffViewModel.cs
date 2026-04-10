@@ -7,7 +7,6 @@ namespace EmployeeTrackingSystem.Models
 {
     public class staffViewModel
     {
-        
             public string StaffCD { get; set; }
             public string StaffName { get; set; }
             public string DepartmentCD { get; set; }
@@ -19,7 +18,6 @@ namespace EmployeeTrackingSystem.Models
             public string PhoneNo { get; set; }
             public bool Enroll { get; set; }
             public string EmployeeType { get; set; }
-
             public string Remark { get; set; }
         
     }

@@ -61,33 +61,7 @@ namespace EmployeeTrackingSystem.Controllers
         {
             using (var db = new EmployeeTrackingDBEntities())
             {
-                //  StaffCD required
-                //if (string.IsNullOrWhiteSpace(model.StaffCD))
-                //{
-                //    return Json(new
-                //    {
-                //        success = false,
-                //        errors = new[] {
-                //    new { field = "StaffCD", message = "スタッフCDは必須です" }
-                //}
-                //    });
-                //}
-
-                // Duplicate check
                 
-
-                //// StaffName required
-                //if (string.IsNullOrWhiteSpace(model.StaffName))
-                //{
-                //    return Json(new
-                //    {
-                //        success = false,
-                //        errors = new[] {
-                //    new { field = "StaffName", message = "スタッフ名は必須です" }
-                //}
-                //    });
-                //}
-
                 // Other ModelState validation (optional)
                 if (!ModelState.IsValid)
                 {
@@ -109,7 +83,7 @@ namespace EmployeeTrackingSystem.Controllers
                     {
                         success = false,
                         errors = new[] {
-                    new { field = "StaffCD", message = "このスタッフCDは既に存在します" }
+                    new { field = "StaffCD", message = "" }
                 }
                     });
                 }
