@@ -57,37 +57,11 @@ namespace EmployeeTrackingSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(T_StaffMaster model)
+        public ActionResult Create(staffViewModel model)
         {
             using (var db = new EmployeeTrackingDBEntities())
             {
-                //  StaffCD required
-                //if (string.IsNullOrWhiteSpace(model.StaffCD))
-                //{
-                //    return Json(new
-                //    {
-                //        success = false,
-                //        errors = new[] {
-                //    new { field = "StaffCD", message = "スタッフCDは必須です" }
-                //}
-                //    });
-                //}
-
-                // Duplicate check
                 
-
-                //// StaffName required
-                //if (string.IsNullOrWhiteSpace(model.StaffName))
-                //{
-                //    return Json(new
-                //    {
-                //        success = false,
-                //        errors = new[] {
-                //    new { field = "StaffName", message = "スタッフ名は必須です" }
-                //}
-                //    });
-                //}
-
                 // Other ModelState validation (optional)
                 if (!ModelState.IsValid)
                 {
@@ -109,7 +83,7 @@ namespace EmployeeTrackingSystem.Controllers
                     {
                         success = false,
                         errors = new[] {
-                    new { field = "StaffCD", message = "このスタッフCDは既に存在します" }
+                    new { field = "StaffCD", message = "" }
                 }
                     });
                 }
@@ -128,10 +102,37 @@ namespace EmployeeTrackingSystem.Controllers
                 }
                     });
                 }
-
+                if (model.DepartmentCD == "S01")
+                {
+                    model.CurrentShop = 1;
+                }
+                else if (model.DepartmentCD == "S02")
+                {
+                    model.CurrentShop = 2;
+                }
+                else if (model.DepartmentCD == "S03")
+                {
+                    model.CurrentShop = 3;
+                }
                 //  Save
-                model.InsertDateTime = DateTime.Now;
-                db.T_StaffMaster.Add(model);
+                var entity = new T_StaffMaster
+                {
+                    StaffCD = model.StaffCD,
+                    StaffName = model.StaffName,
+                    DepartmentCD = model.DepartmentCD,
+                    Position = model.Position,
+                    Email = model.Email,
+                    PhoneNo = model.PhoneNo,
+                    JoinedDate = model.JoinedDate,
+                    EmployeeType = model.EmployeeType,
+                    Enroll = model.Enroll,
+                    Remark = model.Remark,
+                    SeatNo = model.SeatNo,
+                    CurrentShop=model.CurrentShop,
+                    InsertDateTime = DateTime.Now
+                };
+
+                db.T_StaffMaster.Add(entity);
                 db.SaveChanges();
 
                 return Json(new { success = true });
@@ -141,7 +142,7 @@ namespace EmployeeTrackingSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult Update(T_StaffMaster model)
+        public JsonResult Update(staffViewModel model)
         {
             ModelState.Remove("StaffCD");
             ModelState.Remove("StaffName");
@@ -175,8 +176,6 @@ namespace EmployeeTrackingSystem.Controllers
                 if (model.DepartmentCD != null)
                     staff.DepartmentCD = model.DepartmentCD;
 
-               
-
                 if (!string.IsNullOrEmpty(model.Position))
                     staff.Position = model.Position;
 
@@ -193,8 +192,6 @@ namespace EmployeeTrackingSystem.Controllers
                 if (!string.IsNullOrEmpty(model.EmployeeType))
                     staff.EmployeeType = model.EmployeeType;
 
-                // If Enroll is nullable bool
-              
                     staff.Enroll = model.Enroll;
 
                 if (!string.IsNullOrEmpty(model.Remark))
@@ -270,7 +267,7 @@ namespace EmployeeTrackingSystem.Controllers
                 }
 
                 db.SaveChanges();
-                return Content("Update OK");
+                return Content("登録が完了しました");
             }
             catch (Exception ex)
             {
