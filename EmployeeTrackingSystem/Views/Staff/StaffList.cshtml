@@ -61,7 +61,8 @@
                                 <input type="text" class="newSeat"
                                        oninput="this.value = this.value.replace(/\D/g,'')"
                                        onpaste="event.preventDefault();"
-                                       style="text-align: center;" />
+                                       style="text-align: center;" 
+                                       maxlength="2"/>
                             </td>
 
                             <td>
@@ -123,13 +124,24 @@ $(document).ready(function () {
     }
 
     initDatePickers();
-   $(document).ready(function () {
 
-     // =====================
-    // Enter key validation
+    function toggleSeatNo() {
+        var dept = $('#addForm [name="DepartmentCD"]').val();
+        var disable = ["S01", "S02", "S03"].includes(dept);
+
+        $('#addForm [name="SeatNo"]')
+            .val(disable ? "" : $('#addForm [name="SeatNo"]').val())
+            .prop("disabled", disable);
+    }
+
+    $('#addForm [name="DepartmentCD"]').on('change', toggleSeatNo);
+    $('#addModal').on('shown.bs.modal', toggleSeatNo);
+    // =====================
+    // Add Form Enter key validation
     // =====================
 
     var requiredFields = ["StaffCD", "StaffName", "DepartmentCD"];
+
     $('#addForm input, #addForm select, #addForm textarea').on('keypress', function (e) {
         if (e.which === 13) { // Enter key
             e.preventDefault();
@@ -142,12 +154,13 @@ $(document).ready(function () {
                 var value = $("#addForm [name='" + name + "']").val().trim();
                 if (value === "") {
                     $("#addForm #err" + name).text("*");
+
                 } else {
                     $("#addForm #err" + name).text(""); // clear if filled
                 }
             });
-
             // ===== StaffCD duplicate check =====
+
             if (fieldName === "StaffCD") {
                 var staffCD = $this.val().trim();
                 if (staffCD !== "") {
@@ -157,9 +170,10 @@ $(document).ready(function () {
                         data: { staffCD: staffCD },
                         success: function (res) {
                             if (res.exists) {
-                                $("#addForm #errStaffCD").text("このスタッフCDは既に存在します");
+                                $this.addClass("input-error");
                             } else {
-                                moveToNextField($this);
+                                $("#addForm [name='StaffCD']").removeClass("input-error");
+                                moveToNextFieldAdd($this);
                             }
                         },
                         error: function () {
@@ -172,18 +186,19 @@ $(document).ready(function () {
                 }
             }
             // =====  Move to next field if no error =====
-            moveToNextField($this);
+            moveToNextFieldAdd($this);
         }
     });
 
     // ===== Clear error when typing =====
     $('#addForm input, #addForm select, #addForm textarea').on('input', function () {
-        var fieldName = $(this).attr('name');
-        $("#addForm #err" + fieldName).text(""); // only clear current field's error
+        if ($(this).val().trim() !== "") {
+            $(this).removeClass("input-error");
+        }
     });
 
     // ===== Helper to move focus =====
-    function moveToNextField($current) {
+    function moveToNextFieldAdd($current) {
         var $fields = $('#addForm').find('input, select, textarea').filter(':visible');
         var index = $fields.index($current);
         if (index + 1 < $fields.length) {
@@ -191,11 +206,58 @@ $(document).ready(function () {
         } else {
             $('#addForm button[type="submit"]').focus();
         }
-       }
+    }
 
-   });
+    // =====================
+    // ADD FORM
+    // =====================
 
+     $(document).on("submit", "#addForm", function (e) {
+    e.preventDefault();
 
+    //clear previous errors
+    $("#addForm .input-error").removeClass("input-error");
+    $("#addForm .text-danger").text("");
+
+    $.ajax({
+        url: '@Url.Action("Create", "Staff")',
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function (res) {
+
+            if (res.success) {
+
+                alert("登録成功しました");
+                $("#addModal").modal('hide');
+                location.reload();
+
+            } else if (res.errors) {
+
+                res.errors.forEach(function (err) {
+                    var fieldName = err.field.replace("model.", "");
+                    var $field = $("#addForm [name='" + fieldName + "']");
+                    $field.addClass("input-error");
+                });
+
+                //  focus first error field
+                var firstError = $("#addForm .input-error").first();
+                if (firstError.length) {
+                    firstError.focus();
+                }
+            }
+        },
+        error: function () {
+            console.error("エラーが発生しました");
+        }
+    });
+    });
+
+    // Add modal cancel
+    $(document).on("click", "#addModal .btn-cancel", function () {
+        $('#addForm')[0].reset();
+        $('.text-danger').text('');
+        $("#addForm .input-error").removeClass("input-error");
+    });
     // =====================
     // SEARCH
     // =====================
@@ -215,42 +277,6 @@ $(document).ready(function () {
             }
         });
     });
-
-    // =====================
-    // ADD FORM
-    // =====================
-    $(document).on("submit", "#addForm", function (e) {
-        e.preventDefault();
-        $(".text-danger").text("");
-
-        $.ajax({
-            url: '@Url.Action("Create", "Staff")',
-            type: 'POST',
-            data: $(this).serialize(),
-            success: function (res) {
-                if (res.success) {
-                    alert("登録成功しました");
-                    $("#addModal").modal('hide');
-                    location.reload();
-                } else if (res.errors) {
-                    res.errors.forEach(function (err) {
-                        var fieldName = err.field.replace("model.", "");
-                        $('#addForm #err' + fieldName).text(err.message);
-                    });
-                }
-            },
-            error: function () {
-               // alert("エラーが発生しました");
-            }
-        });
-    });
-
-    // Add modal cancel
-    $(document).on("click", "#addModal .btn-cancel", function () {
-        $('#addForm')[0].reset();
-        $('.text-danger').text('');
-    });
-
     // =====================
     // OPEN EDIT MODAL
     // =====================
@@ -280,10 +306,18 @@ $(document).ready(function () {
 
         setTimeout(() => $("#StaffName").focus(), 300);
     });
-
     // =====================
     // EDIT FORM
     // =====================
+
+    $('#editForm input, #editForm select, #editForm textarea').on('keypress', function (e) {
+        if (e.which === 13) { // Enter key
+            e.preventDefault();
+            var $this = $(this);
+
+            moveToNextFieldEdit($this);
+        }
+    });
     $(document).on("submit", "#editForm", function (e) {
         e.preventDefault();
         $(".text-danger").text("");
@@ -294,13 +328,22 @@ $(document).ready(function () {
             data: $(this).serialize(),
             success: function (res) {
                 if (res.success) {
-                    alert(res.message);
-                    $('#editModal').modal('hide');
+
+                    alert("登録成功しました");
+                    $("#editModal").modal('hide');
                     location.reload();
+
                 } else if (res.errors) {
+
                     res.errors.forEach(function (err) {
-                        $("#err" + err.field).text(err.message);
+                        var fieldName = err.field.replace("model.", "");
+                        var $field = $("#editForm [name='" + fieldName + "']");
+                        $field.addClass("input-error");
                     });
+                    var firstError = $("#editForm .input-error").first();
+                    if (firstError.length) {
+                        firstError.focus();
+                    }
                 }
             },
             error: function () {
@@ -313,8 +356,19 @@ $(document).ready(function () {
     $(document).on("click", "#editModal .btn-cancel", function () {
         $('#editForm')[0].reset();
         $('.text-danger').text('');
+        $("#editForm .input-error").removeClass("input-error");
     });
 
+    // ===== Helper to move focus =====
+    function moveToNextFieldEdit($current) {
+        var $fields = $('#editForm').find('input, select, textarea').filter(':visible');
+        var index = $fields.index($current);
+        if (index + 1 < $fields.length) {
+            $fields.eq(index + 1).focus();
+        } else {
+            $('#editForm button[type="submit"]').focus();
+        }
+    }
     // =====================
     // UPDATE SEAT
     // =====================
@@ -374,14 +428,13 @@ $(document).ready(function () {
 
     });
 
-
 });
     </script>
 }
 
 <!--Update-->
 <div class="modal fade" id="editModal" tabindex="-1">
-    <div class="modal-dialog" style="max-width:500px;">
+    <div class="modal-dialog" style="max-width:400px;">
         <div class="modal-content">
             <!-- Header -->
             <div class="modal-header">
@@ -476,7 +529,7 @@ $(document).ready(function () {
 
 <!-- ADD-->
 <div class="modal fade" id="addModal" tabindex="-1">
-    <div class="modal-dialog" style="max-width:500px;">
+    <div class="modal-dialog" style="max-width:400px;">
         <div class="modal-content">
             <!-- Header -->
             <div class="modal-header">
@@ -489,7 +542,7 @@ $(document).ready(function () {
 
                         <div class="form-row">
                             <label>スタッフCD</label>
-                            <input type="text" style="width:80px;" name="StaffCD"  data-ajax-check="/Staff/CheckStaffCD" />
+                            <input type="text" style="width:80px;" name="StaffCD"  id="StaffCD" data-ajax-check="/Staff/CheckStaffCD" />
                             <span class="text-danger" id="errStaffCD"></span>
 
                         </div>
@@ -551,7 +604,7 @@ $(document).ready(function () {
                         </div>
                         <div class="form-row">
                             <label>席番号</label>
-                            <input type="text" name="SeatNo" class="short-input" oninput="this.value = this.value.replace(/\D/g,'')" style="width:50px;" />
+                            <input type="text" name="SeatNo" class="short-input" oninput="this.value = this.value.replace(/\D/g,'')" style="width:50px;" maxlength="2"/>
                             <span class="text-danger" id="errSeatNo"></span>
                         </div>
                         <div class="form-actions">
@@ -640,14 +693,14 @@ $(document).ready(function () {
     }
 
     .form-container {
-        width: 500px;
+        width: 400px;
         margin: 0 auto; /* keep center baseline */
     }
 
     .form-row {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         margin-bottom: 6px;
     }
 
@@ -660,7 +713,7 @@ $(document).ready(function () {
         .form-row select,
         .form-row textarea {
             height: 28px;
-            width: 170px;
+            width: 190px;
             border: 2px solid #3d4740;
             background-color: #DAF2D0;
             box-sizing: border-box;
@@ -701,8 +754,9 @@ $(document).ready(function () {
     .form-actions {
         display: flex;
         justify-content: center;
-        gap: 20px;
+        gap: 1px;
         margin-top: 15px;
+        margin-left:25px;
     }
 
     .btn-cancel {
@@ -741,6 +795,21 @@ $(document).ready(function () {
         font-size: 12px;
         margin: 0;
     }
+
+    input.input-error,
+    select.input-error,
+    textarea.input-error {
+        border: 2px solid #e57373 !important;
+       /* background-color: #fdecea !important;*/
+        transition: 0.2s;
+    }
+
+        input.input-error:focus {
+            box-shadow: 0 0 3px rgba(229,115,115,0.4) !important;
+            outline: none !important;
+        }
+
+
 </style>
 
 
