@@ -196,19 +196,6 @@ namespace EmployeeTrackingSystem.Controllers
             }
         }
 
-        public ActionResult StaffList()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult DetailList()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
 
         [HttpPost]
         public JsonResult SavePlanData(List<PlanViewModel> list)
