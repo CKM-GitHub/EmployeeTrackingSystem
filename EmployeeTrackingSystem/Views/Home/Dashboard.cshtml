@@ -2,9 +2,6 @@
     ViewBag.Title = "Home Page";
 }
 
-<meta charset="utf-8" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-<link rel="stylesheet" href="~/Content/dashboard.css" />
 
 
 <div class="container-fluid py-3 custom-margin-top">
@@ -16,13 +13,7 @@
         </div>
 
         <div class="col-md-8 col-sm-12">
-            @*<div class="d-flex flex-wrap gap-3 justify-content-md-end justify-content-center">
-                    <span><span class="status-icon status-in"></span> 在席</span>
-                    <span><span class="status-icon status-off"></span> 帰宅</span>
-                    <span><span class="status-icon status-away"></span> 外出／直</span>
-                    <span><span class="status-icon status-meeting"></span> 会議</span>
-                    <span><span class="status-icon status-home"></span> 休み</span>
-                </div>*@
+
             <div class="status-legend">
                 <div class="status-item">
                     <span class="dot at-desk"></span>
@@ -92,7 +83,6 @@
                 <input type="hidden" id="DepartmentCd" name="DepartmentCd" />
                 <div class="modal-header">
                     <h5 class="modal-title">Data入力</h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
                 <div class="modal-body">
@@ -166,7 +156,6 @@
             <form id="scheduleForm">
                 <div class="modal-header">
                     <h5 class="modal-title">予定の登録 &nbsp;&nbsp;&nbsp; <span id="displayStaffName"></span></h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
                 <div class="modal-body table-v-scroll" style="height:550px;">
@@ -192,6 +181,9 @@
 </div>
 
 @section Scripts {
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/Content/dashboard.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
@@ -362,7 +354,7 @@
                     $('#Plantable tbody').empty();
 
                     $.each(jsonData, function (i, item) {
-                       
+
                         rows += '<tr>'
                             + '<td style="display:none">' + (staffId || "") + '</td>'
                             + '<td class="text-end">' + (formatDate(item.DateValue)|| "") + '</td>'
@@ -384,22 +376,7 @@
            // return year + "/" + month + "/" + day;
         }
 
-        //$("#scheduleForm").on("submit", function (e) {
-        //    e.preventDefault();
-            
-        //    $.ajax({
-        //        url: '/Dashboard/SaveSchedule',
-        //        type: 'POST',
-        //        data: $(this).serialize(),
-        //        success: function () {
-        //            $("#searchModal").modal("hide");
-        //            location.reload();
-        //        },
-        //        error: function () {
-        //            alert("An error occurred while saving.");
-        //        }
-        //    });
-        //});
+       
         function getByteLength(str) {
             // Encodes to UTF-8 and returns the byte count
             return new TextEncoder().encode(str).length;
@@ -420,15 +397,15 @@
                 });
             });
             var isValid = true;
-            
+
             var errorMessage = "";
             $("#Plantable tbody tr").each(function (index) {
                 var $noteInput = $(this).find(".row-note");
                 var noteValue = getByteLength($noteInput.val());
                 var maxLength = parseInt($noteInput.attr("maxlength"));
-               
+
                 if (noteValue > maxLength) {
-                    
+
                     isValid = false;
                     errorMessage = "Row " + (index + 1) + ": Note exceeds " + maxLength + " characters.";
                     $noteInput.addClass("is-invalid"); // Highlight the error field
