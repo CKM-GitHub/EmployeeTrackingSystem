@@ -188,182 +188,184 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script>
-        $(document).on("click", ".staff-link", function () {
-            // Clear all inputs in the modal form
-            $("#staffForm")[0].reset();
+        $(document).ready(function () {
+            $(document).on("click", ".staff-link", function () {
+                // Clear all inputs in the modal form
+                $("#staffForm")[0].reset();
 
-            // Also clear hidden fields explicitly
-            $("#StaffCd").val("");
-            $("#DepartmentCd").val("");
+                // Also clear hidden fields explicitly
+                $("#StaffCd").val("");
+                $("#DepartmentCd").val("");
 
-            $("#StaffCd").val($(this).data("sid")); // staffcd from link
-            $("#DepartmentCd").val($(this).data("did")); // DepartmentCD from link
+                $("#StaffCd").val($(this).data("sid")); // staffcd from link
+                $("#DepartmentCd").val($(this).data("did")); // DepartmentCD from link
 
-            // Radio button (Status)
-            var status = $(this).data("status");
-            $("input[name='Status'][value='" + status + "']").prop("checked", true);
+                // Radio button (Status)
+                var status = $(this).data("status");
+                $("input[name='Status'][value='" + status + "']").prop("checked", true);
 
-            var returnDate = $(this).data("returndatetime");
-            var note = $(this).data("note");
+                var returnDate = $(this).data("returndatetime");
+                var note = $(this).data("note");
 
-            // Disable all ReturnDateTime and Note inputs by default
-            $("input[name^='ReturnDateTime']").prop("disabled", true).val("");
-            $("input[id^='Note']").prop("disabled", true).val("");
+                // Disable all ReturnDateTime and Note inputs by default
+                $("input[name^='ReturnDateTime']").prop("disabled", true).val("");
+                $("input[id^='Note']").prop("disabled", true).val("");
 
-            if (status === "外出") {
-                $("input[name='ReturnDateTime-out']").prop("disabled", false).val(returnDate);
-                $("input[name='Note-out']").prop("disabled", false).val(note);
-            } else if (status === "会議") {
-                $("input[name='ReturnDateTime-meeting']").prop("disabled", false).val(returnDate);
-                $("input[name='Note-meeting']").prop("disabled", false).val(note);
-            } else if (status === "休み") {
-                $("input[name='Note-leave']").prop("disabled", false).val(note);
-            } else if (status === "直行") {
-                $("input[name='ReturnDateTime-visit']").prop("disabled", false).val(returnDate);
-                $("input[name='Note-visit']").prop("disabled", false).val(note);
-            }
-            // Show Shop radios only for Shop01, Shop02, Shop03 departments
-            var dept = $(this).data("did");
-            if (dept === "S01" || dept === "S02" || dept === "S03") {
-                $("#shop-options").show();
-                $("input[name='Shop'][value='" + dept + "']").prop("checked", true);
-            } else {
-                $("#shop-options").hide();
-            }
-        });
-
-        // When staffModal is shown, initialize the datetimepicker
-        $('#staffModal').on('shown.bs.modal', function () {
-            $('#datetimepicker-out').datetimepicker({
-                format: 'YYYY/MM/DD HH:mm:ss',
-                showClear: true,
-                showClose: true,
-                widgetParent: '#staffModal',
-                minDate: moment().startOf('day'), // disable all dates before today
-                widgetPositioning: {
-                    horizontal: 'left',
-                    vertical: 'bottom'
+                if (status === "外出") {
+                    $("input[name='ReturnDateTime-out']").prop("disabled", false).val(returnDate);
+                    $("input[name='Note-out']").prop("disabled", false).val(note);
+                } else if (status === "会議") {
+                    $("input[name='ReturnDateTime-meeting']").prop("disabled", false).val(returnDate);
+                    $("input[name='Note-meeting']").prop("disabled", false).val(note);
+                } else if (status === "休み") {
+                    $("input[name='Note-leave']").prop("disabled", false).val(note);
+                } else if (status === "直行") {
+                    $("input[name='ReturnDateTime-visit']").prop("disabled", false).val(returnDate);
+                    $("input[name='Note-visit']").prop("disabled", false).val(note);
+                }
+                // Show Shop radios only for Shop01, Shop02, Shop03 departments
+                var dept = $(this).data("did");
+                if (dept === "S01" || dept === "S02" || dept === "S03") {
+                    $("#shop-options").show();
+                    $("input[name='Shop'][value='" + dept + "']").prop("checked", true);
+                } else {
+                    $("#shop-options").hide();
                 }
             });
-            $('#datetimepicker-meeting').datetimepicker({
-                format: 'YYYY/MM/DD HH:mm:ss',
-                showClear: true,
-                showClose: true,
-                widgetParent: '#staffModal',
-                minDate: moment().startOf('day') // disable all dates before today
+
+            // When staffModal is shown, initialize the datetimepicker
+            $('#staffModal').on('shown.bs.modal', function () {
+                $('#datetimepicker-out').datetimepicker({
+                    format: 'YYYY/MM/DD HH:mm:ss',
+                    showClear: true,
+                    showClose: true,
+                    widgetParent: '#staffModal',
+                    minDate: moment().startOf('day'), // disable all dates before today
+                    widgetPositioning: {
+                        horizontal: 'left',
+                        vertical: 'bottom'
+                    }
+                });
+                $('#datetimepicker-meeting').datetimepicker({
+                    format: 'YYYY/MM/DD HH:mm:ss',
+                    showClear: true,
+                    showClose: true,
+                    widgetParent: '#staffModal',
+                    minDate: moment().startOf('day') // disable all dates before today
+                });
+                $('#datetimepicker-visit').datetimepicker({
+                    format: 'YYYY/MM/DD HH:mm:ss',
+                    showClear: true,
+                    showClose: true,
+                    widgetParent: '#staffModal',
+                    minDate: moment().startOf('day') // disable all dates before today
+                });
             });
-            $('#datetimepicker-visit').datetimepicker({
-                format: 'YYYY/MM/DD HH:mm:ss',
-                showClear: true,
-                showClose: true,
-                widgetParent: '#staffModal',
-                minDate: moment().startOf('day') // disable all dates before today
+
+            $("#staffForm").on("submit", function (e) {
+                e.preventDefault();
+
+                var status = $("input[name='Status']:checked").val();
+                var currentShop = $("input[name='Shop']:checked").val();
+
+                var returnDateTime = null;
+                var note = null;
+
+                if (status === "外出") {
+                    returnDateTime = $("input[name='ReturnDateTime-out']").val();
+                    note = $("#Note-out").val();
+                } else if (status === "会議") {
+                    returnDateTime = $("input[name='ReturnDateTime-meeting']").val();
+                    note = $("#Note-meeting").val();
+                } else if (status === "休み") {
+                    note = $("#Note-leave").val();
+                } else if (status === "直行") {
+                    returnDateTime = $("input[name='ReturnDateTime-visit']").val();
+                    note = $("#Note-visit").val();
+                }
+
+                var staffCD = $("#StaffCd").val();
+                var departmentCD = $("#DepartmentCd").val();
+
+                var payload = {
+                    DepartmentCD: departmentCD,
+                    StaffCd: staffCD,
+                    Status: status,
+                    ReturnDateTime: returnDateTime,
+                    Note: note,
+                    CurrentShop: currentShop
+                };
+
+                $.ajax({
+                    url: '/Home/SaveStaff',
+                    type: 'POST',
+                    data: payload,
+                    success: function (response) {
+                        alert(response.message);
+                        $("#staffModal").modal("hide");
+                        location.reload();
+                    },
+                    error: function () {
+                        alert("An error occurred while saving.");
+                    }
+                });
             });
-        });
 
-        $("#staffForm").on("submit", function (e) {
-            e.preventDefault();
+            $(document).on("change", "input[name='Status']", function () {
 
-            var status = $("input[name='Status']:checked").val();
-            var currentShop = $("input[name='Shop']:checked").val();
+                // Add required attributes based on selected radio
+                var selected = $(this).val();
 
-            var returnDateTime = null;
-            var note = null;
+                // First clear and disable all ReturnDateTime and Note inputs
+                $("input[name^='ReturnDateTime']").val("").prop("required", false).prop("disabled", true);
+                $("input[id^='Note']").val("").prop("required", false).prop("disabled", true);
 
-            if (status === "外出") {
-                returnDateTime = $("input[name='ReturnDateTime-out']").val();
-                note = $("#Note-out").val();
-            } else if (status === "会議") {
-                returnDateTime = $("input[name='ReturnDateTime-meeting']").val();
-                note = $("#Note-meeting").val();
-            } else if (status === "休み") {
-                note = $("#Note-leave").val();
-            } else if (status === "直行") {
-                returnDateTime = $("input[name='ReturnDateTime-visit']").val();
-                note = $("#Note-visit").val();
-            }
-
-            var staffCD = $("#StaffCd").val();
-            var departmentCD = $("#DepartmentCd").val();
-
-            var payload = {
-                DepartmentCD: departmentCD,
-                StaffCd: staffCD,
-                Status: status,
-                ReturnDateTime: returnDateTime,
-                Note: note,
-                CurrentShop: currentShop
-            };
-
-            $.ajax({
-                url: '/Home/SaveStaff',
-                type: 'POST',
-                data: payload,
-                success: function (response) {
-                    alert(response.message);
-                    $("#staffModal").modal("hide");
-                    location.reload();
-                },
-                error: function () {
-                    alert("An error occurred while saving.");
+                // Enable only the inputs for the selected status
+                if (selected === "外出") {
+                    $("input[name='ReturnDateTime-out']").prop("disabled", false).prop("required", true);
+                    $("#Note-out").prop("disabled", false).prop("required", true);
+                } else if (selected === "会議") {
+                    $("input[name='ReturnDateTime-meeting']").prop("disabled", false).prop("required", true);
+                    $("#Note-meeting").prop("disabled", false).prop("required", true);
+                } else if (selected === "休み") {
+                    $("#Note-leave").prop("disabled", false).prop("required", true);
+                } else if (selected === "直行") {
+                    $("input[name='ReturnDateTime-visit']").prop("disabled", false).prop("required", true);
+                    $("#Note-visit").prop("disabled", false).prop("required", true);
                 }
             });
-        });
 
-        $(document).on("change", "input[name='Status']", function () {
+            $(document).on("click", ".search-icon", function () {
+                var staffId = $(this).attr('id');
+                // Show the modal
+                $("#searchModal").modal("show");
+                var name = $(this).data('staffname');
 
-            // Add required attributes based on selected radio
-            var selected = $(this).val();
+                // 2. Insert the name into the span inside the modal
+                $('#displayStaffName').text(name);
 
-            // First clear and disable all ReturnDateTime and Note inputs
-            $("input[name^='ReturnDateTime']").val("").prop("required", false).prop("disabled", true);
-            $("input[id^='Note']").val("").prop("required", false).prop("disabled", true);
+                $.ajax({
+                    url: '@Url.Action("GetPlanData", "Home")',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { id: staffId },
+                    success: function (data) {
+                        var jsonData = JSON.parse(data);
+                        var rows = '';
+                        $('#Plantable tbody').empty();
 
-            // Enable only the inputs for the selected status
-            if (selected === "外出") {
-                $("input[name='ReturnDateTime-out']").prop("disabled", false).prop("required", true);
-                $("#Note-out").prop("disabled", false).prop("required", true);
-            } else if (selected === "会議") {
-                $("input[name='ReturnDateTime-meeting']").prop("disabled", false).prop("required", true);
-                $("#Note-meeting").prop("disabled", false).prop("required", true);
-            } else if (selected === "休み") {
-                $("#Note-leave").prop("disabled", false).prop("required", true);
-            } else if (selected === "直行") {
-                $("input[name='ReturnDateTime-visit']").prop("disabled", false).prop("required", true);
-                $("#Note-visit").prop("disabled", false).prop("required", true);
-            }
-        });
+                        $.each(jsonData, function (i, item) {
 
-        $(document).on("click", ".search-icon", function () {
-            var staffId = $(this).attr('id');
-            // Show the modal
-            $("#searchModal").modal("show");
-            var name = $(this).data('staffname');
+                            rows += '<tr>'
+                                + '<td style="display:none">' + (staffId || "") + '</td>'
+                                + '<td class="text-end">' + (formatDate(item.DateValue) || "") + '</td>'
+                                + '<td><input type="text" value="' + (item.Note || "") + '" class="form-control row-note" maxlength="200" /></td>'
+                                + '</tr>';
+                        });
 
-            // 2. Insert the name into the span inside the modal
-            $('#displayStaffName').text(name);
-
-            $.ajax({
-                url: '@Url.Action("GetPlanData", "Home")',
-                type: 'POST',
-                dataType: 'json',
-                data: { id: staffId },
-                success: function (data) {
-                    var jsonData = JSON.parse(data);
-                    var rows = '';
-                    $('#Plantable tbody').empty();
-
-                    $.each(jsonData, function (i, item) {
-
-                        rows += '<tr>'
-                            + '<td style="display:none">' + (staffId || "") + '</td>'
-                            + '<td class="text-end">' + (formatDate(item.DateValue)|| "") + '</td>'
-                            + '<td><input type="text" value="' + (item.Note || "") + '" class="form-control row-note" maxlength="200" /></td>'
-                            + '</tr>';
-                    });
-
-                    $('#Plantable tbody').append(rows);
-                }
+                        $('#Plantable tbody').append(rows);
+                    }
+                });
             });
         });
 
@@ -375,7 +377,6 @@
             return year+'年'+ month + '月' + day + '日';
            // return year + "/" + month + "/" + day;
         }
-
        
         function getByteLength(str) {
             // Encodes to UTF-8 and returns the byte count
