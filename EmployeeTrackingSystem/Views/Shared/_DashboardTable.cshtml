@@ -42,7 +42,7 @@
                                     <tr>
                                         <td colspan="2" class="nested-top staffname">
                                             <a href="#"
-                                               class="staff-link"
+                                               class="staff-link"                                             
                                                data-toggle="modal"
                                                data-target="#staffModal"
                                                data-sid="@member.StaffCD1"
@@ -58,28 +58,35 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="nested-cell date">
-                                            @{ string displayDate1 = "";
-                                                if (!string.IsNullOrEmpty(member.ReturnDatetime1))
-                                                {
-                                                    DateTime dt;
-                                                    if (DateTime.TryParse(member.ReturnDatetime1, out dt))
+                                        @if (member.Status1 != "休み" && member.Status1 != "在席" && member.Status1 != "帰宅")
+                                        {
+                                            <td class="nested-cell date">
+                                                @{ string displayDate1 = "";
+                                                    if (!string.IsNullOrEmpty(member.ReturnDatetime1))
                                                     {
-                                                        if (member.Status1 == "会議")
+                                                        DateTime dt;
+                                                        if (DateTime.TryParse(member.ReturnDatetime1, out dt))
                                                         {
-                                                            displayDate1 = dt.ToString("HH:mm:ss");
+                                                            if (member.Status1 == "会議")
+                                                            {
+                                                                displayDate1 = dt.ToString("HH:mm");
+                                                            }
+                                                            else if (member.Status1 == "外出" || member.Status1 == "直行")
+                                                            {
+                                                                displayDate1 = dt.ToString("yyyy-MM-dd HH:mm");
+                                                            }
                                                         }
-                                                        else if (member.Status1 == "外出" || member.Status1 == "直行")
-                                                        {
-                                                            displayDate1 = dt.ToString("yyyy-MM-dd HH:mm:ss");
-                                                        }
-                                                    }
-                                                } }
-                                            @displayDate1
-                                        </td>
+                                                    } }
+                                                @displayDate1
+                                            </td>
 
 
-                                        <td class="nested-cell note">@(member.Note1 ?? "")</td>
+                                            <td class="nested-cell note">@(member.Note1 ?? "")</td>
+                                        }
+                                        else
+                                        {
+                                            <td colspan="2" class="nested-cell note">@(member.Note1 ?? "")</td>
+                                        }
                                     </tr>
                                 </table>
                             </td>
@@ -106,26 +113,33 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="nested-top date">
-                                            @{ string displayDate2 = "";
-                                                if (!string.IsNullOrEmpty(member.ReturnDatetime2))
-                                                {
-                                                    DateTime dt;
-                                                    if (DateTime.TryParse(member.ReturnDatetime2, out dt))
+                                        @if (member.Status2 != "休み" && member.Status2 != "在席" && member.Status2 != "帰宅")
+                                        {
+                                            <td class="nested-top date">
+                                                @{ string displayDate2 = "";
+                                                    if (!string.IsNullOrEmpty(member.ReturnDatetime2))
                                                     {
-                                                        if (member.Status2 == "会議")
+                                                        DateTime dt;
+                                                        if (DateTime.TryParse(member.ReturnDatetime2, out dt))
                                                         {
-                                                            displayDate2 = dt.ToString("HH:mm:ss");
+                                                            if (member.Status2 == "会議")
+                                                            {
+                                                                displayDate2 = dt.ToString("HH:mm");
+                                                            }
+                                                            else if (member.Status2 == "外出" || member.Status2 == "直行")
+                                                            {
+                                                                displayDate2 = dt.ToString("yyyy-MM-dd HH:mm");
+                                                            }
                                                         }
-                                                        else if (member.Status2 == "外出" || member.Status2 == "直行")
-                                                        {
-                                                            displayDate2 = dt.ToString("yyyy-MM-dd HH:mm:ss");
-                                                        }
-                                                    }
-                                                } }
-                                            @displayDate2
-                                        </td>
-                                        <td class="nested-top note">@(member.Note2 ?? "")</td>
+                                                    } }
+                                                @displayDate2
+                                            </td>
+                                            <td class="nested-top note">@(member.Note2 ?? "")</td>
+                                        }
+                                        else
+                                        {
+                                            <td colspan="2" class="nested-top note">@(member.Note2 ?? "")</td>
+                                        }
                                     </tr>
                                 </table>
                             </td>

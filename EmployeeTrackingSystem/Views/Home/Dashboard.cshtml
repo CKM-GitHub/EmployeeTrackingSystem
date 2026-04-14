@@ -4,9 +4,9 @@
 
 
 
-<div class="container-fluid py-3 custom-margin-top">
+<div class="container-fluid py-3">
     <div class="row align-items-center mb-3">
-        <div class="col-md-4 col-sm-12">
+        <div class="col-md-3 col-sm-12">
             <div class="main-title-bar text-center text-md-start">
                 今の出席状況概要
             </div>
@@ -41,7 +41,7 @@
 
     @model EmployeeTrackingSystem.Models.DashboardTablesViewModel
 
-    <div class="tables-container">
+    <div class="tables-container" >
         <div class="row">
             <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table1)</div>
             <div class="col-md-6 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table2)</div>
@@ -153,13 +153,14 @@
     <div class="modal-dialog modal-lg" role="document">
         <!-- wider for table layout -->
         <div class="modal-content">
-            <form id="scheduleForm">
-                <div class="modal-header">
-                    <h5 class="modal-title">予定の登録 &nbsp;&nbsp;&nbsp; <span id="displayStaffName"></span></h5>
-                </div>
+            <div class="modal-header">
+                <h5 class="modal-title">予定の登録 &nbsp;&nbsp;&nbsp; <span id="displayStaffName"></span></h5>
+            </div>
 
-                <div class="modal-body table-v-scroll" style="height:550px;">
-                    <table class="table table-bordered schedule-table" id="Plantable">
+            <div class="modal-body">
+                @*<div style="max-height: 500px; overflow-y: auto;">  schedule-table *@
+                <div class="modal-container">
+                    <table class="table table-bordered" id="Plantable">
                         <thead>
                             <tr>
                                 <th style="display:none">ID</th>
@@ -170,12 +171,11 @@
                         <tbody></tbody>
                     </table>
                 </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button type="button" Onclick="SavePlanData()" class="btn btn-primary">登録</button>
-                </div>
-            </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" Onclick="SavePlanData()" class="btn btn-primary">登録</button>
+            </div>
         </div>
     </div>
 </div>
@@ -189,6 +189,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script>
         $(document).ready(function () {
+            
+
             $(document).on("click", ".staff-link", function () {
                 // Clear all inputs in the modal form
                 $("#staffForm")[0].reset();
@@ -236,7 +238,7 @@
             // When staffModal is shown, initialize the datetimepicker
             $('#staffModal').on('shown.bs.modal', function () {
                 $('#datetimepicker-out').datetimepicker({
-                    format: 'YYYY/MM/DD HH:mm:ss',
+                    format: 'YYYY/MM/DD HH:mm',
                     showClear: true,
                     showClose: true,
                     widgetParent: '#staffModal',
@@ -247,14 +249,14 @@
                     }
                 });
                 $('#datetimepicker-meeting').datetimepicker({
-                    format: 'YYYY/MM/DD HH:mm:ss',
+                    format: 'YYYY/MM/DD HH:mm',
                     showClear: true,
                     showClose: true,
                     widgetParent: '#staffModal',
                     minDate: moment().startOf('day') // disable all dates before today
                 });
                 $('#datetimepicker-visit').datetimepicker({
-                    format: 'YYYY/MM/DD HH:mm:ss',
+                    format: 'YYYY/MM/DD HH:mm',
                     showClear: true,
                     showClose: true,
                     widgetParent: '#staffModal',

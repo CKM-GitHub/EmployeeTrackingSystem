@@ -17,6 +17,7 @@
     /* Borders and Text */
     --border-dark: #000000;
     --text-main: #000000;
+    --staffName-color: #303B63;
 }
 
 body {
@@ -66,9 +67,12 @@ body {
     white-space: nowrap; /* keep text on one line */
     width: 100%;
 }
-
+/*20260414 added scroll to container by ttw*/
 .tables-container {
     margin: 20px 0 20px 0;
+    max-height: 750px; /* control height */
+    overflow-y: auto; /* enable vertical scroll */
+    overflow-x:hidden; /* enable vertical scroll */
 }
 
 .board-table {
@@ -93,12 +97,13 @@ body {
 
 .nested-table {
     width: 100%;
-    table-layout: fixed;
+    table-layout: fixed;    
 }
 
     .nested-table td {
         padding: 4px;
         text-align: left;
+       
     }
 
         /* Only dotted borders for staff detail cells */
@@ -157,7 +162,7 @@ body {
     }
 
 .staff-link {
-    color: var(--text-main);
+    color: var(--staffName-color);
 }
 
 @media (max-width: 768px) {
@@ -461,4 +466,17 @@ body {
 
     .shop-options label {
         margin-right: 15px; /* spacing between radios */
+    }
+
+/*20260414 add scroll to planmodal table popup by ttw*/
+.modal-container {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+    .modal-container thead th {
+        position: sticky;
+        top: 0;
+        background: #6990C7;
+        z-index: 2;
     }
