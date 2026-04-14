@@ -41,7 +41,7 @@
 
     @model EmployeeTrackingSystem.Models.DashboardTablesViewModel
 
-    <div class="tables-container" >
+    <div class="tables-container">
         <div class="row">
             <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table1)</div>
             <div class="col-md-6 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table2)</div>
@@ -71,7 +71,6 @@
         </div>
     </div>
 </div>
-
 
 
 @*staffname click popup*@
@@ -180,17 +179,16 @@
     </div>
 </div>
 
+
 @section Scripts {
     <meta charset="utf-8" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link rel="stylesheet" href="~/Content/dashboard.css" />
+    <link rel="stylesheet" href="~/Content/dashboard_01.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script>
         $(document).ready(function () {
-            
-
             $(document).on("click", ".staff-link", function () {
                 // Clear all inputs in the modal form
                 $("#staffForm")[0].reset();
@@ -208,7 +206,7 @@
 
                 var returnDate = $(this).data("returndatetime");
                 var note = $(this).data("note");
-
+               
                 // Disable all ReturnDateTime and Note inputs by default
                 $("input[name^='ReturnDateTime']").prop("disabled", true).val("");
                 $("input[id^='Note']").prop("disabled", true).val("");
@@ -379,7 +377,7 @@
             return year+'年'+ month + '月' + day + '日';
            // return year + "/" + month + "/" + day;
         }
-       
+
         function getByteLength(str) {
             // Encodes to UTF-8 and returns the byte count
             return new TextEncoder().encode(str).length;

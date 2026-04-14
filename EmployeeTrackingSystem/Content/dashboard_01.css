@@ -1,0 +1,498 @@
+﻿
+
+:root {
+    /* Status Colors */
+    --status-present: #c7f0d4; /*在席*/
+    --status-off: #848786; /*帰宅*/
+    --status-away: #e3dca8; /*外出/直行*/
+    --status-meeting: #f0a3dd; /*会議*/
+    --status-home: #eb888f; /*休み*/
+    /* header color*/
+    --header-color: #cbebf7;
+    /* Layout Colors */
+    --bg-main: #ddebf7;
+    --bg-header-dark: #003b4b;
+    --bg-category-title: #f4b084;
+    --bg-slot-empty: #dae3f3;
+    /* Borders and Text */
+    --border-dark: #000000;
+    --text-main: #000000;
+    --staffName-color: #303B63;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+}
+
+.custom-margin-top {
+    margin-top: 20px;
+}
+
+
+.status-icon {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #000;
+    margin-right: 5px;
+}
+
+.status-in {
+    background-color: var(--status-present);
+    border-radius: 8px 4px;
+}
+
+.status-off {
+    background-color: var(--status-off);
+}
+
+.status-away {
+    background-color: var(--status-away);
+}
+
+.status-home {
+    background-color: var(--status-home);
+}
+
+.status-meeting {
+    background-color: var(--status-meeting);
+}
+
+.main-title-bar {
+    background-color: var(--bg-header-dark);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 4px;
+    white-space: nowrap; /* keep text on one line */
+    width: 100%;
+}
+/*20260414 added scroll to container by ttw*/
+.tables-container {
+    margin: 10px 0 10px 0;
+    max-height: 750px; /* control height */
+    overflow-y: auto; /* enable vertical scroll */
+    overflow-x: hidden; /* enable vertical scroll */
+}
+
+.board-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    table-layout: fixed;
+    background-color: white;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+    .board-table th {
+        /*background-color: var(--header-color);*/
+        text-align: left;
+        padding: 5px;
+        border: 0px solid #000000;
+    }
+
+    .board-table td {
+        border: 0px solid #000000;
+        padding: 2px 2px 2px 2px;
+        vertical-align: middle;
+        border-radius: 10px;
+    }
+
+.nested-table {
+    width: 100%;
+    table-layout: fixed;
+    border-radius: 10px;
+    padding: 8px;
+    min-height: 80px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+   
+}
+
+    .nested-table td {
+        padding: 4px;
+        text-align: left;
+        border-radius: 10px;
+
+       
+    }
+
+        /* Only dotted borders for staff detail cells */
+        .nested-table td.staffname,
+        .nested-table td.date,
+        .nested-table td.note {
+            border-top: 1px dotted #000000;
+            border-bottom: 1px dotted #000000;
+            border-left: 1px dotted #000000;
+            border-right: none;
+            padding: 4px;
+            text-align: left;
+            white-space: normal; /* allow wrapping */
+            word-wrap: break-word; /* break long words if needed */
+            word-break: break-word; /* ensures wrapping even without spaces */
+            max-width: 200px; /* optional: limit width so wrapping happens */
+          
+        }
+
+        .nested-table td.date,
+        .nested-table td.note {
+            font-size: 11px;         
+        }
+
+
+    /* Remove outer edges */
+    .nested-table tr:first-child td {
+        border-top: none;
+    }
+
+    .nested-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .nested-table tr td:first-child {
+        border-left: none;
+    }
+
+    .nested-table tr td:last-child {
+        border-right: none;
+    }
+/* make the two cells equal width */
+.nested-cell {
+    width: 50%;
+}
+/* force equal row heights */
+.nested-table tr {
+    height: 40px; /* adjust as needed */
+}
+/* Remove gutter spacing between columns */
+.row.no-gap {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+    .row.no-gap > [class*="col-"] {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+.staff-link {
+    color: var(--staffName-color);
+}
+
+@media (max-width: 768px) {
+    .col-md-4 {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
+
+/* Mobile-friendly: stack cells */
+@media (max-width: 600px) {
+    .board-table, .board-table thead, .board-table tbody, .board-table th, .board-table td, .board-table tr {
+        display: block;
+        width: 100%;
+    }
+
+        .board-table tr {
+            margin-bottom: 1rem;
+        }
+
+        .board-table td {
+            text-align: right;
+            padding-left: 50%;
+            position: relative;           
+        }
+
+            .board-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 50%;
+                padding-left: 12px;
+                font-weight: bold;
+                text-align: left;
+            }
+}
+
+.search-icon {
+    float: right;
+    margin-right: 5px;
+    width: 16px;
+    height: 16px;
+    margin-left: 6px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+/* Base modal styling */
+.modal-dialog {
+    max-width: 600px; /* limit width on large screens */
+    margin: 1.75rem auto;
+}
+
+.modal-content {
+    border-radius: 8px;
+    /*overflow: hidden;*/
+}
+/* Form elements */
+.modal-body .form-group {
+    margin-bottom: 1rem;
+}
+
+.modal-body label {
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+/* Radio buttons wrap neatly */
+.modal-body input[type="radio"] {
+    margin-right: 0.25rem;
+}
+
+.modal-body label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+
+/* Footer buttons */
+.modal-footer {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* Modal header background */
+.modal-header {
+    background-color: #1A6B8F; /* deep teal */
+    color: #fff; /* white text for contrast */
+}
+
+/* Modal body/main background */
+.modal-content {
+    background-color: #D7F1D0; /* light green */
+}
+
+/* Optional: adjust footer to match body */
+.modal-footer {
+    background-color: #D7F1D0;
+}
+
+    /* Ensure buttons stand out */
+    .modal-footer .btn-primary {
+        background-color: #1A6B8F;
+        border-color: #1A6B8F;
+    }
+
+    .modal-footer .btn-secondary {
+        background-color: #ccc;
+        border-color: #ccc;
+        color: #000;
+    }
+
+/* Flex container for each status option */
+.status-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* space between radio and input */
+    margin-bottom: 0.75rem;
+}
+
+/* Label stays compact */
+.status-label {
+    flex: 0 0 auto;
+    font-weight: 600;
+}
+
+/* Input stretches to fill remaining space */
+.status-input {
+    flex: 1 1 auto;
+    min-width: 0; /* prevents overflow */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .modal-dialog {
+        max-width: 90%; /* shrink modal on tablets */
+    }
+
+    .modal-footer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+        .modal-footer .btn {
+            width: 100%; /* buttons full width on small screens */
+        }
+}
+
+@media (max-width: 480px) {
+    .modal-dialog {
+        max-width: 95%; /* almost full width on phones */
+    }
+
+    .modal-body label {
+        display: block; /* stack radio buttons vertically */
+    }
+
+    .status-option {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .status-input {
+        width: 100%;
+    }
+}
+
+
+/* Modal header and body colors */
+#searchModal .modal-header {
+    background-color: #1A6B8F;
+    color: #fff;
+}
+
+#searchModal .modal-content {
+    background-color: #D7F1D0;
+}
+
+/* Table styling */
+.schedule-table th {
+    background-color: #eee;
+    text-align: center;
+}
+
+.schedule-table td {
+    vertical-align: middle;
+}
+
+/* Radio buttons inline */
+.schedule-table label {
+    margin-right: 1rem;
+    font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .schedule-table td {
+        display: block;
+    }
+
+    .schedule-table label {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .modal-dialog {
+        max-width: 95%;
+    }
+}
+
+
+/* Highlight required fields with a red border when invalid */
+.form-group .status-option > input:required:invalid {
+    border: 2px solid red !important;
+    box-shadow: none; /* remove default glow */
+}
+
+/* Optional: green border when valid */
+.form-group .status-option > input:required:valid {
+    border: 2px solid green !important;
+}
+
+
+.text-end {
+    text-align: center;
+    max-width: 80px;
+}
+
+#searchModal input,
+#searchModal select,
+#searchModal textarea {
+    max-width: 400px;
+}
+
+.bootstrap-datetimepicker-widget {
+    z-index: 2000 !important; /* higher than modal */
+}
+
+/*20260409 added by ttw*/
+/* Container for the whole bar */
+.status-legend {
+    display: flex;
+    gap: 15px; /* Spacing between items */
+    align-items: center;
+    /*background-color: #e6f2ff;*/ /* Light blue background from your image */
+    padding: 10px;
+    font-family: sans-serif;
+}
+
+/* Container for each dot + text pair */
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Spacing between dot and text */
+}
+
+/* The Base Circle Design */
+.dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #333; /* Dark border as seen in your image */
+    display: inline-block;
+}
+
+/* Specific Colors based on classes */
+.at-desk {
+    background-color: #c2f0c2;
+}
+/* Light Green */
+.left-office {
+    background-color: #808080;
+}
+/* Grey */
+.out-of-office {
+    background-color: #f0e68c;
+}
+/* Pale Yellow */
+.in-meeting {
+    background-color: #ffb3e6;
+}
+/* Pink */
+.day-off {
+    background-color: #ff9999;
+}
+/* Red/Salmon */
+
+.label {
+    font-size: 14px;
+    color: #333;
+}
+/* */
+.shop-options {
+    display: inline-block; /* keep radios inline */
+    margin-left: 4px; /* spacing after 在席 */
+    border: 1px solid #000; /* single border around all radios */
+    padding: 5px 10px; /* space inside border */
+    border-radius: 4px; /* optional rounded corners */
+}
+
+    .shop-options label {
+        margin-right: 15px; /* spacing between radios */
+    }
+
+/*20260414 add scroll to planmodal table popup by ttw*/
+.modal-container {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+    .modal-container thead th {
+        position: sticky;
+        top: 0;
+        background: #6990C7;
+        z-index: 2;
+    }
