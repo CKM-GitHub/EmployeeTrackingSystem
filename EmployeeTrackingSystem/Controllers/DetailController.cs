@@ -65,10 +65,10 @@ namespace EmployeeTrackingSystem.Controllers
                     x.DepartmentName,
                     x.Status,
                     StartDateTime = x.StartDateTime.HasValue
-                        ? x.StartDateTime.Value.ToString("yyyy-MM-dd H:mm:ss")
+                        ? x.StartDateTime.Value.ToString("yyyy-MM-dd HH:mm")
                         : "",
                                     ReturnDateTime = x.ReturnDateTime.HasValue
-                        ? x.ReturnDateTime.Value.ToString("yyyy-MM-dd H:mm:ss")
+                        ? x.ReturnDateTime.Value.ToString("yyyy-MM-dd HH:mm")
                         : "",
                     x.Note
                 });
@@ -105,10 +105,10 @@ namespace EmployeeTrackingSystem.Controllers
                 x.DepartmentName,
                 x.Status,
                 StartDateTime = x.StartDateTime.HasValue
-                    ? x.StartDateTime.Value.ToString("yyyy-MM-dd H:mm:ss")
+                    ? x.StartDateTime.Value.ToString("yyyy-MM-dd HH:mm")
                     : "",
                 ReturnDateTime = x.ReturnDateTime.HasValue
-                    ? x.ReturnDateTime.Value.ToString("yyyy-MM-dd H:mm:ss")
+                    ? x.ReturnDateTime.Value.ToString("yyyy-MM-dd HH:mm")
                     : "",
                 x.Note
             });

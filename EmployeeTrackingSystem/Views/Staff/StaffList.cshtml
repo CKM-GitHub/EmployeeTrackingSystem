@@ -6,10 +6,10 @@
 
     @section Buttons {
         <div class="d-flex mb-2">
-            <button type="button" id="btnSearch" class="btn btn-warning btn-fixed me-2">
+            <button type="button" id="btnSearch" class="btn_search btn">
                 変更
             </button>
-            <button type="button" class="btn btn-primary btn-fixed" data-toggle="modal" data-target="#addModal">
+            <button type="button" class="btn_Blue btn btn-primary" data-toggle="modal" data-target="#addModal">
                 追加
             </button>
         </div>
@@ -24,9 +24,9 @@
                     <th>スタッフCD</th>
                     <th>スタッフ名</th>
                     <th>部門名</th>
-                    <th style="text-align:center">入会日</th>
-                    <th style="text-align:center">席番号</th>
-                    <th style="text-align:center">
+                    <th class="th_center">入会日</th>
+                    <th class="th_center">席番号</th>
+                    <th class="th_center">
                         Next <br />
                         席番号
                     </th>
@@ -96,341 +96,6 @@
     </div>
 
 </div>
-
-@section scripts {
-    <script>
-$(document).ready(function () {
-
-    // =====================
-    // DATEPICKER: Add & Edit
-    // =====================
-    function initDatePickers() {
-        $("#JoinedDate").datepicker({
-            dateFormat: "yy/mm/dd"
-        });
-        $("#JoinedDateAdd").datepicker({
-            dateFormat: "yy/mm/dd"
-        });
-
-        // Auto open on focus
-        $(document).on("focus", "#JoinedDate, #JoinedDateAdd", function () {
-            $(this).datepicker("show");
-        });
-
-        // Optional: default today date in Add modal
-        if (!$("#JoinedDateAdd").val()) {
-            $("#JoinedDateAdd").val($.datepicker.formatDate('yy/mm/dd', new Date()));
-        }
-    }
-
-    initDatePickers();
-
-    function toggleSeatNo() {
-        var dept = $('#addForm [name="DepartmentCD"]').val();
-        var disable = ["S01", "S02", "S03"].includes(dept);
-
-        $('#addForm [name="SeatNo"]')
-            .val(disable ? "" : $('#addForm [name="SeatNo"]').val())
-            .prop("disabled", disable);
-    }
-
-    $('#addForm [name="DepartmentCD"]').on('change', toggleSeatNo);
-    $('#addModal').on('shown.bs.modal', toggleSeatNo);
-    // =====================
-    // Add Form Enter key validation
-    // =====================
-
-    var requiredFields = ["StaffCD", "StaffName", "DepartmentCD"];
-
-    $('#addForm input, #addForm select, #addForm textarea').on('keypress', function (e) {
-        if (e.which === 13) { // Enter key
-            e.preventDefault();
-
-            var $this = $(this);
-            var fieldName = $this.attr('name');
-
-            // =====  Check required fields =====
-            requiredFields.forEach(function (name) {
-                var value = $("#addForm [name='" + name + "']").val().trim();
-                if (value === "") {
-                    $("#addForm #err" + name).text("*");
-
-                } else {
-                    $("#addForm #err" + name).text(""); // clear if filled
-                }
-            });
-            // ===== StaffCD duplicate check =====
-
-            if (fieldName === "StaffCD") {
-                var staffCD = $this.val().trim();
-                if (staffCD !== "") {
-                    $.ajax({
-                        url: '/Staff/CheckStaffCD',
-                        type: 'GET',
-                        data: { staffCD: staffCD },
-                        success: function (res) {
-                            if (res.exists) {
-                                $this.addClass("input-error");
-                            } else {
-                                $("#addForm [name='StaffCD']").removeClass("input-error");
-                                moveToNextFieldAdd($this);
-                            }
-                        },
-                        error: function () {
-                            console.error("Error checking StaffCD");
-                        }
-                    });
-                    return; // stop here, next field move handled in AJAX
-                } else {
-                    return; // stop, empty StaffCD already shows error
-                }
-            }
-            // =====  Move to next field if no error =====
-            moveToNextFieldAdd($this);
-        }
-    });
-
-    // ===== Clear error when typing =====
-    $('#addForm input, #addForm select, #addForm textarea').on('input', function () {
-        if ($(this).val().trim() !== "") {
-            $(this).removeClass("input-error");
-        }
-    });
-
-    // ===== Helper to move focus =====
-    function moveToNextFieldAdd($current) {
-        var $fields = $('#addForm').find('input, select, textarea').filter(':visible');
-        var index = $fields.index($current);
-        if (index + 1 < $fields.length) {
-            $fields.eq(index + 1).focus();
-        } else {
-            $('#addForm button[type="submit"]').focus();
-        }
-    }
-
-    // =====================
-    // ADD FORM
-    // =====================
-
-     $(document).on("submit", "#addForm", function (e) {
-    e.preventDefault();
-
-    //clear previous errors
-    $("#addForm .input-error").removeClass("input-error");
-    $("#addForm .text-danger").text("");
-
-    $.ajax({
-        url: '@Url.Action("Create", "Staff")',
-        type: 'POST',
-        data: $(this).serialize(),
-        success: function (res) {
-
-            if (res.success) {
-
-                alert("登録成功しました");
-                $("#addModal").modal('hide');
-                location.reload();
-
-            } else if (res.errors) {
-
-                res.errors.forEach(function (err) {
-                    var fieldName = err.field.replace("model.", "");
-                    var $field = $("#addForm [name='" + fieldName + "']");
-                    $field.addClass("input-error");
-                });
-
-                //  focus first error field
-                var firstError = $("#addForm .input-error").first();
-                if (firstError.length) {
-                    firstError.focus();
-                }
-            }
-        },
-        error: function () {
-            console.error("エラーが発生しました");
-        }
-    });
-    });
-
-    // Add modal cancel
-    $(document).on("click", "#addModal .btn-cancel", function () {
-        $('#addForm')[0].reset();
-        $('.text-danger').text('');
-        $("#addForm .input-error").removeClass("input-error");
-    });
-    // =====================
-    // SEARCH
-    // =====================
-    $(document).on("click", "#btnSearch", function () {
-        var dept = $("#department").val();
-        var staff = $("#staff").val();
-
-        $.ajax({
-            url: '/Staff/StaffList',
-            type: 'GET',
-            data: { department: dept, staff: staff },
-            success: function (result) {
-                $("#tableStaff tbody").html($(result).find("#tableStaff tbody").html());
-            },
-            error: function () {
-               // alert("Error loading data");
-            }
-        });
-    });
-    // =====================
-    // OPEN EDIT MODAL
-    // =====================
-    $(document).on("click", "#tableStaff tbody .btn-primary", function () {
-
-        let row = $(this).closest("tr");
-
-        $("#StaffCD").val(row.find("td").eq(0).text().trim());
-        $("#StaffName").val(row.find("td").eq(1).text().trim());
-        $("#DepartmentCD").val(row.find(".deptCD").val());
-        $("#Position").val(row.find(".position").val());
-        $("#Email").val(row.find(".email").val());
-        $("#PhoneNo").val(row.find(".phoneNo").val());
-        $("#Remark").val(row.find(".remark").val());
-        $("#EmployeeType").val(row.find(".employeetype").val());
-
-        let joinedText = row.find("td").eq(3).text().trim();
-        $("#JoinedDate").val(joinedText ? joinedText.replace(/\//g, "/") : "");
-
-
-        $("#SeatNo").val(row.find("td").eq(4).text().trim());
-
-        let enrollVal = row.find(".enroll").val();
-        $("#editModal input[name='Enroll'][value='" + enrollVal + "']").prop("checked", true);
-
-        $('#editModal').modal('show');
-
-        setTimeout(() => $("#StaffName").focus(), 300);
-    });
-    // =====================
-    // EDIT FORM
-    // =====================
-
-    $('#editForm input, #editForm select, #editForm textarea').on('keypress', function (e) {
-        if (e.which === 13) { // Enter key
-            e.preventDefault();
-            var $this = $(this);
-
-            moveToNextFieldEdit($this);
-        }
-    });
-    $(document).on("submit", "#editForm", function (e) {
-        e.preventDefault();
-        $(".text-danger").text("");
-
-        $.ajax({
-            url: '/Staff/Update',
-            type: 'POST',
-            data: $(this).serialize(),
-            success: function (res) {
-                if (res.success) {
-
-                    alert("登録成功しました");
-                    $("#editModal").modal('hide');
-                    location.reload();
-
-                } else if (res.errors) {
-
-                    res.errors.forEach(function (err) {
-                        var fieldName = err.field.replace("model.", "");
-                        var $field = $("#editForm [name='" + fieldName + "']");
-                        $field.addClass("input-error");
-                    });
-                    var firstError = $("#editForm .input-error").first();
-                    if (firstError.length) {
-                        firstError.focus();
-                    }
-                }
-            },
-            error: function () {
-                alert("エラーが発生しました");
-            }
-        });
-    });
-
-    // Edit modal cancel
-    $(document).on("click", "#editModal .btn-cancel", function () {
-        $('#editForm')[0].reset();
-        $('.text-danger').text('');
-        $("#editForm .input-error").removeClass("input-error");
-    });
-
-    // ===== Helper to move focus =====
-    function moveToNextFieldEdit($current) {
-        var $fields = $('#editForm').find('input, select, textarea').filter(':visible');
-        var index = $fields.index($current);
-        if (index + 1 < $fields.length) {
-            $fields.eq(index + 1).focus();
-        } else {
-            $('#editForm button[type="submit"]').focus();
-        }
-    }
-    // =====================
-    // UPDATE SEAT
-    // =====================
-    $(document).on("click", "#btnUpdateSeat", function () {
-
-        let rows = $("#tableStaff tbody tr");
-        let dataList = [];
-        let seatMap = {};
-        let duplicateFound = false;
-
-        rows.each(function () {
-            let row = $(this);
-            let seatInput = row.find(".newSeat");
-
-            if (seatInput.val() !== "") {
-
-                let StaffCD = row.find("td").eq(0).text().trim();
-                let SeatNo = seatInput.val().trim();
-                let DepartmentCD = row.find(".deptCD").val();
-
-                if (!seatMap[DepartmentCD]) seatMap[DepartmentCD] = {};
-
-                if (seatMap[DepartmentCD][SeatNo]) {
-                    duplicateFound = true;
-                    alert(`Seat ${SeatNo} in Department ${DepartmentCD} is duplicated.`);
-                    return false;
-                }
-
-                seatMap[DepartmentCD][SeatNo] = StaffCD;
-
-                dataList.push({
-                    StaffCD: StaffCD,
-                    SeatNo: SeatNo,
-                    DepartmentCD: DepartmentCD
-                });
-            }
-        });
-
-        if (duplicateFound || dataList.length === 0) {
-            if (dataList.length === 0) alert("No seat entered");
-            return;
-        }
-
-        $.ajax({
-            url: '/Staff/UpdateSeat',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(dataList),
-            success: function (res) {
-                alert(res);
-                location.reload();
-            },
-            error: function (err) {
-               // alert("Error: " + err.responseText);
-            }
-        });
-
-    });
-
-});
-    </script>
-}
 
 <!--Update-->
 <div class="modal fade" id="editModal" tabindex="-1">
@@ -619,8 +284,345 @@ $(document).ready(function () {
 </div>
 
 
-<style>
+@section scripts {
+<script>
+    $(document).ready(function () {
+    $('#department').select2();
+    $('#staff').select2();
+    initDatePickers();
+    
+    $('#addForm [name="DepartmentCD"]').on('change', toggleSeatNo);
+    $('#addModal').on('shown.bs.modal', toggleSeatNo);
+    // =====================
+    // Add Form Enter key validation
+    // =====================
 
+    var requiredFields = ["StaffCD", "StaffName", "DepartmentCD"];
+
+    $('#addForm input, #addForm select, #addForm textarea').on('keypress', function (e) {
+        if (e.which === 13) { // Enter key
+            e.preventDefault();
+            
+            var $this = $(this);
+            var fieldName = $this.attr('name');
+
+            // =====  Check required fields =====
+            requiredFields.forEach(function (name) {
+                var value = $("#addForm [name='" + name + "']").val().trim();
+                if (value === "") {
+                    $("#addForm #err" + name).text("*");
+
+                } else {
+                    $("#addForm #err" + name).text(""); // clear if filled
+                }
+            });
+            // ===== StaffCD duplicate check =====
+
+            if (fieldName === "StaffCD") {
+                var staffCD = $this.val().trim();
+                if (staffCD !== "") {
+                    $.ajax({
+                        url: '/Staff/CheckStaffCD',
+                        type: 'GET',
+                        data: { staffCD: staffCD },
+                        success: function (res) {
+                            if (res.exists) {
+                                $this.addClass("input-error");
+                            } else {
+                                $("#addForm [name='StaffCD']").removeClass("input-error");
+                                moveToNextFieldAdd($this);
+                            }
+                        },
+                        error: function () {
+                            console.error("Error checking StaffCD");
+                        }
+                    });
+                    return; // stop here, next field move handled in AJAX
+                } else {
+                    return; // stop, empty StaffCD already shows error
+                }
+            }
+            // =====  Move to next field if no error =====
+            moveToNextFieldAdd($this);
+        }
+    });
+
+    // ===== Clear error when typing =====
+    $('#addForm input, #addForm select, #addForm textarea').on('input', function () {
+        if ($(this).val().trim() !== "") {
+            $(this).removeClass("input-error");
+        }
+    });
+
+    // =====================
+    // ADD FORM
+    // =====================
+
+     $(document).on("submit", "#addForm", function (e) {
+        e.preventDefault();
+
+    //clear previous errors
+    $("#addForm .input-error").removeClass("input-error");
+    $("#addForm .text-danger").text("");
+
+    $.ajax({
+        url: '@Url.Action("Create", "Staff")',
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function (res) {
+
+            if (res.success) {
+
+                alert("登録成功しました");
+                $("#addModal").modal('hide');
+                location.reload();
+
+            } else if (res.errors) {
+
+                res.errors.forEach(function (err) {
+                    var fieldName = err.field.replace("model.", "");
+                    var $field = $("#addForm [name='" + fieldName + "']");
+                    $field.addClass("input-error");
+                });
+
+                //  focus first error field
+                var firstError = $("#addForm .input-error").first();
+                if (firstError.length) {
+                    firstError.focus();
+                }
+            }
+        },
+        error: function () {
+            console.error("エラーが発生しました");
+        }
+    });
+    });
+
+    // Add modal cancel
+    $(document).on("click", "#addModal .btn-cancel", function () {
+        $('#addForm')[0].reset();
+        $('.text-danger').text('');
+        $("#addForm .input-error").removeClass("input-error");
+    });
+    // =====================
+    // SEARCH
+    // =====================
+    $(document).on("click", "#btnSearch", function () {
+        var dept = $("#department").val();
+        var staff = $("#staff").val();
+
+        $.ajax({
+            url: '/Staff/StaffList',
+            type: 'GET',
+            data: { department: dept, staff: staff },
+            success: function (result) {
+                $("#tableStaff tbody").html($(result).find("#tableStaff tbody").html());
+            },
+            error: function () {
+               // alert("Error loading data");
+            }
+        });
+    });
+    // =====================
+    // OPEN EDIT MODAL
+    // =====================
+    $(document).on("click", "#tableStaff tbody .btn-primary", function () {
+
+        let row = $(this).closest("tr");
+
+        $("#StaffCD").val(row.find("td").eq(0).text().trim());
+        $("#StaffName").val(row.find("td").eq(1).text().trim());
+        $("#DepartmentCD").val(row.find(".deptCD").val());
+        $("#Position").val(row.find(".position").val());
+        $("#Email").val(row.find(".email").val());
+        $("#PhoneNo").val(row.find(".phoneNo").val());
+        $("#Remark").val(row.find(".remark").val());
+        $("#EmployeeType").val(row.find(".employeetype").val());
+
+        let joinedText = row.find("td").eq(3).text().trim();
+        $("#JoinedDate").val(joinedText ? joinedText.replace(/\//g, "/") : "");
+
+
+        $("#SeatNo").val(row.find("td").eq(4).text().trim());
+
+        let enrollVal = row.find(".enroll").val();
+        $("#editModal input[name='Enroll'][value='" + enrollVal + "']").prop("checked", true);
+
+        $('#editModal').modal('show');
+
+        setTimeout(() => $("#StaffName").focus(), 300);
+    });
+    // =====================
+    // EDIT FORM
+    // =====================
+
+    $('#editForm input, #editForm select, #editForm textarea').on('keypress', function (e) {
+        if (e.which === 13) { // Enter key
+            e.preventDefault();
+            var $this = $(this);
+
+            moveToNextFieldEdit($this);
+        }
+    });
+    $(document).on("submit", "#editForm", function (e) {
+        e.preventDefault();
+        $(".text-danger").text("");
+
+        $.ajax({
+            url: '/Staff/Update',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function (res) {
+                if (res.success) {
+
+                    alert("登録成功しました");
+                    $("#editModal").modal('hide');
+                    location.reload();
+
+                } else if (res.errors) {
+
+                    res.errors.forEach(function (err) {
+                        var fieldName = err.field.replace("model.", "");
+                        var $field = $("#editForm [name='" + fieldName + "']");
+                        $field.addClass("input-error");
+                    });
+                    var firstError = $("#editForm .input-error").first();
+                    if (firstError.length) {
+                        firstError.focus();
+                    }
+                }
+            },
+            error: function () {
+                alert("エラーが発生しました");
+            }
+        });
+    });
+
+    // Edit modal cancel
+    $(document).on("click", "#editModal .btn-cancel", function () {
+        $('#editForm')[0].reset();
+        $('.text-danger').text('');
+        $("#editForm .input-error").removeClass("input-error");
+    });
+
+    // =====================
+    // UPDATE SEAT
+    // =====================
+    $(document).on("click", "#btnUpdateSeat", function () {
+
+        let rows = $("#tableStaff tbody tr");
+        let dataList = [];
+        let seatMap = {};
+        let duplicateFound = false;
+
+        rows.each(function () {
+            let row = $(this);
+            let seatInput = row.find(".newSeat");
+
+            if (seatInput.val() !== "") {
+
+                let StaffCD = row.find("td").eq(0).text().trim();
+                let SeatNo = seatInput.val().trim();
+                let DepartmentCD = row.find(".deptCD").val();
+
+                if (!seatMap[DepartmentCD]) seatMap[DepartmentCD] = {};
+
+                if (seatMap[DepartmentCD][SeatNo]) {
+                    duplicateFound = true;
+                    alert(`Seat ${SeatNo} in Department ${DepartmentCD} is duplicated.`);
+                    return false;
+                }
+
+                seatMap[DepartmentCD][SeatNo] = StaffCD;
+
+                dataList.push({
+                    StaffCD: StaffCD,
+                    SeatNo: SeatNo,
+                    DepartmentCD: DepartmentCD
+                });
+            }
+        });
+
+        if (duplicateFound || dataList.length === 0) {
+            if (dataList.length === 0) alert("No seat entered");
+            return;
+        }
+
+        $.ajax({
+            url: '/Staff/UpdateSeat',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(dataList),
+            success: function (res) {
+                alert(res);
+                location.reload();
+            },
+            error: function (err) {
+               // alert("Error: " + err.responseText);
+            }
+        });
+
+    });
+
+    });
+
+    // =====================
+    // DATEPICKER: Add & Edit
+    // =====================
+    function initDatePickers() {
+        $("#JoinedDate").datepicker({
+            dateFormat: "yy/mm/dd"
+        });
+        $("#JoinedDateAdd").datepicker({
+            dateFormat: "yy/mm/dd"
+        });
+
+        // Auto open on focus
+        $(document).on("focus", "#JoinedDate, #JoinedDateAdd", function () {
+            $(this).datepicker("show");
+        });
+
+        // Optional: default today date in Add modal
+        if (!$("#JoinedDateAdd").val()) {
+            $("#JoinedDateAdd").val($.datepicker.formatDate('yy/mm/dd', new Date()));
+        }
+    }
+
+    function toggleSeatNo() {
+        var dept = $('#addForm [name="DepartmentCD"]').val();
+        var disable = ["S01", "S02", "S03"].includes(dept);
+
+        $('#addForm [name="SeatNo"]')
+            .val(disable ? "" : $('#addForm [name="SeatNo"]').val())
+            .prop("disabled", disable);
+    }
+
+    // ===== Helper to move focus =====
+    function moveToNextFieldEdit($current) {
+        var $fields = $('#editForm').find('input, select, textarea').filter(':visible');
+        var index = $fields.index($current);
+        if (index + 1 < $fields.length) {
+            $fields.eq(index + 1).focus();
+        } else {
+            $('#editForm button[type="submit"]').focus();
+        }
+    }
+
+    // ===== Helper to move focus =====
+    function moveToNextFieldAdd($current) {
+        var $fields = $('#addForm').find('input, select, textarea').filter(':visible');
+        var index = $fields.index($current);
+        if (index + 1 < $fields.length) {
+            $fields.eq(index + 1).focus();
+        } else {
+            $('#addForm button[type="submit"]').focus();
+        }
+    }
+</script>
+}
+
+<style>
+    /*StaffList css*/
     .table-wrapper {
         max-height: 400px; /* max height */
         overflow-y: auto; /* vertical scroll */
@@ -715,7 +717,7 @@ $(document).ready(function () {
             height: 28px;
             width: 190px;
             border: 2px solid #3d4740;
-            background-color: #DAF2D0;
+            background-color: white;
             box-sizing: border-box;
             border-radius: 4px;
         }
@@ -756,7 +758,7 @@ $(document).ready(function () {
         justify-content: center;
         gap: 1px;
         margin-top: 15px;
-        margin-left:25px;
+        margin-left: 25px;
     }
 
     .btn-cancel {
@@ -800,7 +802,7 @@ $(document).ready(function () {
     select.input-error,
     textarea.input-error {
         border: 2px solid #e57373 !important;
-       /* background-color: #fdecea !important;*/
+        /* background-color: #fdecea !important;*/
         transition: 0.2s;
     }
 
@@ -808,8 +810,6 @@ $(document).ready(function () {
             box-shadow: 0 0 3px rgba(229,115,115,0.4) !important;
             outline: none !important;
         }
-
-
 </style>
 
 

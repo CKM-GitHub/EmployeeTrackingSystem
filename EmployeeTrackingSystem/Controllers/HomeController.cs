@@ -16,7 +16,7 @@ namespace EmployeeTrackingSystem.Controllers
         public string conStr = ConfigurationManager.ConnectionStrings["SQLConnection"].ConnectionString;
         private EmployeeTrackingDBEntities db = new EmployeeTrackingDBEntities();
         public ActionResult Dashboard()
-        {
+        {            
             string json1 = Get_DashboardInformation(2, "D01");
             List<DashboardViewModel> table1 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json1);
             string json2 = Get_DashboardInformation(5, "D02");
@@ -42,7 +42,7 @@ namespace EmployeeTrackingSystem.Controllers
 
             string json_shop3 = Get_DashboardInformation(2, "S03");
             List<DashboardViewModel> tableshop3 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json_shop3);
-
+            
             var model = new DashboardTablesViewModel
             {
                 Table1 = table1,
@@ -56,9 +56,10 @@ namespace EmployeeTrackingSystem.Controllers
 
                 Table9 = tableshop1,
                 Table10 = tableshop2,
-                Table11 = tableshop3
+                Table11 = tableshop3,
+                AvailableShops = db.T_Department.Where(s => s.DepartmentCD.StartsWith("S")).ToList()
             };
-
+          
             return View(model);
         }
         public string Get_DashboardInformation(int show_column, string DepartmentCD)
@@ -104,11 +105,11 @@ namespace EmployeeTrackingSystem.Controllers
                 insertflag = Dashobard_StaffName_Click_Save(staffRecord);
                 if (insertflag)
                 {
-                    TempData["Message"] = "Update Successfully!!";
+                    TempData["Message"] = "登録しました。";
                 }
                 else
                 {
-                    TempData["Message"] = "Update Failed!!";
+                    TempData["Message"] = "登録失敗しました。";
                 }
             }
             else
@@ -124,9 +125,7 @@ namespace EmployeeTrackingSystem.Controllers
             {
                 DataTable dtinfo = new DataTable();
                 SqlParameter[] prms = new SqlParameter[6];
-
-
-
+                
                 prms[0] = new SqlParameter("@DepartmentCD", SqlDbType.VarChar) { Value = model.DepartmentCD };
                 prms[1] = new SqlParameter("@StaffCD", SqlDbType.VarChar) { Value = model.StaffCD1 };
 

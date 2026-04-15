@@ -46,3 +46,32 @@ textarea {
         border-bottom: 2px solid #32383e;
     }
 
+.navbar-nav .nav-item .nav-link {
+    text-decoration: none;
+    font-weight: normal;
+    color: white;
+    padding: 15px 20px;
+    transition: all 0.3s;
+}
+
+    .navbar-nav .nav-item .nav-link.active {
+        font-weight: bold;
+        text-decoration: underline;
+        color: #ffd800; /* optional highlight color */
+    }
+.th_center {
+    text-align: center;
+}
+
+.btn_search {
+    background-color: #B58F35;
+    color: white;
+    width: 100px;
+    font-weight: bold;
+}
+
+.btn_Blue {
+    width: 100px;
+    font-weight: bold;
+}
+

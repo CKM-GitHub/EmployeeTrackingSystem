@@ -1,9 +1,8 @@
-﻿@{
+﻿
+@using EmployeeTrackingSystem.Models
+@{
     ViewBag.Title = "Home Page";
 }
-
-
-
 <div class="container-fluid py-3">
     <div class="row align-items-center mb-3">
         <div class="col-md-3 col-sm-12">
@@ -88,15 +87,17 @@
                     <!-- 在席 -->
                     <div class="form-group">
                         <label><input type="radio" name="Status" value="在席" /> 在席</label>
+                        <div id="shop-options" class="shop-options" style="display:none;">
+                            @foreach (var shop in Model.AvailableShops)
+                            {
+                                <label><input type="radio" name="Shop" value=@shop.DepartmentCD /> @shop.DepartmentName</label>
+                            }
+                        </div>
                     </div>
                     <!-- 帰宅 -->
                     <div class="form-group">
                         <label><input type="radio" name="Status" value="帰宅" /> 帰宅</label>
-                        <div id="shop-options" class="shop-options" style="display:none;">
-                            <label><input type="radio" name="Shop" value="S01" /> ShopA</label>
-                            <label><input type="radio" name="Shop" value="S02" /> ShopB</label>
-                            <label><input type="radio" name="Shop" value="S03" /> ShopC</label>
-                        </div>
+
                     </div>
 
                     <!-- 外出 -->
@@ -182,11 +183,8 @@
 
 @section Scripts {
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="~/Content/dashboard_01.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    
     <script>
         $(document).ready(function () {
             $(document).on("click", ".staff-link", function () {
@@ -206,7 +204,7 @@
 
                 var returnDate = $(this).data("returndatetime");
                 var note = $(this).data("note");
-               
+
                 // Disable all ReturnDateTime and Note inputs by default
                 $("input[name^='ReturnDateTime']").prop("disabled", true).val("");
                 $("input[id^='Note']").prop("disabled", true).val("");
@@ -224,8 +222,8 @@
                     $("input[name='Note-visit']").prop("disabled", false).val(note);
                 }
                 // Show Shop radios only for Shop01, Shop02, Shop03 departments
-                var dept = $(this).data("did");
-                if (dept === "S01" || dept === "S02" || dept === "S03") {
+                var dept = $(this).data("did").toString(); // Ensure it is a string
+                if (dept.startsWith('S')) {
                     $("#shop-options").show();
                     $("input[name='Shop'][value='" + dept + "']").prop("checked", true);
                 } else {
@@ -239,25 +237,26 @@
                     format: 'YYYY/MM/DD HH:mm',
                     showClear: true,
                     showClose: true,
-                    widgetParent: '#staffModal',
+                    //widgetParent: '#staffModal',
                     minDate: moment().startOf('day'), // disable all dates before today
                     widgetPositioning: {
                         horizontal: 'left',
                         vertical: 'bottom'
                     }
+
                 });
                 $('#datetimepicker-meeting').datetimepicker({
                     format: 'YYYY/MM/DD HH:mm',
                     showClear: true,
                     showClose: true,
-                    widgetParent: '#staffModal',
+                    //widgetParent: '#staffModal',
                     minDate: moment().startOf('day') // disable all dates before today
                 });
                 $('#datetimepicker-visit').datetimepicker({
                     format: 'YYYY/MM/DD HH:mm',
                     showClear: true,
                     showClose: true,
-                    widgetParent: '#staffModal',
+                    //widgetParent: '#staffModal',
                     minDate: moment().startOf('day') // disable all dates before today
                 });
             });

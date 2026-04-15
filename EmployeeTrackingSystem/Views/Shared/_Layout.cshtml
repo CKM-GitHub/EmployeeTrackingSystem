@@ -11,30 +11,21 @@
     @RenderSection("scripts", required: false)
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
     <!-- Select2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
 </head>
 
 <body>
-    <style>
-        .navbar-nav .nav-item .nav-link {
-            text-decoration: none;
-            font-weight: normal;
-            color: white;
-            padding: 15px 20px;
-            transition: all 0.3s;
-        }
 
-            .navbar-nav .nav-item .nav-link.active {
-                font-weight: bold;
-                text-decoration: underline;
-                color: #ffd800; /* optional highlight color */
-            }
-    </style>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -49,7 +40,7 @@
                 <ul class="nav navbar-nav" id="menu">
                     <li class="nav-item"><a class="nav-link" href="/Home/Dashboard">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Staff/StaffList">Staff List</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Detail/DetailList">Detail List</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Detail/DetailList">Log List</a></li>
                 </ul>
             </div>
         </div>
