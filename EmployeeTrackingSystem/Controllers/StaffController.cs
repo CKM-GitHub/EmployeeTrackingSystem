@@ -33,7 +33,7 @@ namespace EmployeeTrackingSystem.Controllers
                                  Remark =s.Remark,
                                  EmployeeType =s.EmployeeType
 
-                             }).ToList();
+                             }).Where(s=> s.Enroll != false).ToList();
 
             //  Filter Department
             if (!string.IsNullOrEmpty(department) )
@@ -168,7 +168,7 @@ namespace EmployeeTrackingSystem.Controllers
 
                 if (staff == null)
                 {
-                    return Json(new { success = false, message = "Update failed" });
+                    return Json(new { success = false, message = "更新失敗しました。" });
                 }
                 if (model.StaffName != null)
                     staff.StaffName = model.StaffName;
@@ -203,7 +203,7 @@ namespace EmployeeTrackingSystem.Controllers
             }
             catch (Exception ex)
             {
-               return Json(new { success = false, message = "Update failed" });
+               return Json(new { success = false, message = "更新失敗しました。" });
             }
         }
         [HttpPost]
@@ -219,7 +219,7 @@ namespace EmployeeTrackingSystem.Controllers
 
                 // 2. Build current seat map (Department -> Seat -> Staff)
                 var seatMap = staffInDepartments
-                    .Where(s => s.SeatNo.HasValue)
+                    .Where(s => s.SeatNo.HasValue && s.Enroll != false)
                     .GroupBy(s => s.DepartmentCD)
                     .ToDictionary(
                         g => g.Key,
@@ -247,7 +247,14 @@ namespace EmployeeTrackingSystem.Controllers
                         var inBatch = list.Any(x => x.StaffCD == existingStaff);
                         if (!inBatch)
                         {
-                            return Content($"Error: Seat {model.SeatNo} in Department {model.DepartmentCD} is already assigned to {existingStaff}");
+                            var deptname = db.T_Department
+                              .Where(s => s.DepartmentCD == model.DepartmentCD)
+                              .Select(s => new
+                              {
+                                DeptName = s.DepartmentName
+                              }).FirstOrDefault();
+
+                            return Content($"Error: 席 {model.SeatNo} in {deptname.DeptName} is already assigned to {existingStaff}");
                         }
                     }
 

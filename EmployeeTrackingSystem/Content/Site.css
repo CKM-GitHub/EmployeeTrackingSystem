@@ -75,3 +75,12 @@ textarea {
     font-weight: bold;
 }
 
+
+
+.truncate-logic {
+    max-width: 500px; /* Adjust this width to fit your table design */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+

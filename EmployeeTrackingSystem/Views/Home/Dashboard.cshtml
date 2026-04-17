@@ -1,7 +1,7 @@
 ﻿
 @using EmployeeTrackingSystem.Models
 @{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Dashboard";
 }
 <div class="container-fluid py-3">
     <div class="row align-items-center mb-3">
@@ -80,7 +80,7 @@
                 <input type="hidden" id="StaffCd" name="StaffCd" />
                 <input type="hidden" id="DepartmentCd" name="DepartmentCd" />
                 <div class="modal-header">
-                    <h5 class="modal-title">Data入力</h5>
+                    <h5 class="modal-title">Data入力 &nbsp;&nbsp;&nbsp; <span id="staffName"></span></h5>
                 </div>
 
                 <div class="modal-body">
@@ -189,8 +189,7 @@
         $(document).ready(function () {
             $(document).on("click", ".staff-link", function () {
                 // Clear all inputs in the modal form
-                $("#staffForm")[0].reset();
-
+                $("#staffForm")[0].reset();                
                 // Also clear hidden fields explicitly
                 $("#StaffCd").val("");
                 $("#DepartmentCd").val("");
@@ -205,20 +204,31 @@
                 var returnDate = $(this).data("returndatetime");
                 var note = $(this).data("note");
 
+                const date = new Date(returnDate);
+
+                const formatted = date.toLocaleString('en-CA', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                }).replace(',', '').replace(/-/g, '-');
+
                 // Disable all ReturnDateTime and Note inputs by default
                 $("input[name^='ReturnDateTime']").prop("disabled", true).val("");
                 $("input[id^='Note']").prop("disabled", true).val("");
-
+               
                 if (status === "外出") {
-                    $("input[name='ReturnDateTime-out']").prop("disabled", false).val(returnDate);
+                    $("input[name='ReturnDateTime-out']").prop("disabled", false).val(formatted);
                     $("input[name='Note-out']").prop("disabled", false).val(note);
                 } else if (status === "会議") {
-                    $("input[name='ReturnDateTime-meeting']").prop("disabled", false).val(returnDate);
+                    $("input[name='ReturnDateTime-meeting']").prop("disabled", false).val(formatted);
                     $("input[name='Note-meeting']").prop("disabled", false).val(note);
                 } else if (status === "休み") {
                     $("input[name='Note-leave']").prop("disabled", false).val(note);
                 } else if (status === "直行") {
-                    $("input[name='ReturnDateTime-visit']").prop("disabled", false).val(returnDate);
+                    $("input[name='ReturnDateTime-visit']").prop("disabled", false).val(formatted);
                     $("input[name='Note-visit']").prop("disabled", false).val(note);
                 }
                 // Show Shop radios only for Shop01, Shop02, Shop03 departments
@@ -366,6 +376,25 @@
                     }
                 });
             });
+
+            document.addEventListener("mouseover", function (e) {
+                // Check if the hovered element has our class
+                if (e.target.classList.contains("nested-cell")) {
+                    const el = e.target;
+
+                    // If the actual text width is wider than the container
+                    if (el.scrollWidth > el.clientWidth) {
+                        // Set the title only for long strings
+                        el.setAttribute("title", el.innerText);
+                        el.style.cursor = "pointer";
+                    } else {
+                        // Remove title if it's a short string
+                        el.removeAttribute("title");
+                        el.style.cursor = "default";
+                    }
+                }
+            });
+
         });
 
         function formatDate(dateString) {

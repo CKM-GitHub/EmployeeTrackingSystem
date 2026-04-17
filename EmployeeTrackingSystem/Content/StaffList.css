@@ -1,0 +1,189 @@
+﻿
+/*StaffList css*/
+.table-wrapper {
+    max-height: 400px; /* max height */
+    overflow-y: auto; /* vertical scroll */
+    overflow-x: auto; /* horizontal scroll if needed */
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+#tableStaff {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px; /* smaller font for compact look */
+}
+
+    #tableStaff th, #tableStaff td {
+        padding: 6px 10px;
+        white-space: nowrap; /* prevent text wrap on small screens */
+    }
+
+        #tableStaff td.text-center {
+            text-align: center;
+        }
+
+        #tableStaff td.text-right {
+            text-align: left;
+        }
+
+    #tableStaff th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        height: 29px;
+        vertical-align: middle;
+    }
+
+    #tableStaff tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    #tableStaff th, #tableStaff td {
+        padding: 1px 2px;
+    }
+
+    #tableStaff input.newSeat {
+        width: 40px !important;
+    }
+
+    #tableStaff td:last-child,
+    #tableStaff th:last-child {
+        width: 100px; /* adjust as needed */
+        white-space: nowrap; /* keep button on one line */
+        text-align: center;
+    }
+
+    #tableStaff button {
+        width: 70px;
+        font-size: 11px;
+        padding: 2px 6px;
+    }
+
+.btn-fixed {
+    width: 100px;
+    font-weight: bold;
+    margin-left: 15px;
+}
+
+.btn-group-custom {
+    margin-left: 100px; /* move right */
+}
+
+.form-container {
+    width: 400px;
+    margin: 0 auto; /* keep center baseline */
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+    .form-row > label {
+        width: 120px;
+        text-align: right;
+    }
+
+    .form-row input:not([type="radio"]),
+    .form-row select,
+    .form-row textarea {
+        height: 28px;
+        width: 190px;
+        border: 2px solid #3d4740;
+        background-color: white;
+        box-sizing: border-box;
+        border-radius: 4px;
+    }
+
+.form-actions button {
+    margin: 0 10px;
+}
+
+.short-input {
+    width: 50px; /* class for short input width */
+}
+
+.radio-group input[type="radio"] {
+    vertical-align: middle;
+    margin-top: 0;
+}
+
+.radio-group {
+    flex: 1;
+    display: flex;
+    gap: 2px;
+    padding-left: 0;
+}
+
+    .radio-group label {
+        width: auto;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+    }
+
+textarea {
+    height: 100px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1px;
+    margin-top: 15px;
+    margin-left: 25px;
+}
+
+.btn-cancel {
+    background-color: #6c8ebf;
+    color: white;
+    border: none;
+    padding: 6px 20px;
+}
+
+.btn-submit {
+    background-color: #00aaff;
+    color: white;
+    border: none;
+    padding: 6px 20px;
+}
+
+.modal-body {
+    display: flex;
+    justify-content: center; /**/
+    background-color: #DAF2D0;
+}
+
+.modal-header {
+    padding: 0px 10px;
+    background-color: #83CCEB;
+}
+
+.modal-title {
+    font-size: 14px;
+    height: 25px;
+    align-content: center;
+}
+
+.text-danger {
+    color: red;
+    font-size: 12px;
+    margin: 0;
+}
+
+input.input-error,
+select.input-error,
+textarea.input-error {
+    border: 2px solid #e57373 !important;
+    /* background-color: #fdecea !important;*/
+    transition: 0.2s;
+}
+
+    input.input-error:focus {
+        box-shadow: 0 0 3px rgba(229,115,115,0.4) !important;
+        outline: none !important;
+    }

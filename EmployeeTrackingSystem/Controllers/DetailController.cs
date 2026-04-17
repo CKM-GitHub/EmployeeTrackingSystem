@@ -139,7 +139,7 @@ namespace EmployeeTrackingSystem.Controllers
         {
             // Replace this with your actual database logic (e.g., db.Staffs.Where...)
             var staffList = db.T_StaffMaster
-                              .Where(s => s.DepartmentCD == departmentId)
+                              .Where(s => s.DepartmentCD == departmentId && s.Enroll != false)
                               .Select(s => new {
                                   Value = s.StaffCD,
                                   Text = s.StaffName

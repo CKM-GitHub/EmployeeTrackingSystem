@@ -1,10 +1,11 @@
-﻿@using EmployeeTrackingSystem.Models
+﻿
+@using EmployeeTrackingSystem.Models
 @model List<staffViewModel>
 
-@{ ViewBag.Title = "Staff List"; }
-<div class="container mt-2">
+    @{ ViewBag.Title = "Staff List"; }
+    <div class="container mt-2">
 
-    @section Buttons {
+        @section Buttons {
         <div class="d-flex mb-2">
             <button type="button" id="btnSearch" class="btn_search btn">
                 変更
@@ -13,286 +14,289 @@
                 追加
             </button>
         </div>
-    }
+        }
 
-    <!-- TABLE AREA -->
-    <div class="table-warpper table-v-scroll table-responsive">
+        <!-- TABLE AREA -->
+        <div class="table-warpper table-v-scroll table-responsive">
 
-        <table class="table table-striped table-hover" id="tableStaff">
-            <thead class="table-dark">
-                <tr class="table-header">
-                    <th>スタッフCD</th>
-                    <th>スタッフ名</th>
-                    <th>部門名</th>
-                    <th class="th_center">入会日</th>
-                    <th class="th_center">席番号</th>
-                    <th class="th_center">
-                        Next <br />
-                        席番号
-                    </th>
-                    <th>Action</th>
-                </tr>
-            </thead>
+            <table class="table table-striped table-hover" id="tableStaff">
+                <thead class="table-dark">
+                    <tr class="table-header">
+                        <th>スタッフCD</th>
+                        <th>スタッフ名</th>
+                        <th>部門名</th>
+                        <th class="th_center">入会日</th>
+                        <th class="th_center">席番号</th>
+                        <th class="th_center">
+                            Next <br />
+                            席番号
+                        </th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                @if (Model != null && Model.Count > 0)
-                {
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
                     foreach (var item in Model)
                     {
-                        <tr>
-                            <td class="text-right"> @item.StaffCD</td>
-                            <td class="text-right">@item.StaffName</td>
-                            <td class="text-right">
-                                @item.DepartmentName
-                                <input type="hidden" class="deptCD" value="@item.DepartmentCD" />
-                                <input type="hidden" class="position" value="@item.Position" />
-                                <input type="hidden" class="email" value="@item.Email" />
-                                <input type="hidden" class="phoneNo" value="@item.PhoneNo" />
-                                <input type="hidden" class="remark" value="@item.Remark" />
-                                <input type="hidden" class="employeetype" value="@item.EmployeeType" />
-                                <input type="hidden" class="enroll" value="@item.Enroll.ToString().ToLower()" />
-                            </td>
-                            <td class="text-center">
-                                @(item.JoinedDate.HasValue? item.JoinedDate.Value.ToString("yyyy/MM/dd")
-    : "")
-                            </td>
-                            <td class="text-center">@item.SeatNo</td>
-                            <td class="text-center">
-                                <input type="text" class="newSeat"
-                                       oninput="this.value = this.value.replace(/\D/g,'')"
-                                       onpaste="event.preventDefault();"
-                                       style="text-align: center;" 
-                                       maxlength="2"/>
-                            </td>
+                    <tr>
+                        <td class="text-right"> @item.StaffCD</td>
+                        <td class="text-right">@item.StaffName</td>
+                        <td class="text-right">
+                            @item.DepartmentName
+                            <input type="hidden" class="deptCD" value="@item.DepartmentCD" />
+                            <input type="hidden" class="position" value="@item.Position" />
+                            <input type="hidden" class="email" value="@item.Email" />
+                            <input type="hidden" class="phoneNo" value="@item.PhoneNo" />
+                            <input type="hidden" class="remark" value="@item.Remark" />
+                            <input type="hidden" class="employeetype" value="@item.EmployeeType" />
+                            <input type="hidden" class="enroll" value="@item.Enroll.ToString().ToLower()" />
+                        </td>
+                        <td class="text-center">
+                            @(item.JoinedDate.HasValue? item.JoinedDate.Value.ToString("yyyy/MM/dd"): "")
+                        </td>
+                        <td class="text-center">@item.SeatNo</td>
+                        <td class="text-center">
+                            <input type="text" class="newSeat"
+                                   oninput="this.value = this.value.replace(/\D/g,'')"
+                                   onpaste="event.preventDefault();"
+                                   style="text-align: center;"
+                                   maxlength="2" />
+                        </td>
 
-                            <td>
-                                <button class="btn btn-primary">
-                                    変更
-                                </button>
-                            </td>
-                        </tr>
+                        <td>
+                            <button class="btn btn-primary">
+                                変更
+                            </button>
+                        </td>
+                    </tr>
                     }
-                }
-                else
-                {
+                    }
+                    else
+                    {
                     <tr>
                         <td colspan="7" class="text-center text-danger">
                             No data found
                         </td>
                     </tr>
-                }
-            </tbody>
-        </table>
+                    }
+                </tbody>
+            </table>
 
+
+        </div>
+
+        <div>
+            <button type="button" id="btnUpdateSeat"
+                    class="btn btn-primary"
+                    style="display:block; margin-left:auto; margin-right:30px;margin-top:8px; width:100px;">
+                席を変わる
+            </button>
+        </div>
 
     </div>
 
-    <div>
-        <button type="button" id="btnUpdateSeat"
-                class="btn btn-primary"
-                style="display:block; margin-left:auto; margin-right:30px;margin-top:8px; width:100px;">
-            席を変わる
-        </button>
-    </div>
+    <!--Update-->
+    <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog" style="max-width:400px;">
+            <div class="modal-content">
+                <!-- Header -->
+                <div class="modal-header">
+                    <div class="modal-title">スタッフ修正</div>
+                </div> <!-- Body -->
+                <div class="modal-body">
+                    <form id="editForm">
+                        @Html.AntiForgeryToken()
+                        <div class="form-container">
 
-</div>
-
-<!--Update-->
-<div class="modal fade" id="editModal" tabindex="-1">
-    <div class="modal-dialog" style="max-width:400px;">
-        <div class="modal-content">
-            <!-- Header -->
-            <div class="modal-header">
-                <div class="modal-title">スタッフ修正</div>
-            </div> <!-- Body -->
-            <div class="modal-body">
-                <form id="editForm">
-                    @Html.AntiForgeryToken()
-                    <div class="form-container">
-
-                        <div class="form-row">
-                            <label>スタッフCD</label>
-                            <input type="text" id="StaffCD" name="StaffCD" readonly style="background-color:lightgray;width:80px;" />
-                            <span class="text-danger" id="errStaffCD"></span>
-                        </div>
-
-                        <div class="form-row">
-                            <label>スタッフ名</label>
-                            <input type="text" id="StaffName" name="StaffName" />
-                            <span class="text-danger" id="errStaffName"></span>
-                        </div>
-
-                        <div class="form-row">
-                            <label>部門CD</label>
-                            @Html.DropDownList("DepartmentCD", ViewBag.Departments as SelectList, new { @class = "form-control DepartmentCD" })
-
-                            <span class="text-danger" id="errDepartmentCD"></span>
-                        </div>
-
-                        <div class="form-row">
-                            <label>位置</label>
-                            <input type="text" name="Position" id="Position" />
-                            <span class="text-danger" id="errPosition"></span>
-                        </div>
-
-                        <div class="form-row">
-                            <label>メール</label>
-                            <input type="text" name="Email" id="Email" />
-                            <span class="text-danger" id="errEmail"></span>
-                        </div>
-
-                        <div class="form-row">
-                            <label>電話番号</label>
-                            <input type="text" name="PhoneNo" id="PhoneNo" />
-                            <span class="text-danger" id="errPhoneNo"></span>
-                        </div>
-
-                        <div class="form-row">
-                            <label>入会日</label>
-                            <input type="text" id="JoinedDate" name="JoinedDate" placeholder="yyyy/MM/dd" />
-                        </div>
-
-                        <div class="form-row">
-                            <label>従業員の種類</label>
-                            <select name="EmployeeType" class="form-control EmployeeType" id="EmployeeType">
-                                <option>Full Time</option>
-                                <option>Part Time</option>
-                            </select>
-                        </div>
-
-                        <div class="form-row">
-                            <label>登録済み</label>
-                            <div class="radio-group">
-                                <label>  <input type="radio" name="Enroll" value="true" checked /> Active</label>
-                                <label><input type="radio" name="Enroll" value="false" /> InActive</label>
+                            <div class="form-row">
+                                <label>スタッフCD</label>
+                                <input type="text" id="StaffCD" name="StaffCD" readonly style="background-color:lightgray;width:80px;" />
+                                <span class="text-danger" id="errStaffCD"></span>
                             </div>
-                        </div>
 
-                        <div class="form-row">
-                            <label style="height: 55px !important;">リマーク</label>
-                            <textarea name="Remark" id="Remark" rows="2" style=" height: 60px !important;"></textarea>
-                            <span class="text-danger" id="errRemark"></span>
-                        </div>
+                            <div class="form-row">
+                                <label>スタッフ名</label>
+                                <input type="text" id="StaffName" name="StaffName" />
+                                <span class="text-danger" id="errStaffName"></span>
+                            </div>
 
-                        <div class="form-row">
-                            <label>席番号</label>
-                            <input type="number" id="SeatNo" name="SeatNo" style="width:50px;background-color:lightgray" readonly />
-                        </div>
+                            <div class="form-row">
+                                <label>部門CD</label>
+                                @Html.DropDownList("DepartmentCD", ViewBag.Departments as SelectList, new { @class = "DepartmentCD" })
+                                @*//form-control*@
 
-                        <!-- Buttons -->
-                        <div class="form-actions">
-                            <button type="button" class="btn-cancel" data-dismiss="modal">取消</button>
-                            <button type="submit" class="btn-submit">修正</button>
-                        </div>
+                                <span class="text-danger" id="errDepartmentCD"></span>
+                            </div>
 
-                    </div>
-                </form>
+                            <div class="form-row">
+                                <label>位置</label>
+                                <input type="text" name="Position" id="Position" />
+                                <span class="text-danger" id="errPosition"></span>
+                            </div>
+
+                            <div class="form-row">
+                                <label>メール</label>
+                                <input type="text" name="Email" id="Email" />
+                                <span class="text-danger" id="errEmail"></span>
+                            </div>
+
+                            <div class="form-row">
+                                <label>電話番号</label>
+                                <input type="text" name="PhoneNo" id="PhoneNo" />
+                                <span class="text-danger" id="errPhoneNo"></span>
+                            </div>
+
+                            <div class="form-row">
+                                <label>入会日</label>
+                                <input type="text" id="JoinedDate" name="JoinedDate" placeholder="yyyy/MM/dd" />
+                            </div>
+
+                            <div class="form-row">
+                                <label>従業員の種類</label>
+                                <select name="EmployeeType" class="EmployeeType" id="EmployeeType">
+                                    @*form-control*@
+
+                                    <option>Full Time</option>
+                                    <option>Part Time</option>
+                                </select>
+                            </div>
+
+                            <div class="form-row">
+                                <label>登録済み</label>
+                                <div class="radio-group">
+                                    <label>  <input type="radio" name="Enroll" value="true" checked /> Active</label>
+                                    <label><input type="radio" name="Enroll" value="false" /> InActive</label>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <label style="height: 55px !important;">リマーク</label>
+                                <textarea name="Remark" id="Remark" rows="2" style=" height: 60px !important;"></textarea>
+                                <span class="text-danger" id="errRemark"></span>
+                            </div>
+
+                            <div class="form-row">
+                                <label>席番号</label>
+                                <input type="number" id="SeatNo" name="SeatNo" style="width:50px;background-color:lightgray" readonly />
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="form-actions">
+                                <button type="button" class="btn-cancel" data-dismiss="modal">取消</button>
+                                <button type="submit" class="btn-submit">修正</button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- ADD-->
-<div class="modal fade" id="addModal" tabindex="-1">
-    <div class="modal-dialog" style="max-width:400px;">
-        <div class="modal-content">
-            <!-- Header -->
-            <div class="modal-header">
-                <div class="modal-title">スタッフ追加</div>
-            </div> <!-- Body -->
-            <div class="modal-body">
-                <form id="addForm">
-                    @Html.AntiForgeryToken()
-                    <div class="form-container">
+    <!-- ADD-->
+    <div class="modal fade" id="addModal" tabindex="-1">
+        <div class="modal-dialog" style="max-width:400px;">
+            <div class="modal-content">
+                <!-- Header -->
+                <div class="modal-header">
+                    <div class="modal-title">スタッフ追加</div>
+                </div> <!-- Body -->
+                <div class="modal-body">
+                    <form id="addForm">
+                        @Html.AntiForgeryToken()
+                        <div class="form-container">
 
-                        <div class="form-row">
-                            <label>スタッフCD</label>
-                            <input type="text" style="width:80px;" name="StaffCD"  id="StaffCD" data-ajax-check="/Staff/CheckStaffCD" />
-                            <span class="text-danger" id="errStaffCD"></span>
+                            <div class="form-row">
+                                <label>スタッフCD</label>
+                                <input type="text" style="width:80px;" name="StaffCD" id="StaffCD" data-ajax-check="/Staff/CheckStaffCD" tabindex="1" />
+                                <span class="text-danger" id="errStaffCD"></span>
+                            </div>
+                            <div class="form-row">
+                                <label>スタッフ名</label>
+                                <input type="text" name="StaffName" />
+                                <span class="text-danger" id="errStaffName"></span>
+                            </div>
 
-                        </div>
-                        <div class="form-row">
-                            <label>スタッフ名</label>
-                            <input type="text" name="StaffName"  />
-                            <span class="text-danger" id="errStaffName"></span>
-                        </div>
-
-                        <div class="form-row">
-                            <label>部門CD</label>
-                            @Html.DropDownList("DepartmentCD", ViewBag.Departments as SelectList)
-                            @*,
+                            <div class="form-row">
+                                <label>部門CD</label>
+                                @Html.DropDownList("DepartmentCD", ViewBag.Departments as SelectList)
+                                @*,
                                 new { @class = "form-control" }))*@
-                            <span class="text-danger" id="errDepartmentCD"></span>
-                        </div>
+                                <span class="text-danger" id="errDepartmentCD"></span>
+                            </div>
 
-                        <div class="form-row">
-                            <label>位置</label>
-                            <input type="text" name="Position" />
-                            <span class="text-danger" id="errPosition"></span>
-                        </div>
+                            <div class="form-row">
+                                <label>位置</label>
+                                <input type="text" name="Position" />
+                                <span class="text-danger" id="errPosition"></span>
+                            </div>
 
-                        <div class="form-row">
-                            <label>メール</label>
-                            <input type="text" name="Email" data-required="true" data-validate="email" />
-                            <span class="text-danger" id="errEmail"></span>
-                        </div>
+                            <div class="form-row">
+                                <label>メール</label>
+                                <input type="text" name="Email" data-required="true" data-validate="email" />
+                                <span class="text-danger" id="errEmail"></span>
+                            </div>
 
-                        <div class="form-row">
-                            <label>電話番号</label>
-                            <input type="text" name="PhoneNo" />
-                            <span class="text-danger" id="errPhoneNo"></span>
-                        </div>
+                            <div class="form-row">
+                                <label>電話番号</label>
+                                <input type="text" name="PhoneNo" />
+                                <span class="text-danger" id="errPhoneNo"></span>
+                            </div>
 
-                        <div class="form-row">
-                            <label>入会日</label>
-                            <input type="text" name="JoinedDate" id="JoinedDateAdd" placeholder="yyyy/MM/dd" />
-                        </div>
+                            <div class="form-row">
+                                <label>入会日</label>
+                                <input type="text" name="JoinedDate" id="JoinedDateAdd" placeholder="yyyy/MM/dd" />
+                            </div>
 
-                        <div class="form-row">
-                            <label>従業員の種類</label>
-                            <select name="EmployeeType">
-                                <option>Full Time</option>
-                                <option>Part Time</option>
-                            </select>
-                        </div>
-                        <div class="form-row">
-                            <label>登録済み</label>
-                            <div class="radio-group">
-                                <label>  <input type="radio" name="Enroll" value="true" checked>Active</label>
-                                <label>  <input type="radio" name="Enroll" value="false">InActive</label>
+                            <div class="form-row">
+                                <label>従業員の種類</label>
+                                <select name="EmployeeType">
+                                    <option>Full Time</option>
+                                    <option>Part Time</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>登録済み</label>
+                                <div class="radio-group">
+                                    <label>  <input type="radio" name="Enroll" value="true" checked>Active</label>
+                                    <label>  <input type="radio" name="Enroll" value="false">InActive</label>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <label style=" height: 55px !important;">リマーク</label>
+                                <textarea name="Remark" rows="2" style=" height: 60px !important;"></textarea>
+                                <span class="text-danger" id="errRemark"></span>
+                            </div>
+                            <div class="form-row">
+                                <label>席番号</label>
+                                <input type="text" name="SeatNo" class="short-input" oninput="this.value = this.value.replace(/\D/g,'')" style="width:50px;" maxlength="2" />
+                                <span class="text-danger" id="errSeatNo"></span>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn-cancel" data-dismiss="modal">取消</button>
+                                <button type="submit" class="btn-submit">登録</button>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <label style=" height: 55px !important;">リマーク</label>
-                            <textarea name="Remark" rows="2" style=" height: 60px !important;"></textarea>
-                            <span class="text-danger" id="errRemark"></span>
-                        </div>
-                        <div class="form-row">
-                            <label>席番号</label>
-                            <input type="text" name="SeatNo" class="short-input" oninput="this.value = this.value.replace(/\D/g,'')" style="width:50px;" maxlength="2"/>
-                            <span class="text-danger" id="errSeatNo"></span>
-                        </div>
-                        <div class="form-actions">
-                            <button type="button" class="btn-cancel" data-dismiss="modal">取消</button>
-                            <button type="submit" class="btn-submit">登録</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
-@section scripts {
-<script>
+    @section scripts {
+    <link rel="stylesheet" href="~/Content/StaffList.css" />
+    <script>
     $(document).ready(function () {
     $('#department').select2();
     $('#staff').select2();
     initDatePickers();
-    
+
     $('#addForm [name="DepartmentCD"]').on('change', toggleSeatNo);
     $('#addModal').on('shown.bs.modal', toggleSeatNo);
+
     // =====================
     // Add Form Enter key validation
     // =====================
@@ -302,7 +306,7 @@
     $('#addForm input, #addForm select, #addForm textarea').on('keypress', function (e) {
         if (e.which === 13) { // Enter key
             e.preventDefault();
-            
+
             var $this = $(this);
             var fieldName = $this.attr('name');
 
@@ -358,45 +362,38 @@
     // ADD FORM
     // =====================
 
-     $(document).on("submit", "#addForm", function (e) {
+    $(document).on("submit", "#addForm", function (e) {
         e.preventDefault();
-
-    //clear previous errors
-    $("#addForm .input-error").removeClass("input-error");
-    $("#addForm .text-danger").text("");
-
-    $.ajax({
-        url: '@Url.Action("Create", "Staff")',
-        type: 'POST',
-        data: $(this).serialize(),
-        success: function (res) {
-
-            if (res.success) {
-
-                alert("登録成功しました");
-                $("#addModal").modal('hide');
-                location.reload();
-
-            } else if (res.errors) {
-
-                res.errors.forEach(function (err) {
-                    var fieldName = err.field.replace("model.", "");
-                    var $field = $("#addForm [name='" + fieldName + "']");
-                    $field.addClass("input-error");
-                });
-
-                //  focus first error field
-                var firstError = $("#addForm .input-error").first();
-                if (firstError.length) {
-                    firstError.focus();
+        //clear previous errors
+        $("#addForm .input-error").removeClass("input-error");
+        $("#addForm .text-danger").text("");
+        $.ajax({
+            url: '@Url.Action("Create", "Staff")',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function (res) {
+                if (res.success) {
+                    alert("登録成功しました");
+                    $("#addModal").modal('hide');
+                    location.reload();
+                }else if (res.errors) {
+                    res.errors.forEach(function (err) {
+                        var fieldName = err.field.replace("model.", "");
+                        var $field = $("#addForm [name='" + fieldName + "']");
+                        $field.addClass("input-error");
+                    });
+                    //  focus first error field
+                    var firstError = $("#addForm .input-error").first();
+                    if (firstError.length) {
+                        firstError.focus();
+                    }                        
                 }
+            },
+            error: function () {
+                console.error("エラーが発生しました");
             }
-        },
-        error: function () {
-            console.error("エラーが発生しました");
-        }
-    });
-    });
+        });
+        });   
 
     // Add modal cancel
     $(document).on("click", "#addModal .btn-cancel", function () {
@@ -496,7 +493,8 @@
                 alert("エラーが発生しました");
             }
         });
-    });
+        });
+        
 
     // Edit modal cancel
     $(document).on("click", "#editModal .btn-cancel", function () {
@@ -524,12 +522,13 @@
                 let StaffCD = row.find("td").eq(0).text().trim();
                 let SeatNo = seatInput.val().trim();
                 let DepartmentCD = row.find(".deptCD").val();
+                let DeptName = row.find("td").eq(2).text().trim();
 
                 if (!seatMap[DepartmentCD]) seatMap[DepartmentCD] = {};
 
                 if (seatMap[DepartmentCD][SeatNo]) {
                     duplicateFound = true;
-                    alert(`Seat ${SeatNo} in Department ${DepartmentCD} is duplicated.`);
+                    alert(`Seat ${SeatNo} in  ${DeptName} Department is duplicated.`);
                     return false;
                 }
 
@@ -564,7 +563,22 @@
 
     });
 
+    $("#tableStaff").on("keydown", ".newSeat", function (e) { // 20260416 ttw
+
+            if (e.key === "Enter") {
+                e.preventDefault();
+
+                var inputs = $("#tableStaff .newSeat");
+                var index = inputs.index(this);
+
+                if (index + 1 < inputs.length) {
+                    inputs.eq(index + 1).focus();
+                }
+            }
+        });
+
     });
+
 
     // =====================
     // DATEPICKER: Add & Edit
@@ -590,11 +604,14 @@
 
     function toggleSeatNo() {
         var dept = $('#addForm [name="DepartmentCD"]').val();
-        var disable = ["S01", "S02", "S03"].includes(dept);
+        var disable = dept.startsWith('S'); // 20260416 ttw
+        //  var disable = ["S01", "S02", "S03"].includes(dept);
 
         $('#addForm [name="SeatNo"]')
             .val(disable ? "" : $('#addForm [name="SeatNo"]').val())
             .prop("disabled", disable);
+
+        $("#JoinedDateAdd").val($.datepicker.formatDate('yy/mm/dd', new Date())); // 20260416 ttw
     }
 
     // ===== Helper to move focus =====
@@ -618,199 +635,10 @@
             $('#addForm button[type="submit"]').focus();
         }
     }
-</script>
-}
-
-<style>
-    /*StaffList css*/
-    .table-wrapper {
-        max-height: 400px; /* max height */
-        overflow-y: auto; /* vertical scroll */
-        overflow-x: auto; /* horizontal scroll if needed */
-        border: 1px solid #ccc;
-        border-radius: 6px;
+    </script>
     }
 
-    #tableStaff {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        font-size: 13px; /* smaller font for compact look */
-    }
 
-        #tableStaff th, #tableStaff td {
-            padding: 6px 10px;
-            white-space: nowrap; /* prevent text wrap on small screens */
-        }
-
-            #tableStaff td.text-center {
-                text-align: center;
-            }
-
-            #tableStaff td.text-right {
-                text-align: left;
-            }
-
-        #tableStaff th {
-            position: sticky;
-            top: 0;
-            z-index: 1;
-            height: 29px;
-            vertical-align: middle;
-        }
-
-        #tableStaff tbody tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        #tableStaff th, #tableStaff td {
-            padding: 1px 2px;
-        }
-
-        #tableStaff input.newSeat {
-            width: 40px !important;
-        }
-
-        #tableStaff td:last-child,
-        #tableStaff th:last-child {
-            width: 100px; /* adjust as needed */
-            white-space: nowrap; /* keep button on one line */
-            text-align: center;
-        }
-
-        #tableStaff button {
-            width: 70px;
-            font-size: 11px;
-            padding: 2px 6px;
-        }
-
-    .btn-fixed {
-        width: 100px;
-        font-weight: bold;
-        margin-left: 15px;
-    }
-
-    .btn-group-custom {
-        margin-left: 100px; /* move right */
-    }
-
-    .form-container {
-        width: 400px;
-        margin: 0 auto; /* keep center baseline */
-    }
-
-    .form-row {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 6px;
-    }
-
-        .form-row > label {
-            width: 120px;
-            text-align: right;
-        }
-
-        .form-row input:not([type="radio"]),
-        .form-row select,
-        .form-row textarea {
-            height: 28px;
-            width: 190px;
-            border: 2px solid #3d4740;
-            background-color: white;
-            box-sizing: border-box;
-            border-radius: 4px;
-        }
-
-    .form-actions button {
-        margin: 0 10px;
-    }
-
-    .short-input {
-        width: 50px; /* class for short input width */
-    }
-
-    .radio-group input[type="radio"] {
-        vertical-align: middle;
-        margin-top: 0;
-    }
-
-    .radio-group {
-        flex: 1;
-        display: flex;
-        gap: 2px;
-        padding-left: 0;
-    }
-
-        .radio-group label {
-            width: auto;
-            display: flex;
-            align-items: center;
-            gap: 2px;
-        }
-
-    textarea {
-        height: 100px;
-    }
-
-    .form-actions {
-        display: flex;
-        justify-content: center;
-        gap: 1px;
-        margin-top: 15px;
-        margin-left: 25px;
-    }
-
-    .btn-cancel {
-        background-color: #6c8ebf;
-        color: white;
-        border: none;
-        padding: 6px 20px;
-    }
-
-    .btn-submit {
-        background-color: #00aaff;
-        color: white;
-        border: none;
-        padding: 6px 20px;
-    }
-
-    .modal-body {
-        display: flex;
-        justify-content: center; /**/
-        background-color: #DAF2D0;
-    }
-
-    .modal-header {
-        padding: 0px 10px;
-        background-color: #83CCEB;
-    }
-
-    .modal-title {
-        font-size: 14px;
-        height: 25px;
-        align-content: center;
-    }
-
-    .text-danger {
-        color: red;
-        font-size: 12px;
-        margin: 0;
-    }
-
-    input.input-error,
-    select.input-error,
-    textarea.input-error {
-        border: 2px solid #e57373 !important;
-        /* background-color: #fdecea !important;*/
-        transition: 0.2s;
-    }
-
-        input.input-error:focus {
-            box-shadow: 0 0 3px rgba(229,115,115,0.4) !important;
-            outline: none !important;
-        }
-</style>
 
 
 

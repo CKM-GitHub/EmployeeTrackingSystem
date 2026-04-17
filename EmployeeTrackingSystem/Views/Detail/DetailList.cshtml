@@ -6,10 +6,10 @@
 
 <div class="container mt-2">
     @section Buttons {
-        <button class="btn_search btn" onclick="searchData()">検索</button>
-        <button class="btn_Blue btn btn-primary" onclick="exportExcel()">Excel</button>
+        <button class="btn_search btn" id="btn_search">検索</button>
+        <button class="btn_Blue btn btn-primary" id="btn_Excel">Excel</button>
     }
-
+    
     <div class="table-v-scroll table-responsive">
         <table id="detailtb" class="table table-striped table-hover">
             <thead>
@@ -17,22 +17,26 @@
                     <th width="10%">スタッフ名</th>
                     <th width="10%">部門名</th>
                     <th class="th_center" width="5%">状態</th>
-                    <th class="th_center" width="20%">開始日時</th>
-                    <th class="th_center" width="20%">返却日時</th>
-                    <th width="30%">備考</th>
+                    <th class="th_center" width="15%">開始日時</th>
+                    <th class="th_center" width="15%">返却日時</th>
+                    <th width="40%">備考</th>
                 </tr>
             </thead>
             <tbody id="DetailTable">
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>@item.StaffName</td>
-                        <td>@item.DepartmentName</td>
-                        <td style="background-color:@GetStatusColor(item.Status)" align="center">@item.Status</td>
-                        <td class="th_center">@(item.StartDateTime.HasValue ? item.StartDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>
-                        <td class="th_center">@(item.ReturnDateTime.HasValue ? item.ReturnDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>
-                        <td>@item.Note</td>
-                    </tr>
+                <tr>
+                    <td class="truncate-logic">@item.StaffName</td>
+                    <td>@item.DepartmentName</td>
+                    <td class="th_center" style="background-color:@GetStatusColor(item.Status)">@item.Status</td>
+                    <td class="th_center">@(item.StartDateTime.HasValue ? item.StartDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>
+                    <td class="th_center">@(item.ReturnDateTime.HasValue ? item.ReturnDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>                   
+                    <td>
+                        <div class="truncate-logic" >
+                            @item.Note
+                        </div>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>
@@ -57,24 +61,22 @@
 
 @section Scripts {
 
-    <script type="text/javascript">
+    <script>
 
         $(document).ready(function () {
             $('#department').select2();
             $('#staff').select2();
-        });
-
-
-        function searchData() {
-            var searchParams = {
+            
+            $(document).on("click", "#btn_search", function () {
+                var searchParams = {
                 departMent: $('#department').val(),
                 staffName: $('#staff').val(),
                 fromDate: $('#fromDate').val(),
                 toDate: $('#toDate').val()
-            };
-            $.ajax({
-            url: '@Url.Action("GetFilteredData", "Detail")',
-            type: 'POST',
+                };
+                $.ajax({
+                url: '@Url.Action("GetFilteredData", "Detail")',
+                type: 'POST',
                 data: searchParams,
                 success: function (data) {
                     var items = "";
@@ -83,21 +85,68 @@
                     // 3. Loop through JSON result
                     $.each(data, function (i, item) {
                         items += "<tr>" +
-                            "<td>" + (item.StaffName || "") + "</td>" +
+                            "<td class='truncate-logic'>" + (item.StaffName || "") + "</td>" +
                             "<td>" + (item.DepartmentName || "") + "</td>" +
                             "<td style=background-color:" + getStatusColor(item.Status) + " align = center>" + (item.Status || "") + "</td>" +
                             "<td class='th_center'>" + (item.StartDateTime || "") + "</td>" +
                             "<td class='th_center'>" + (item.ReturnDateTime || "") + "</td>" +
-                            "<td>" + (item.Note || "") + "</td>" +
+                            "<td class='truncate-logic'>" + (item.Note || "") + "</td>" +
                             "</tr>";
                     });
                     // 4. Bind to table
                     $('#DetailTable').html(items);
                 }
+                });
             });
-        }
 
+              //Excel Export
+            $(document).on("click", "#btn_Excel", function () {
+                // Collect all your filter values
+                var filters = {
+                    departMent: $('#department').val(),
+                    staffName: $('#staff').val(),
+                    fromDate: $('#fromDate').val(),
+                    toDate: $('#toDate').val()
+                };
+                // Create a hidden form dynamically
+                var $form = $('<form>', {
+                    action: '@Url.Action("ExportToExcel", "Detail")',
+                    method: 'post',
+                    data: filters
+                });
+                // Add each filter as a hidden input
+                $.each(filters, function (key, value) {
+                $form.append($('<input>', {
+                    type: 'hidden',
+                    name: key,
+                    value: value
+                }));
+                });
+                // Append to body, submit, and remove
+                $(document.body).append($form);
+                $form.submit();
+                $form.remove();
+            });
 
+            document.addEventListener("mouseover", function (e) {
+                // Check if the hovered element has our class
+                if (e.target.classList.contains("truncate-logic")) {
+                    const el = e.target;
+
+                    // If the actual text width is wider than the container
+                    if (el.scrollWidth > el.clientWidth) {
+                        // Set the title only for long strings
+                        el.setAttribute("title", el.innerText);
+                        el.style.cursor = "pointer";
+                    } else {
+                        // Remove title if it's a short string
+                        el.removeAttribute("title");
+                        el.style.cursor = "default";
+                    }
+                }
+            });
+        });
+        
         function getStatusColor(status) {
             if (status == "直行") return "#e3dca8";
             if (status == "外出") return "#e3dca8";
@@ -107,37 +156,7 @@
             if (status == "会議") return "#f0a3dd";
         return "";
     }
-
-
-        //Excel Export
-        function exportExcel() {
-        // Collect all your filter values
-        var filters = {
-        departMent: $('#department').val(),
-        staffName: $('#staff').val(),
-        fromDate: $('#fromDate').val(),
-        toDate: $('#toDate').val()
-        };
-        // Create a hidden form dynamically
-         var $form = $('<form>', {
-        action: '@Url.Action("ExportToExcel", "Detail")',
-        method: 'post',
-        data: filters
-        });
-        // Add each filter as a hidden input
-        $.each(filters, function(key, value) {
-            $form.append($('<input>', {
-                type: 'hidden',
-                name: key,
-                value: value
-            }));
-        });
-         // Append to body, submit, and remove
-         $(document.body).append($form);
-         $form.submit();
-         $form.remove();
-        }
-
+        
     </script>
 }
 

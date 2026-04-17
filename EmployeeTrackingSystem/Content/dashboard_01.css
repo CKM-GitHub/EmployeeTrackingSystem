@@ -120,7 +120,21 @@ body {
     }
 
         /* Only dotted borders for staff detail cells */
-        .nested-table td.staffname,
+        .nested-table td.staffname {
+            border-top: 1px dotted #000000;
+            border-bottom: 1px dotted #000000;
+            border-left: 1px dotted #000000;
+            border-right: none;
+            padding: 4px;
+            text-align: left;
+            white-space: normal; /* allow wrapping */
+            word-wrap: break-word; /* break long words if needed */
+            word-break: break-word; /* ensures wrapping even without spaces */
+            max-width: 50px; /* Adjust this width to fit your table design */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
         .nested-table td.date,
         .nested-table td.note {
             border-top: 1px dotted #000000;
@@ -132,13 +146,21 @@ body {
             white-space: normal; /* allow wrapping */
             word-wrap: break-word; /* break long words if needed */
             word-break: break-word; /* ensures wrapping even without spaces */
-            max-width: 200px; /* optional: limit width so wrapping happens */
+            max-width: 200px; /* optional: limit width so wrapping happens */         
           
         }
 
-        .nested-table td.date,
+        .nested-table td.date {
+            font-size: 11px;
+        }
+
         .nested-table td.note {
-            font-size: 11px;         
+            font-size: 11px;
+            max-width: 150px; /* Adjust this width to fit your table design  20260417 ttw*/
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
         }
 
 
@@ -497,3 +519,11 @@ body {
         background: #6990C7;
         z-index: 2;
     }
+
+.text-truncate-hover {
+    max-width: 70px; /* Adjust this width to fit your table design */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Changes cursor to indicate more info is available */
+}

@@ -2556,8 +2556,9 @@ th {
   background-color: #ebcccc;
 }
 .table-responsive {
-  min-height: 0.01%;
-  overflow-x: auto;
+    min-height: 0.01%;
+    overflow-x: auto;
+    overflow-y: visible !important; 
 }
 @media screen and (max-width: 767px) {
   .table-responsive {
