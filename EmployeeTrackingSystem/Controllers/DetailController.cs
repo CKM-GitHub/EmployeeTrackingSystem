@@ -140,11 +140,22 @@ namespace EmployeeTrackingSystem.Controllers
             // Replace this with your actual database logic (e.g., db.Staffs.Where...)
             var staffList = db.T_StaffMaster
                               .Where(s => s.DepartmentCD == departmentId && s.Enroll != false)
-                              .Select(s => new {
+                              .Select(s => new
+                              {
                                   Value = s.StaffCD,
                                   Text = s.StaffName
                               }).ToList();
 
+            if (departmentId == "")//20260420
+            {
+                staffList = db.T_StaffMaster
+                                  .Where(s => s.Enroll != false)
+                                  .Select(s => new
+                                  {
+                                      Value = s.StaffCD,
+                                      Text = s.StaffName
+                                  }).ToList();
+            }
             return Json(staffList, JsonRequestBehavior.AllowGet);
         }
     }
