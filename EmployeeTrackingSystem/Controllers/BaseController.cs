@@ -26,6 +26,7 @@ namespace EmployeeTrackingSystem.Controllers
             ViewBag.Departments = new SelectList(departments, "Value", "Text");
 
             var staffs = db.T_StaffMaster
+                .Where(s =>s.Enroll != false)
                 .Select(s => new
                 {
                     Value = s.StaffCD,
