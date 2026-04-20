@@ -244,7 +244,7 @@
             // When staffModal is shown, initialize the datetimepicker
             $('#staffModal').on('shown.bs.modal', function () {
                 $('#datetimepicker-out').datetimepicker({
-                    format: 'YYYY/MM/DD HH:mm',
+                    format: 'YYYY-MM-DD HH:mm',
                     showClear: true,
                     showClose: true,
                     //widgetParent: '#staffModal',
@@ -256,14 +256,14 @@
 
                 });
                 $('#datetimepicker-meeting').datetimepicker({
-                    format: 'YYYY/MM/DD HH:mm',
+                    format: 'YYYY-MM-DD HH:mm',
                     showClear: true,
                     showClose: true,
                     //widgetParent: '#staffModal',
                     minDate: moment().startOf('day') // disable all dates before today
                 });
                 $('#datetimepicker-visit').datetimepicker({
-                    format: 'YYYY/MM/DD HH:mm',
+                    format: 'YYYY-MM-DD HH:mm',
                     showClear: true,
                     showClose: true,
                     //widgetParent: '#staffModal',
