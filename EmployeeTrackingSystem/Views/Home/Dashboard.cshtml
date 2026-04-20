@@ -243,6 +243,45 @@
 
             // When staffModal is shown, initialize the datetimepicker
             $('#staffModal').on('shown.bs.modal', function () {
+                // Status radio
+                var status = link.data("status");
+                $("input[name='Status'][value='" + status + "']").prop("checked", true);
+
+                // Date + note
+                var returnDate = link.attr("data-returndatetime");
+                var note = link.data("note");
+
+                var formatted = "";
+                if (returnDate) {
+                    var isoString = returnDate.replace(" ", "T");
+                    var date = new Date(isoString);
+                    if (!isNaN(date.getTime())) {
+                        formatted = date.toLocaleString('en-CA', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false
+                        }).replace(',', '').replace(/-/g, '-');
+                    }
+                }
+
+                // Reset notes
+                $("input[id^='Note']").prop("disabled", true).val("");
+
+                if (status === "外出") {
+                    $("#ReturnDateTime-out").prop("disabled", false).val(formatted);
+                    $("#Note-out").prop("disabled", false).val(note);
+                } else if (status === "会議") {
+                    $("#ReturnDateTime-meeting").prop("disabled", false).val(formatted);
+                    $("#Note-meeting").prop("disabled", false).val(note);
+                } else if (status === "休み") {
+                    $("#Note-leave").prop("disabled", false).val(note);
+                } else if (status === "直行") {
+                    $("#ReturnDateTime-visit").prop("disabled", false).val(formatted);
+                    $("#Note-visit").prop("disabled", false).val(note);
+                }
                 $('#datetimepicker-out').datetimepicker({
                     format: 'YYYY-MM-DD HH:mm',
                     showClear: true,
