@@ -39,11 +39,11 @@
     }
 
     #tableStaff th:nth-child(1) {
-        width: 70px;
+        width: 50px;
     }
 
     #tableStaff th:nth-child(2) {
-        width: 180px;
+        width: 130px;
     }
 
     #tableStaff td:nth-child(2) {
@@ -53,11 +53,11 @@
     }
 
     #tableStaff th:nth-child(3) {
-        width: 60px;
+        width: 50px;
     }
 
     #tableStaff th:nth-child(4) {
-        width: 40px;
+        width: 30px;
     }
 
     #tableStaff th:nth-child(5),
@@ -74,7 +74,7 @@
         padding: 1px 2px;
         text-align: center;
     }
-.new-seat-col {
+.newSeat {
     width: 40px !important;
     text-align: center;
     padding: 0;
