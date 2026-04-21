@@ -240,9 +240,35 @@
                     $("#shop-options").hide();
                 }
             });
+            $(function () {
+                $('#datetimepicker-out').datetimepicker({
+                    format: 'YYYY-MM-DD HH:mm',
+                    showClear: true,
+                    showClose: true,
+                    minDate: moment().startOf('day'),
+                    widgetPositioning: {
+                        horizontal: 'left',
+                        vertical: 'bottom'
+                    }
+                });
 
+                $('#datetimepicker-meeting').datetimepicker({
+                    format: 'YYYY-MM-DD HH:mm',
+                    showClear: true,
+                    showClose: true,
+                    minDate: moment().startOf('day')
+                });
+
+                $('#datetimepicker-visit').datetimepicker({
+                    format: 'YYYY-MM-DD HH:mm',
+                    showClear: true,
+                    showClose: true,
+                    minDate: moment().startOf('day')
+                });
+            });
             // When staffModal is shown, initialize the datetimepicker
-            $('#staffModal').on('shown.bs.modal', function () {
+            $('#staffModal').on('shown.bs.modal', function (event) {
+                var link = $(event.relatedTarget); // this is the <a class="staff-link"> you clicked
                 // Status radio
                 var status = link.data("status");
                 $("input[name='Status'][value='" + status + "']").prop("checked", true);
@@ -267,9 +293,6 @@
                     }
                 }
 
-                // Reset notes
-                $("input[id^='Note']").prop("disabled", true).val("");
-
                 if (status === "外出") {
                     $("#ReturnDateTime-out").prop("disabled", false).val(formatted);
                     $("#Note-out").prop("disabled", false).val(note);
@@ -282,32 +305,32 @@
                     $("#ReturnDateTime-visit").prop("disabled", false).val(formatted);
                     $("#Note-visit").prop("disabled", false).val(note);
                 }
-                $('#datetimepicker-out').datetimepicker({
-                    format: 'YYYY-MM-DD HH:mm',
-                    showClear: true,
-                    showClose: true,
-                    //widgetParent: '#staffModal',
-                    minDate: moment().startOf('day'), // disable all dates before today
-                    widgetPositioning: {
-                        horizontal: 'left',
-                        vertical: 'bottom'
-                    }
+                //$('#datetimepicker-out').datetimepicker({
+                //    format: 'YYYY-MM-DD HH:mm',
+                //    showClear: true,
+                //    showClose: true,
+                //    //widgetParent: '#staffModal',
+                //    minDate: moment().startOf('day'), // disable all dates before today
+                //    widgetPositioning: {
+                //        horizontal: 'left',
+                //        vertical: 'bottom'
+                //    }
 
-                });
-                $('#datetimepicker-meeting').datetimepicker({
-                    format: 'YYYY-MM-DD HH:mm',
-                    showClear: true,
-                    showClose: true,
-                    //widgetParent: '#staffModal',
-                    minDate: moment().startOf('day') // disable all dates before today
-                });
-                $('#datetimepicker-visit').datetimepicker({
-                    format: 'YYYY-MM-DD HH:mm',
-                    showClear: true,
-                    showClose: true,
-                    //widgetParent: '#staffModal',
-                    minDate: moment().startOf('day') // disable all dates before today
-                });
+                //});
+                //$('#datetimepicker-meeting').datetimepicker({
+                //    format: 'YYYY-MM-DD HH:mm',
+                //    showClear: true,
+                //    showClose: true,
+                //    //widgetParent: '#staffModal',
+                //    minDate: moment().startOf('day') // disable all dates before today
+                //});
+                //$('#datetimepicker-visit').datetimepicker({
+                //    format: 'YYYY-MM-DD HH:mm',
+                //    showClear: true,
+                //    showClose: true,
+                //    //widgetParent: '#staffModal',
+                //    minDate: moment().startOf('day') // disable all dates before today
+                //});
             });
 
             $("#staffForm").on("submit", function (e) {
