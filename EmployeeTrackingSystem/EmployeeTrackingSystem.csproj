@@ -480,7 +480,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Staff\StaffList.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Detail\DetailList.cshtml" />
     <Content Include="Views\Home\Dashboard.cshtml" />
     <Content Include="Views\Shared\_DashboardTable.cshtml" />
