@@ -127,28 +127,38 @@ body {
             border-right: none;
             padding: 4px;
             text-align: left;
-            white-space: normal; /* allow wrapping */
-            word-wrap: break-word; /* break long words if needed */
-            word-break: break-word; /* ensures wrapping even without spaces */
-            max-width: 160px; /* Adjust this width to fit your table design */
+            width: 120px; /* fixed width for truncation */
             white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis;
         }
+
 .nested-cell.staffname a.staff-link {
-    display: inline-block; /* allow width control */
-    max-width: 82px; /* leave room for the icon */
-    white-space: nowrap; /* keep on one line */
+    display: inline-block;
+    width: calc(100% - 21px); /* reserve space for icon */
+    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* truncate with … */
+    text-overflow: ellipsis;
     vertical-align: middle;
 }
 
 .nested-cell.staffname img.search-icon {
-    display: inline-block;
+    display: inline-block; /* keep inline, not float */
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
     vertical-align: middle;
-    margin-left: 4px; /* spacing */
+    cursor: pointer;
 }
+.search-icon {
+    /*float: right;*/
+    /* margin-right: 5px;*/
+    width: 16px;
+    height: 16px;
+    /*margin-left: 6px;*/
+    vertical-align: middle;
+    cursor: pointer;
+}
+
         .nested-table td.date,
         .nested-table td.note {
             border-top: 1px dotted #000000;
@@ -253,15 +263,7 @@ body {
             }
 }
 
-.search-icon {
-    float: right;
-    margin-right: 5px;
-    width: 16px;
-    height: 16px;
-    margin-left: 6px;
-    vertical-align: middle;
-    cursor: pointer;
-}
+
 
 /* Base modal styling */
 .modal-dialog {
