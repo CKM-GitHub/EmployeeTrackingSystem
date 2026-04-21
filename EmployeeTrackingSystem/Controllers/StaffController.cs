@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web.Mvc;
 using static EmployeeTrackingSystem.Models.staffViewModel;
 
@@ -61,12 +62,32 @@ namespace EmployeeTrackingSystem.Controllers
         {
             using (var db = new EmployeeTrackingDBEntities())
             {
-                
+                if (!string.IsNullOrEmpty(model.StaffName) &&
+             !IsUtf8Valid(model.StaffName, 50))
+                {
+                    ModelState.AddModelError("StaffName", "StaffName exceeds 50 bytes");
+                }
+
+                if (!string.IsNullOrEmpty(model.Position) &&
+                    !IsUtf8Valid(model.Position, 20))
+                {
+                    ModelState.AddModelError("Position", "Position exceeds 20 bytes");
+                }
+
+                if (!string.IsNullOrEmpty(model.PhoneNo) &&
+                  !IsUtf8Valid(model.PhoneNo, 15))
+                {
+                    ModelState.AddModelError("PhoneNo", "PhoneNo exceeds 15 bytes");
+                }
+
+                if (!string.IsNullOrEmpty(model.Remark) &&
+                    !IsUtf8Valid(model.Remark, 200))
+                {
+                    ModelState.AddModelError("Remark", "Remark exceeds 200 bytes");
+                }
                 // Other ModelState validation (optional)
                 if (!ModelState.IsValid)
                 {
-                    
-
                     var errors = ModelState
                         .Where(x => x.Value.Errors.Count > 0)
                         .Select(x => new {
@@ -99,7 +120,7 @@ namespace EmployeeTrackingSystem.Controllers
                         success = false,
                         errors = new[] {
                     new { field = "SeatNo", message = "この席番号は既に使用されています" }
-                }
+                        }
                     });
                 }
                 if (model.DepartmentCD == "S01")
@@ -115,38 +136,67 @@ namespace EmployeeTrackingSystem.Controllers
                     model.CurrentShop = 3;
                 }
                 //  Save
-                var entity = new T_StaffMaster
+
+                try
                 {
-                    StaffCD = model.StaffCD,
-                    StaffName = model.StaffName,
-                    DepartmentCD = model.DepartmentCD,
-                    Position = model.Position,
-                    Email = model.Email,
-                    PhoneNo = model.PhoneNo,
-                    JoinedDate = model.JoinedDate,
-                    EmployeeType = model.EmployeeType,
-                    Enroll = model.Enroll,
-                    Remark = model.Remark,
-                    SeatNo = model.SeatNo,
-                    CurrentShop=model.CurrentShop,
-                    InsertDateTime = DateTime.Now
-                };
+                    var entity = new T_StaffMaster
+                    {
+                        StaffCD = model.StaffCD,
+                        StaffName = model.StaffName,
+                        DepartmentCD = model.DepartmentCD,
+                        Position = model.Position,
+                        Email = model.Email,
+                        PhoneNo = model.PhoneNo,
+                        JoinedDate = model.JoinedDate,
+                        EmployeeType = model.EmployeeType,
+                        Enroll = model.Enroll,
+                        Remark = model.Remark,
+                        SeatNo = model.SeatNo,
+                        CurrentShop = model.CurrentShop,
+                        InsertDateTime = DateTime.Now
+                    };
 
-                db.T_StaffMaster.Add(entity);
-                db.SaveChanges();
+                    db.T_StaffMaster.Add(entity);
+                    db.SaveChanges();
 
-                return Json(new { success = true });
+                    return Json(new { success = true });
+                }
+                catch(Exception ex)
+                {
+                    return Json(new { success = false, message = ex.Message });
+                }
+              
             }
         }
        
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult Update(staffViewModel model)
+        public JsonResult Update(StaffUpdateModel model)
         {
-            ModelState.Remove("StaffCD");
-            ModelState.Remove("StaffName");
-            ModelState.Remove("DepartmentCD");
+            if (!string.IsNullOrEmpty(model.StaffName) &&
+              !IsUtf8Valid(model.StaffName, 50))
+            {
+                ModelState.AddModelError("StaffName", "StaffName exceeds 50 bytes");
+            }
+
+            if (!string.IsNullOrEmpty(model.Position) &&
+                !IsUtf8Valid(model.Position, 20))
+            {
+                ModelState.AddModelError("Position", "Position exceeds 20 bytes");
+            }
+
+            if (!string.IsNullOrEmpty(model.PhoneNo) &&
+              !IsUtf8Valid(model.PhoneNo, 15))
+            {
+                ModelState.AddModelError("PhoneNo", "PhoneNo exceeds 15 bytes");
+            }
+
+            if (!string.IsNullOrEmpty(model.Remark) &&
+                !IsUtf8Valid(model.Remark, 200))
+            {
+                ModelState.AddModelError("Remark", "Remark exceeds 200 bytes");
+            }
 
 
             if (!ModelState.IsValid)
@@ -160,7 +210,21 @@ namespace EmployeeTrackingSystem.Controllers
 
                 return Json(new { success = false, errors = errors });;
             }
+                bool isExist = db.T_StaffMaster.Any(x =>
+                    x.DepartmentCD == model.DepartmentCD &&
+                    x.SeatNo == model.SeatNo &&
+                    x.StaffCD != model.StaffCD);
 
+                if (isExist)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        errors = new[] {
+                    new { field = "SeatNo", message = "この席番号は既に使用されています" }
+                        }
+                    });
+                }
             try
             {
                 var staff = db.T_StaffMaster
@@ -170,6 +234,8 @@ namespace EmployeeTrackingSystem.Controllers
                 {
                     return Json(new { success = false, message = "更新失敗しました。" });
                 }
+
+
                 if (model.StaffName != null)
                     staff.StaffName = model.StaffName;
 
@@ -196,6 +262,9 @@ namespace EmployeeTrackingSystem.Controllers
 
                 if (!string.IsNullOrEmpty(model.Remark))
                     staff.Remark = model.Remark;
+
+              
+                    staff.SeatNo = model.SeatNo;
 
                 staff.UpdateDateTime = DateTime.Now;
                 db.SaveChanges();
@@ -289,5 +358,12 @@ namespace EmployeeTrackingSystem.Controllers
             return Json(new { exists = exists }, JsonRequestBehavior.AllowGet);
         }
 
+        bool IsUtf8Valid(string value, int maxBytes)
+        {
+            if (string.IsNullOrEmpty(value))
+                return true;
+
+            return Encoding.UTF8.GetByteCount(value) <= maxBytes;
+        }
     }
 }
