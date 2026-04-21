@@ -1,7 +1,7 @@
 ﻿
 /*StaffList css*/
 .table-wrapper {
-    max-height: 400px; /* max height */
+    max-height: 600px; /* max height */
     overflow-y: auto; /* vertical scroll */
     overflow-x: auto; /* horizontal scroll if needed */
     border: 1px solid #ccc;
@@ -10,24 +10,22 @@
 
 #tableStaff {
     width: 100%;
+    table-layout: fixed;
     border-collapse: separate;
     border-spacing: 0;
     font-size: 13px; /* smaller font for compact look */
+    overflow: auto;
+    border: 1px solid #ccc;
 }
 
     #tableStaff th, #tableStaff td {
-        padding: 6px 10px;
-        white-space: nowrap; /* prevent text wrap on small screens */
+        padding: 2px 6px;
+        
     }
 
-        #tableStaff td.text-center {
+    #tableStaff td.text-center {
             text-align: center;
         }
-
-        #tableStaff td.text-right {
-            text-align: left;
-        }
-
     #tableStaff th {
         position: sticky;
         top: 0;
@@ -40,20 +38,49 @@
         background-color: #f2f2f2;
     }
 
-    #tableStaff th, #tableStaff td {
+    #tableStaff th:nth-child(1) {
+        width: 70px;
+    }
+
+    #tableStaff th:nth-child(2) {
+        width: 180px;
+    }
+
+    #tableStaff td:nth-child(2) {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    #tableStaff th:nth-child(3) {
+        width: 60px;
+    }
+
+    #tableStaff th:nth-child(4) {
+        width: 40px;
+    }
+
+    #tableStaff th:nth-child(5),
+    #tableStaff th:nth-child(6) {
+        width: 40px;
+    }
+
+  
+    #tableStaff th:nth-child(7) {
+        width: 40px;
+    }
+    #tableStaff td:nth-child(5),
+    #tableStaff td:nth-child(6) {
         padding: 1px 2px;
-    }
-
-    #tableStaff input.newSeat {
-        width: 40px !important;
-    }
-
-    #tableStaff td:last-child,
-    #tableStaff th:last-child {
-        width: 100px; /* adjust as needed */
-        white-space: nowrap; /* keep button on one line */
         text-align: center;
     }
+.new-seat-col {
+    width: 40px !important;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
 
     #tableStaff button {
         width: 70px;
@@ -61,28 +88,44 @@
         padding: 2px 6px;
     }
 
-.btn-fixed {
+.btn-updateSeat {
+    display:block; 
+    margin-left:auto;
+    margin-right:60px;
+    margin-top:8px;
+    width:100px;
+}
+    .btn-fixed {
     width: 100px;
     font-weight: bold;
     margin-left: 15px;
 }
 
-.btn-group-custom {
+    .btn-group-custom {
     margin-left: 100px; /* move right */
 }
 
-.form-container {
+    .form-container {
     width: 400px;
     margin: 0 auto; /* keep center baseline */
 }
 
-.form-row {
+    .form-row {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-bottom: 6px;
 }
 
+    .form-row input.staff-code {
+        background-color: lightgray !important;
+        width: 80px !important;
+    }
+
+    .staff-new-code{
+       
+        width: 80px !important;
+    }
     .form-row > label {
         width: 120px;
         text-align: right;
@@ -99,20 +142,20 @@
         border-radius: 4px;
     }
 
-.form-actions button {
+    .form-actions button {
     margin: 0 10px;
 }
 
-.short-input {
-    width: 50px; /* class for short input width */
+    .short-input {
+    width: 50px !important; /* class for short input width */
 }
 
-.radio-group input[type="radio"] {
+    .radio-group input[type="radio"] {
     vertical-align: middle;
     margin-top: 0;
 }
 
-.radio-group {
+    .radio-group {
     flex: 1;
     display: flex;
     gap: 2px;
@@ -126,11 +169,11 @@
         gap: 2px;
     }
 
-textarea {
+    textarea {
     height: 100px;
 }
 
-.form-actions {
+    .form-actions {
     display: flex;
     justify-content: center;
     gap: 1px;
@@ -138,46 +181,46 @@ textarea {
     margin-left: 25px;
 }
 
-.btn-cancel {
+    .btn-cancel {
     background-color: #6c8ebf;
     color: white;
     border: none;
     padding: 6px 20px;
 }
 
-.btn-submit {
+    .btn-submit {
     background-color: #00aaff;
     color: white;
     border: none;
     padding: 6px 20px;
 }
 
-.modal-body {
+    .modal-body {
     display: flex;
     justify-content: center; /**/
     background-color: #DAF2D0;
 }
 
-.modal-header {
+    .modal-header {
     padding: 0px 10px;
     background-color: #83CCEB;
 }
 
-.modal-title {
+    .modal-title {
     font-size: 14px;
     height: 25px;
     align-content: center;
 }
 
-.text-danger {
+    .text-danger {
     color: red;
     font-size: 12px;
     margin: 0;
 }
 
-input.input-error,
-select.input-error,
-textarea.input-error {
+    input.input-error,
+    select.input-error,
+    textarea.input-error {
     border: 2px solid #e57373 !important;
     /* background-color: #fdecea !important;*/
     transition: 0.2s;
@@ -186,4 +229,31 @@ textarea.input-error {
     input.input-error:focus {
         box-shadow: 0 0 3px rgba(229,115,115,0.4) !important;
         outline: none !important;
+    }
+
+    .label-remark {
+    height: 55px !important;
+}
+    .textarea-remark {
+    height: 60px !important;
+}
+    .date-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+    .date-wrapper input {
+        width: 200px; /* adjust if needed */
+        padding-right: 30px; /* space for icon */
+        box-sizing: border-box;
+    }
+
+    .date-wrapper::after {
+        content: "📅";
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        font-size: 14px;
     }

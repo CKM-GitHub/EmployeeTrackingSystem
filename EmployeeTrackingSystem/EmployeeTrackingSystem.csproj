@@ -164,6 +164,7 @@
       <DependentUpon>EmployeeModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\PlanViewModel.cs" />
+    <Compile Include="Models\StaffUpdateModel.cs" />
     <Compile Include="Models\staffViewModel.cs" />
     <Compile Include="Models\T_Department.cs">
       <DependentUpon>EmployeeModel.tt</DependentUpon>
