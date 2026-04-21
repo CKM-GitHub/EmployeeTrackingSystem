@@ -98,7 +98,7 @@ namespace EmployeeTrackingSystem.Controllers
                     return Json(new { success = false, errors = errors });
                 }
 
-                if (db.T_StaffMaster.Any(x => x.StaffCD == model.StaffCD))
+                if (db.T_StaffMaster.Any(x => x.StaffCD == model.StaffCD && x.Enroll == true))
                 {
                     return Json(new
                     {
@@ -111,7 +111,8 @@ namespace EmployeeTrackingSystem.Controllers
                 // Seat duplicate
                 bool isExist = db.T_StaffMaster.Any(x =>
                     x.DepartmentCD == model.DepartmentCD &&
-                    x.SeatNo == model.SeatNo);
+                    x.SeatNo == model.SeatNo &&
+                    x.Enroll == true);
 
                 if (isExist)
                 {
@@ -213,7 +214,8 @@ namespace EmployeeTrackingSystem.Controllers
                 bool isExist = db.T_StaffMaster.Any(x =>
                     x.DepartmentCD == model.DepartmentCD &&
                     x.SeatNo == model.SeatNo &&
-                    x.StaffCD != model.StaffCD);
+                    x.StaffCD != model.StaffCD &&
+                    x.Enroll == true);
 
                 if (isExist)
                 {
@@ -228,7 +230,7 @@ namespace EmployeeTrackingSystem.Controllers
             try
             {
                 var staff = db.T_StaffMaster
-                    .FirstOrDefault(x => x.StaffCD == model.StaffCD);
+                    .FirstOrDefault(x => x.StaffCD == model.StaffCD && x.Enroll == true);
 
                 if (staff == null)
                 {
@@ -353,7 +355,7 @@ namespace EmployeeTrackingSystem.Controllers
 
         public JsonResult CheckStaffCD(string staffCD)
         {
-            bool exists = db.T_StaffMaster.Any(x => x.StaffCD == staffCD);
+            bool exists = db.T_StaffMaster.Any(x => x.StaffCD == staffCD && x.Enroll ==true);
 
             return Json(new { exists = exists }, JsonRequestBehavior.AllowGet);
         }
