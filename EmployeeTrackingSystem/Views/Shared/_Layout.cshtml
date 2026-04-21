@@ -113,7 +113,26 @@
                     });
                 } else {
                     $staffDropdown.empty();
-                    $staffDropdown.append('<option value="">All</option>');
+                    $.ajax({//20260420
+                        url: '@Url.Action("GetStaffByDepartment", "Detail")',
+                        type: "GET",
+                        data: { departmentId: selectedDeptId },
+                        success: function (data) {
+                            $staffDropdown.empty();
+                            $staffDropdown.append('<option value="">All</option>');
+
+                            // Loop through the JSON data and add options
+                            $.each(data, function (index, item) {
+                                $staffDropdown.append($('<option>', {
+                                    value: item.Value,
+                                    text: item.Text
+                                }));
+                            });
+                        },
+                        error: function () {
+                            alert("Error loading staff members.");
+                        }
+                    });
                 }
             });
 
