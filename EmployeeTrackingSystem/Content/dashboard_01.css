@@ -130,11 +130,25 @@ body {
             white-space: normal; /* allow wrapping */
             word-wrap: break-word; /* break long words if needed */
             word-break: break-word; /* ensures wrapping even without spaces */
-            max-width: 50px; /* Adjust this width to fit your table design */
+            max-width: 160px; /* Adjust this width to fit your table design */
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
+.nested-cell.staffname a.staff-link {
+    display: inline-block; /* allow width control */
+    max-width: 82px; /* leave room for the icon */
+    white-space: nowrap; /* keep on one line */
+    overflow: hidden;
+    text-overflow: ellipsis; /* truncate with … */
+    vertical-align: middle;
+}
+
+.nested-cell.staffname img.search-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 4px; /* spacing */
+}
         .nested-table td.date,
         .nested-table td.note {
             border-top: 1px dotted #000000;
