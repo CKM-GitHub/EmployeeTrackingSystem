@@ -518,8 +518,14 @@
                 contentType: 'application/json',
                 data: JSON.stringify(list),
                 success: function (res) {
-                    alert('登録しました。');
-                    window.location.reload();
+                    if (res.success)
+                    {
+                        alert('登録しました。');
+                        window.location.reload();
+                    }
+                    else {
+                        $("#searchModal").modal("hide");
+                    }                   
                 }
             });
         }

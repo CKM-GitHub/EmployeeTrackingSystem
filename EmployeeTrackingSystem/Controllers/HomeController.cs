@@ -215,10 +215,9 @@ namespace EmployeeTrackingSystem.Controllers
                         existingRecord.UpdateDateTime = DateTime.Now;
                     }
                 }
-
                 else if (item.Note != null)
                 {
-                    // Example: save to DB
+                    //save to DB
                     db.T_Plan.Add(new T_Plan
                     {
                         StaffCD = item.StaffCD,
@@ -228,10 +227,11 @@ namespace EmployeeTrackingSystem.Controllers
                     });
                 }
             }
-            db.SaveChanges();
-
-
-            return Json(new { success = true });
+            int sv = db.SaveChanges();
+            bool res = false;
+            if (sv > 0)
+                res = true;
+            return Json(new { success = res });
         }
     }
 }
