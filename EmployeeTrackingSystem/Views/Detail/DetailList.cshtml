@@ -9,7 +9,7 @@
         <button class="btn_search btn" id="btn_search">検索</button>
         <button class="btn_Blue btn btn-primary" id="btn_Excel">Excel</button>
     }
-    
+
     <div class="table-v-scroll table-responsive">
         <table id="detailtb" class="table table-striped table-hover">
             <thead>
@@ -25,18 +25,18 @@
             <tbody id="DetailTable">
                 @foreach (var item in Model)
                 {
-                <tr>
-                    <td class="truncate-logic">@item.StaffName</td>
-                    <td>@item.DepartmentName</td>
-                    <td class="th_center" style="background-color:@GetStatusColor(item.Status)">@item.Status</td>
-                    <td class="th_center">@(item.StartDateTime.HasValue ? item.StartDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>
-                    <td class="th_center">@(item.ReturnDateTime.HasValue ? item.ReturnDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>                   
-                    <td>
-                        <div class="truncate-logic" >
-                            @item.Note
-                        </div>
-                    </td>
-                </tr>
+                    <tr>
+                        <td class="truncate-logic">@item.StaffName</td>
+                        <td>@item.DepartmentName</td>
+                        <td class="th_center" style="background-color:@GetStatusColor(item.Status)">@item.Status</td>
+                        <td class="th_center">@(item.StartDateTime.HasValue ? item.StartDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>
+                        <td class="th_center">@(item.ReturnDateTime.HasValue ? item.ReturnDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>
+                        <td>
+                            <div class="truncate-logic">
+                                @item.Note
+                            </div>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
@@ -60,13 +60,13 @@
 }
 
 @section Scripts {
-
+    <link rel="stylesheet" href="~/Content/bootstrap.css" />
     <script>
 
         $(document).ready(function () {
             $('#department').select2();
             $('#staff').select2();
-            
+
             $(document).on("click", "#btn_search", function () {
                 var searchParams = {
                 departMent: $('#department').val(),
@@ -146,7 +146,7 @@
                 }
             });
         });
-        
+
         function getStatusColor(status) {
             if (status == "直行") return "#e3dca8";
             if (status == "外出") return "#e3dca8";
@@ -156,7 +156,7 @@
             if (status == "会議") return "#f0a3dd";
         return "";
     }
-        
+
     </script>
 }
 
