@@ -521,7 +521,9 @@
                     if (res.success)
                     {
                         alert('登録しました。');
-                        window.location.reload();
+                        $("#searchModal").modal("hide");
+                        //window.location.reload();
+                        $("#staffForm")[0].reset();
                     }
                     else {
                         $("#searchModal").modal("hide");
