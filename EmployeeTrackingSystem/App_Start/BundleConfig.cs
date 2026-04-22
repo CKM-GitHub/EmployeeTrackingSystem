@@ -27,7 +27,7 @@ namespace EmployeeTrackingSystem
             "~/Scripts/bootstrap-datetimepicker.js"   // Load Datetimepicker last
             ));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
+            bundles.Add(new StyleBundle("~/bundles/css").Include(
                       "~/Content/bootstrap.css",
             "~/Content/css/select2.min.css",
             "~/Content/bootstrap-datetimepicker.min.css",
