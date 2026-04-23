@@ -183,13 +183,14 @@
 
 @section Scripts {
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="~/Content/bootstrap.css" />
     <link rel="stylesheet" href="~/Content/dashboard_01.css" />
-    
+
     <script>
         $(document).ready(function () {
             $(document).on("click", ".staff-link", function () {
                 // Clear all inputs in the modal form
-                $("#staffForm")[0].reset();                
+                $("#staffForm")[0].reset();
                 // Also clear hidden fields explicitly
                 $("#StaffCd").val("");
                 $("#DepartmentCd").val("");
@@ -218,7 +219,7 @@
                 // Disable all ReturnDateTime and Note inputs by default
                 $("input[name^='ReturnDateTime']").prop("disabled", true).val("");
                 $("input[id^='Note']").prop("disabled", true).val("");
-               
+
                 if (status === "外出") {
                     $("input[name='ReturnDateTime-out']").prop("disabled", false).val(formatted);
                     $("input[name='Note-out']").prop("disabled", false).val(note);
@@ -517,8 +518,16 @@
                 contentType: 'application/json',
                 data: JSON.stringify(list),
                 success: function (res) {
-                    alert('登録しました。');
-                    window.location.reload();
+                    if (res.success)
+                    {
+                        alert('登録しました。');
+                        $("#searchModal").modal("hide");
+                        //window.location.reload();
+                        $("#staffForm")[0].reset();
+                    }
+                    else {
+                        $("#searchModal").modal("hide");
+                    }                   
                 }
             });
         }
