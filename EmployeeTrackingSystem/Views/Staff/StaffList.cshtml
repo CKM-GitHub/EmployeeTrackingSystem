@@ -31,7 +31,7 @@
                             Next <br />
                             席番号
                         </th>
-                        <th >Action</th>
+                        <th class="th_center">Action</th>
                     </tr>
                 </thead>
 
@@ -83,9 +83,9 @@
             </table>
         </div>
 
-        <div>
+        <div class="btn-wrapper" >
             <button type="button" id="btnUpdateSeat"
-                    class="btn btn-primary btn-updateSeat">
+                    class="btn_Blue btn btn-primary">
                 席を変わる
             </button>
         </div>
@@ -339,10 +339,20 @@
                         type: 'GET',
                         data: { staffCD: staffCD },
                         success: function (res) {
+                            if (res.errorType === "inactive") {
+                                alert(res.message);
+                                $this.addClass("input-error");
+                                return;
+                            }
+
+                            //  duplicate case
                             if (res.exists) {
                                 $this.addClass("input-error");
-                            } else {
-                                $("#addForm [name='StaffCD']").removeClass("input-error");
+                            }
+
+                            //  valid case
+                            else {
+                                $this.removeClass("input-error");
                                 moveToNextFieldAdd($this);
                             }
                         },
@@ -359,7 +369,7 @@
             moveToNextFieldAdd($this);
         }
     });
-
+        
     // ===== Clear error when typing =====
     $('#addForm input, #addForm select, #addForm textarea').on('input', function () {
         if ($(this).val().trim() !== "") {
@@ -385,7 +395,15 @@
                     alert("登録成功しました");
                     $("#addModal").modal('hide');
                     location.reload();
-                }else if (res.errors) {
+                } else if (res.errorType === "inactive") {
+                    var fieldName = err.field.replace("model.", "");
+                    var $field = $("#addForm [name='" + fieldName + "']");
+                    $field.addClass("input-error");
+                    alert(res.message);
+
+
+                }
+                else if (res.errors) {
                     res.errors.forEach(function (err) {
                         var fieldName = err.field.replace("model.", "");
                         var $field = $("#addForm [name='" + fieldName + "']");
@@ -486,7 +504,8 @@
                     $("#editModal").modal('hide');
                     location.reload();
 
-                } else if (res.errors) {
+                } 
+                else if (res.errors) {
 
                     res.errors.forEach(function (err) {
                         var fieldName = err.field.replace("model.", "");

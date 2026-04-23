@@ -97,33 +97,60 @@ namespace EmployeeTrackingSystem.Controllers
 
                     return Json(new { success = false, errors = errors });
                 }
+                var existsActive = db.T_StaffMaster
+                    .Any(x => x.StaffCD == model.StaffCD && x.Enroll == true);
 
-                if (db.T_StaffMaster.Any(x => x.StaffCD == model.StaffCD && x.Enroll == true))
+                var existsInactive = db.T_StaffMaster
+                    .Any(x => x.StaffCD == model.StaffCD && x.Enroll == false);
+
+                if (existsInactive)
                 {
                     return Json(new
                     {
                         success = false,
-                        errors = new[] {
+                        errorType = "inactive",
+                        message = "Inactive CD already exist"
+                    });
+                }
+
+                if (existsActive)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        errorType = "duplicate",
+                        errors = new[]
+                        {
                     new { field = "StaffCD", message = "" }
-                }
+                         }
                     });
                 }
-                // Seat duplicate
-                bool isExist = db.T_StaffMaster.Any(x =>
-                    x.DepartmentCD == model.DepartmentCD &&
-                    x.SeatNo == model.SeatNo &&
-                    x.Enroll == true);
+                //if (db.T_StaffMaster.Any(x => x.StaffCD == model.StaffCD && x.Enroll == true))
+                //{
+                //    return Json(new
+                //    {
+                //        success = false,
+                //        errors = new[] {
+                //    new { field = "StaffCD", message = "" }
+                //}
+                //    });
+                //}
+                //// Seat duplicate
+                //bool isExist = db.T_StaffMaster.Any(x =>
+                //    x.DepartmentCD == model.DepartmentCD &&
+                //    x.SeatNo == model.SeatNo &&
+                //    x.Enroll == true);
 
-                if (isExist)
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        errors = new[] {
-                    new { field = "SeatNo", message = "この席番号は既に使用されています" }
-                        }
-                    });
-                }
+                //if (isExist)
+                //{
+                //    return Json(new
+                //    {
+                //        success = false,
+                //        errors = new[] {
+                //    new { field = "SeatNo", message = "この席番号は既に使用されています" }
+                //        }
+                //    });
+                //}
                 if (model.DepartmentCD == "S01")
                 {
                     model.CurrentShop = 1;
@@ -355,10 +382,45 @@ namespace EmployeeTrackingSystem.Controllers
 
         public JsonResult CheckStaffCD(string staffCD)
         {
-            bool exists = db.T_StaffMaster.Any(x => x.StaffCD == staffCD && x.Enroll ==true);
+            var active = db.T_StaffMaster
+                .Any(x => x.StaffCD == staffCD && x.Enroll == true);
 
-            return Json(new { exists = exists }, JsonRequestBehavior.AllowGet);
+            var inactive = db.T_StaffMaster
+                .Any(x => x.StaffCD == staffCD && x.Enroll == false);
+
+            if (inactive)
+            {
+                return Json(new
+                {
+                    exists = true,
+                    errorType = "inactive",
+                    message = "Inactive CD already exist"
+
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+            if (active)
+            {
+                return Json(new
+                {
+                    exists = true,
+                    errorType = "duplicate",
+                    message = "Invalid use"
+
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+            return Json(new
+            {
+                status = "ok"
+            }, JsonRequestBehavior.AllowGet);
         }
+        //public JsonResult CheckStaffCD(string staffCD)
+        //{
+        //    bool exists = db.T_StaffMaster.Any(x => x.StaffCD == staffCD && x.Enroll ==true);
+
+        //    return Json(new { exists = exists }, JsonRequestBehavior.AllowGet);
+        //}
 
         bool IsUtf8Valid(string value, int maxBytes)
         {
