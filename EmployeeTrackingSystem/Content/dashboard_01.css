@@ -63,7 +63,7 @@ body {
 .main-title-bar {
     background-color: var(--bg-header-dark);
     color: white;
-    padding: 5px 15px;
+    padding: 5px;
     border-radius: 4px;
     white-space: nowrap; /* keep text on one line */
     width: 100%;
@@ -79,13 +79,14 @@ body {
 
 .board-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate; /* important */
     margin-bottom: 10px;
     table-layout: fixed;
     background-color: white;
     border-radius: 12px;
-    padding: 10px;
+   
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-spacing: 2px; /* controls gap (horizontal + vertical) */
 }
 
     .board-table th {
