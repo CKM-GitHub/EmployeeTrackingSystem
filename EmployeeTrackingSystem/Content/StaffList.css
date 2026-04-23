@@ -252,3 +252,8 @@ textarea.input-error {
         pointer-events: none;
         font-size: 14px;
     }
+#addForm input:disabled,
+#editForm input:disabled {
+    background-color: lightgray;
+    cursor: not-allowed;
+}

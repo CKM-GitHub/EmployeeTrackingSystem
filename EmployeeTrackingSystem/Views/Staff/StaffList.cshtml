@@ -93,7 +93,7 @@
 </div>
 
 <!--Update-->
-<div class="modal fade" id="editModal" tabindex="-1">
+<div class="modal fade" id="editModal" tabindex="-1" autocomplete="off" >
     <div class="modal-dialog" style="max-width:400px;">
         <div class="modal-content">
             <!-- Header -->
@@ -146,7 +146,7 @@
                         <div class="form-row">
                             <label>入会日</label>
                             <div class="date-wrapper">
-                                <input type="text" id="JoinedDate" name="JoinedDate" placeholder="yyyy/MM/dd" />
+                                <input type="text" id="JoinedDate" name="JoinedDate" placeholder="yyyy/MM/dd" autocomplete="off" />
                             </div>
                         </div>
 
@@ -197,7 +197,7 @@
 </div>
 
 <!-- ADD-->
-<div class="modal fade" id="addModal" tabindex="-1">
+<div class="modal fade" id="addModal" tabindex="-1" autocomplete="off" >
     <div class="modal-dialog" style="max-width:400px;">
         <div class="modal-content">
             <!-- Header -->
@@ -249,7 +249,7 @@
                         <div class="form-row">
                             <label>入会日</label>
                             <div class="date-wrapper">
-                                <input type="text" name="JoinedDate" id="JoinedDateAdd" placeholder="yyyy/MM/dd" />
+                                <input type="text" name="JoinedDate" id="JoinedDateAdd" placeholder="yyyy/MM/dd" autocomplete="off" />
                             </div>
                         </div>
                         <div class="form-row">
@@ -303,12 +303,24 @@
             applySeatRule();
     $('#department').select2();
     $('#staff').select2();
-    initDatePickers();
+            initDatePickers();
 
-    $('#addForm [name="DepartmentCD"]').on('change', toggleSeatNo);
-    $('#addModal').on('shown.bs.modal', toggleSeatNo);
+            $('#addForm [name="DepartmentCD"]').on('change', function () {
+                toggleSeatNo('#addForm');
+            });
 
-  
+            $('#addModal').on('shown.bs.modal', function () {
+                toggleSeatNo('#addForm');
+            });
+
+            $('#editForm [name="DepartmentCD"]').on('change', function () {
+                toggleSeatNo('#editForm');
+            });
+
+            $('#editModal').on('shown.bs.modal', function () {
+                toggleSeatNo('#editForm');
+            });
+
     // =====================
     // Add Form Enter key validation
     // =====================
@@ -636,41 +648,26 @@
             if (!$("#JoinedDateAdd").val()) {
                 $("#JoinedDateAdd").val($.datepicker.formatDate('yy/mm/dd', new Date()));
             }
-        //$("#JoinedDate,#JoinedDateAdd").datepicker({
-        //    dateFormat: "yy/mm/dd",
-        //    showOn: "button",
-        //    buttonText: "📅"
-        //});
-        ////$("#JoinedDateAdd").datepicker({
-        ////    dateFormat: "yy/mm/dd"
-        ////});
-
-        //// Auto open on focus
-        //////$(document).on("focus", "#JoinedDate, #JoinedDateAdd", function () {
-        //////    $(this).datepicker("show");
-        //////});
-
-        //// Optional: default today date in Add modal
-        //if (!$("#JoinedDateAdd").val()) {
-        //    $("#JoinedDateAdd").val($.datepicker.formatDate('yy/mm/dd', new Date()));
-        //}
-
-        //$("#JoinedDate, #JoinedDateAdd").on("input", function () {
-        //    this.value = this.value.replace(/[^0-9\/]/g, '');
-        //});
+       
     }
 
-    function toggleSeatNo() {
-        var dept = $('#addForm [name="DepartmentCD"]').val();
-        var disable = dept.startsWith('S'); // 20260416 ttw
-        //  var disable = ["S01", "S02", "S03"].includes(dept);
+        function toggleSeatNo(formSelector) {
 
-        $('#addForm [name="SeatNo"]')
-            .val(disable ? "" : $('#addForm [name="SeatNo"]').val())
-            .prop("disabled", disable);
+            var dept = $(formSelector + ' [name="DepartmentCD"]').val() || "";
 
-        $("#JoinedDateAdd").val($.datepicker.formatDate('yy/mm/dd', new Date())); // 20260416 ttw
-    }
+            var disable = dept.startsWith('S');
+
+            var $seat = $(formSelector + ' [name="SeatNo"]');
+
+            $seat
+                .val(disable ? "" : $seat.val())
+                .prop("disabled", disable);
+
+            // only apply date default for add form
+            if (formSelector === "#addForm") {
+                $("#JoinedDateAdd").val($.datepicker.formatDate('yy/mm/dd', new Date()));
+            }
+        }
 
     // ===== Helper to move focus =====
     function moveToNextFieldEdit($current) {
