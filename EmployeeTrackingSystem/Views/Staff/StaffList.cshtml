@@ -309,6 +309,13 @@
     // =====================
     // Add Form Enter key validation
     // =====================
+        $('#addModal').on('shown.bs.modal', function () {
+            $("#addForm [name='StaffCD']").focus();
+        });
+
+        $('#editModal').on('shown.bs.modal', function () {
+            $("#editForm [name='StaffName']").focus();
+        });
 
     var requiredFields = ["StaffCD", "StaffName", "DepartmentCD"];
 
@@ -396,12 +403,11 @@
                     $("#addModal").modal('hide');
                     location.reload();
                 } else if (res.errorType === "inactive") {
-                    var fieldName = err.field.replace("model.", "");
-                    var $field = $("#addForm [name='" + fieldName + "']");
-                    $field.addClass("input-error");
+                   
                     alert(res.message);
-
-
+                    var $field = $("#addForm [name='StaffCD']");
+                    $field.addClass("input-error");
+                    $field.focus();
                 }
                 else if (res.errors) {
                     res.errors.forEach(function (err) {
