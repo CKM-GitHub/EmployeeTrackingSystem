@@ -98,7 +98,7 @@
                         data: { departmentId: selectedDeptId },
                         success: function (data) {
                             $staffDropdown.empty();
-                            $staffDropdown.append('<option value="">All</option>');
+                            $staffDropdown.append('<option value=""></option>');
 
                             // Loop through the JSON data and add options
                             $.each(data, function (index, item) {
