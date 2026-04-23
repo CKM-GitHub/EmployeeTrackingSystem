@@ -299,7 +299,8 @@
     <link rel="stylesheet" href="~/Content/bootstrap.css" />
     <link rel="stylesheet" href="~/Content/StaffList.css" />
     <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
+            applySeatRule();
     $('#department').select2();
     $('#staff').select2();
     initDatePickers();
@@ -307,6 +308,7 @@
     $('#addForm [name="DepartmentCD"]').on('change', toggleSeatNo);
     $('#addModal').on('shown.bs.modal', toggleSeatNo);
 
+  
     // =====================
     // Add Form Enter key validation
     // =====================
@@ -448,6 +450,7 @@
             data: { department: dept, staff: staff },
             success: function (result) {
                 $("#tableStaff tbody").html($(result).find("#tableStaff tbody").html());
+                applySeatRule();
             },
             error: function () {
                // alert("Error loading data");
@@ -691,23 +694,22 @@
         }
         }
 
-        //function getUtf8ByteLength(str) {
-        //    return new TextEncoder().encode(str).length;
-        //}
+        function applySeatRule() {
 
-        //function checkLength(el, maxBytes, errorId) {
-        //    const bytes = getUtf8ByteLength(el.value);
-        //    const msg = document.getElementById(errorId);
+            $("#tableStaff tbody tr").each(function () {
 
-        //    if (bytes > maxBytes) {
-        //        msg.textContent = "最大 " + maxBytes + " バイトを超えています";
-        //        el.classList.add("input-error");
-        //        new TextEncoder().encode(el.value).slice(0, maxBytes)
-        //    } else {
-        //        msg.textContent = "";
-        //        el.classList.remove("input-error");
-        //    }
-        //}
+                var deptCD = $(this).find("input.deptCD").val();
+
+                if (deptCD && deptCD.trim().startsWith("S")) {
+
+                    $(this).find("input.newSeat")
+                        .val("")
+                        .prop("disabled", true);
+                }
+
+            });
+
+        }
 
     </script>
 }
