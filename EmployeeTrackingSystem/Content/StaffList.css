@@ -17,15 +17,23 @@
     font-size: 13px;
     border: 1px solid #ccc;
 }
-
-    
-    #tableStaff th,
-    #tableStaff td {
+    #tableStaff th {
+        position: sticky;
         padding: 4px 6px;
+        top: 0;
+        z-index: 1;
+        height: 29px;
         vertical-align: middle;
         white-space: nowrap;
     }
 
+
+    #tableStaff td {
+        padding: 0;
+        height: 30px; 
+        vertical-align: middle;
+        white-space: nowrap;
+    }
          #tableStaff td.text-center {
             text-align: center;
         }
@@ -37,13 +45,7 @@
         }
 
     /* Sticky header */
-    #tableStaff th {
-        position: sticky;
-        top: 0;
-        z-index: 1;
-        height: 29px;
-        vertical-align: middle;
-    }
+  
 
     
     #tableStaff tbody tr:nth-child(even) {
@@ -56,7 +58,7 @@
     }
 
     #tableStaff th:nth-child(2) {
-        width: 130px;
+        width: 140px;
     }
 
     #tableStaff th:nth-child(3) {
@@ -67,8 +69,11 @@
         width: 30px;
     }
 
+    #tableStaff th:nth-child(6) {
+        width: 80px;
+    }
+   
     #tableStaff th:nth-child(5),
-    #tableStaff th:nth-child(6),
     #tableStaff th:nth-child(7) {
         width: 70px;
     }
@@ -82,10 +87,10 @@
 
 
 .newSeat {
-    width: 35px !important;
+    width: 38px !important;
     text-align: center;
-    padding: 0;
-    margin: 0;
+    padding: 0 !important;
+    border: 1px solid #ccc;
 }
 
 
@@ -97,13 +102,13 @@
 
 .btn-wrapper {
     text-align: right;
-    padding-right: 63px;
+    padding-right: 42px;
     padding-top: 5px;
 }
 
 @media (max-width: 576px) {
     .btn-wrapper {
-        padding-right: 8px;
+        padding-right: 0px;
     }
 }
 
