@@ -384,10 +384,10 @@ body {
 /* Container for the whole bar */
 .status-legend {
     display: flex;
-    gap: 15px; /* Spacing between items */
+    gap: 0px; /* Spacing between items */
     align-items: center;
     /*background-color: #e6f2ff;*/ /* Light blue background from your image */
-    padding: 10px;
+    padding: 5px;
     font-family: sans-serif;
 }
 
@@ -395,7 +395,7 @@ body {
 .status-item {
     display: flex;
     align-items: center;
-    gap: 8px; /* Spacing between dot and text */
+    gap: 0px; /* Spacing between dot and text */
 }
 
 /* The Base Circle Design */
