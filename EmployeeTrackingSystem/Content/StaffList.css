@@ -82,7 +82,7 @@
 
 
 .newSeat {
-    width: 40px !important;
+    width: 35px !important;
     text-align: center;
     padding: 0;
     margin: 0;
@@ -97,11 +97,15 @@
 
 .btn-wrapper {
     text-align: right;
-    padding-right: 65px;
+    padding-right: 63px;
     padding-top: 5px;
 }
 
-
+@media (max-width: 576px) {
+    .btn-wrapper {
+        padding-right: 8px;
+    }
+}
 
 .form-container {
     width: 400px;
