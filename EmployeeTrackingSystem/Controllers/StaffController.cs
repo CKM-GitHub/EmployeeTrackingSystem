@@ -98,10 +98,10 @@ namespace EmployeeTrackingSystem.Controllers
                     return Json(new { success = false, errors = errors });
                 }
                 var existsActive = db.T_StaffMaster
-                    .Any(x => x.StaffCD == model.StaffCD && x.Enroll == true);
+                    .Any(x => x.StaffCD == model.StaffCD  && x.Enroll == true);
 
                 var existsInactive = db.T_StaffMaster
-                    .Any(x => x.StaffCD == model.StaffCD && x.Enroll == false);
+                    .Any(x => x.StaffCD == model.StaffCD  && x.Enroll == false);
 
                 if (existsInactive)
                 {
@@ -125,32 +125,23 @@ namespace EmployeeTrackingSystem.Controllers
                          }
                     });
                 }
-                //if (db.T_StaffMaster.Any(x => x.StaffCD == model.StaffCD && x.Enroll == true))
-                //{
-                //    return Json(new
-                //    {
-                //        success = false,
-                //        errors = new[] {
-                //    new { field = "StaffCD", message = "" }
-                //}
-                //    });
-                //}
+                
                 //// Seat duplicate
-                //bool isExist = db.T_StaffMaster.Any(x =>
-                //    x.DepartmentCD == model.DepartmentCD &&
-                //    x.SeatNo == model.SeatNo &&
-                //    x.Enroll == true);
+                bool isExist = db.T_StaffMaster.Any(x =>
+                    x.DepartmentCD == model.DepartmentCD &&
+                    x.SeatNo == model.SeatNo &&
+                    x.Enroll == true);
 
-                //if (isExist)
-                //{
-                //    return Json(new
-                //    {
-                //        success = false,
-                //        errors = new[] {
-                //    new { field = "SeatNo", message = "この席番号は既に使用されています" }
-                //        }
-                //    });
-                //}
+                if (isExist)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        errors = new[] {
+                    new { field = "SeatNo", message = "この席番号は既に使用されています" }
+                        }
+                    });
+                }
                 if (model.DepartmentCD == "S01")
                 {
                     model.CurrentShop = 1;
