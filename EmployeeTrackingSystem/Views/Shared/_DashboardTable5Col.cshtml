@@ -10,6 +10,9 @@
     if (!string.IsNullOrEmpty(first.StaffName3)) { staffCount++; }
     if (!string.IsNullOrEmpty(first.StaffName4)) { staffCount++; }
     if (!string.IsNullOrEmpty(first.StaffName5)) { staffCount++; }
+    if (!string.IsNullOrEmpty(first.StaffName6)) { staffCount++; }
+    if (!string.IsNullOrEmpty(first.StaffName7)) { staffCount++; }
+    if (!string.IsNullOrEmpty(first.StaffName8)) { staffCount++; }
 
     <div class="table-responsive">
         <table class="board-table">
@@ -62,276 +65,462 @@
                     else if (member.Status5 == "会議") { statusClass5 = "status-meeting"; }
                     else if (member.Status5 == "休み") { statusClass5 = "status-home"; }
 
+                    string statusClass6 = "";
+                    if (member.Status6 == "在席") { statusClass6 = "status-in"; }
+                    else if (member.Status6 == "帰宅") { statusClass6 = "status-off"; }
+                    else if (member.Status6 == "外出") { statusClass6 = "status-away"; }
+                    else if (member.Status6 == "直行") { statusClass6 = "status-away"; }
+                    else if (member.Status6 == "会議") { statusClass6 = "status-meeting"; }
+                    else if (member.Status6 == "休み") { statusClass6 = "status-home"; }
 
-                    <tr>
-                        @if (!string.IsNullOrEmpty(member.StaffName1))
-                        {
-                            <td class="@statusClass1">
-                                <table class="nested-table">
-                                    <tr>
-                                        <td colspan="2" class="nested-cell staffname">
-                                            <a href="#"
-                                               class="staff-link"
-                                               data-toggle="modal"
-                                               data-target="#staffModal"
-                                               data-sid="@member.StaffCD1"
-                                               data-did="@member.DepartmentCD"
-                                               data-status="@member.Status1"
-                                               data-returndatetime="@member.ReturnDatetime1"
-                                               data-note="@member.Note1">
-                                                @member.StaffName1
-                                            </a>
-                                            <img src="~/Content/search.png" class="search-icon" id="@member.StaffCD1"
-                                                                         data-staffname="@member.StaffName1" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        @if (member.Status1 != "休み" && member.Status1 != "在席" && member.Status1 != "帰宅")
-                                        {
-                                            <td class="nested-top date">
-                                                @{ string displayDate1 = "";
-                                                    if (!string.IsNullOrEmpty(member.ReturnDatetime1))
-                                                    {
-                                                        DateTime dt;
-                                                        if (DateTime.TryParse(member.ReturnDatetime1, out dt))
-                                                        {
-                                                            if (member.Status1 == "会議")
-                                                            {
-                                                                displayDate1 = dt.ToString("HH:mm:");
-                                                            }
-                                                            else if (member.Status1 == "外出" || member.Status1 == "直行")
-                                                            {
-                                                                displayDate1 = dt.ToString("yyyy-MM-dd HH:mm");
-                                                            }
-                                                        }
-                                                    } }
-                                                @displayDate1
-                                            </td>
+                    string statusClass7 = "";
+                    if (member.Status7 == "在席") { statusClass7 = "status-in"; }
+                    else if (member.Status7 == "帰宅") { statusClass7 = "status-off"; }
+                    else if (member.Status7 == "外出") { statusClass7 = "status-away"; }
+                    else if (member.Status7 == "直行") { statusClass7 = "status-away"; }
+                    else if (member.Status7 == "会議") { statusClass7 = "status-meeting"; }
+                    else if (member.Status7 == "休み") { statusClass7 = "status-home"; }
 
-                                            <td class="nested-cell note">@(member.Note1 ?? "")</td>
-                                        }
-                                        else
-                                        {
-                                            <td colspan="2" class="nested-cell note">@(member.Note1 ?? "")</td>
-                                        }
-                                    </tr>
-                                </table>
-                            </td>
-                        }
-                        @if (!string.IsNullOrEmpty(member.StaffName2))
-                        {
-                            <td class="@statusClass2">
-                                <table class="nested-table">
-                                    <tr>
-                                        <td colspan="2" class="nested-cell staffname">
-                                            <a href="#"
-                                               class="staff-link"
-                                               data-toggle="modal"
-                                               data-target="#staffModal"
-                                               data-sid="@member.StaffCD2"
-                                               data-did="@member.DepartmentCD"
-                                               data-status="@member.Status2"
-                                               data-returndatetime="@member.ReturnDatetime2"
-                                               data-note="@member.Note2">
-                                                @member.StaffName2
-                                            </a>
-                                            <img src="~/Content/search.png" class="search-icon" id="@member.StaffCD2"
-                                                                         data-staffname="@member.StaffName2" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        @if (member.Status2 != "休み" && member.Status2 != "在席" && member.Status2 != "帰宅")
-                                        {
-                                            <td class="nested-top date">
-                                                @{ string displayDate2 = "";
-                                                    if (!string.IsNullOrEmpty(member.ReturnDatetime2))
-                                                    {
-                                                        DateTime dt;
-                                                        if (DateTime.TryParse(member.ReturnDatetime2, out dt))
-                                                        {
-                                                            if (member.Status2 == "会議")
-                                                            {
-                                                                displayDate2 = dt.ToString("HH:mm");
-                                                            }
-                                                            else if (member.Status2 == "外出" || member.Status2 == "直行")
-                                                            {
-                                                                displayDate2 = dt.ToString("yyyy-MM-dd HH:mm");
-                                                            }
-                                                        }
-                                                    } }
-                                                @displayDate2
-                                            </td>
-                                            <td class="nested-cell note">@(member.Note2 ?? "")</td>
-                                        }
-                                        else
-                                        {
-                                            <td colspan="2" class="nested-cell note">@(member.Note2 ?? "")</td>
-                                        }
-                                    </tr>
-                                </table>
-                            </td>
-                        }
-                        @if (!string.IsNullOrEmpty(member.StaffName3))
-                        {
-                            <td class="@statusClass3">
-                                <table class="nested-table">
-                                    <tr>
-                                        <td colspan="2" class="nested-cell staffname">
-                                            <a href="#"
-                                               class="staff-link"
-                                               data-toggle="modal"
-                                               data-target="#staffModal"
-                                               data-sid="@member.StaffCD3"
-                                               data-did="@member.DepartmentCD"
-                                               data-status="@member.Status3"
-                                               data-returndatetime="@member.ReturnDatetime3"
-                                               data-note="@member.Note3">
-                                                @member.StaffName3
-                                            </a>
-                                            <img src="~/Content/search.png" class="search-icon" id="@member.StaffCD3"
-                                                                         data-staffname="@member.StaffName3" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        @if (member.Status3 != "休み" && member.Status3 != "在席" && member.Status3 != "帰宅")
-                                        {
-                                            <td class="nested-top date">
-                                                @{ string displayDate3 = "";
-                                                    if (!string.IsNullOrEmpty(member.ReturnDatetime3))
-                                                    {
-                                                        DateTime dt;
-                                                        if (DateTime.TryParse(member.ReturnDatetime3, out dt))
-                                                        {
-                                                            if (member.Status3 == "会議")
-                                                            {
-                                                                displayDate3 = dt.ToString("HH:mm");
-                                                            }
-                                                            else if (member.Status3 == "外出" || member.Status3 == "直行")
-                                                            {
-                                                                displayDate3 = dt.ToString("yyyy-MM-dd HH:mm");
-                                                            }
-                                                        }
-                                                    } }
-                                                @displayDate3
-                                            </td>
-                                            <td class="nested-cell note">@(member.Note3 ?? "")</td>
-                                        }
-                                        else
-                                        {
-                                            <td colspan="2" class="nested-cell note">@(member.Note3 ?? "")</td>
-                                        }
-                                    </tr>
-                                </table>
-                            </td>
-                        }
-                        @if (!string.IsNullOrEmpty(member.StaffName4))
-                        {
-                            <td class="@statusClass4">
-                                <table class="nested-table">
-                                    <tr>
-                                        <td colspan="2" class="nested-cell staffname">
-                                            <a href="#"
-                                               class="staff-link"
-                                               data-toggle="modal"
-                                               data-target="#staffModal"
-                                               data-sid="@member.StaffCD4"
-                                               data-did="@member.DepartmentCD"
-                                               data-status="@member.Status4"
-                                               data-returndatetime="@member.ReturnDatetime4"
-                                               data-note="@member.Note4">
-                                                @member.StaffName4
-                                            </a>
-                                            <img src="~/Content/search.png" class="search-icon" id="@member.StaffCD4"
-                                                                         data-staffname="@member.StaffName4" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        @if (member.Status4 != "休み" && member.Status4 != "在席" && member.Status4 != "帰宅")
-                                        {
-                                            <td class="nested-top date">
-                                                @{ string displayDate4 = "";
-                                                    if (!string.IsNullOrEmpty(member.ReturnDatetime4))
-                                                    {
-                                                        DateTime dt;
-                                                        if (DateTime.TryParse(member.ReturnDatetime4, out dt))
-                                                        {
-                                                            if (member.Status4 == "会議")
-                                                            {
-                                                                displayDate4 = dt.ToString("HH:mm");
-                                                            }
-                                                            else if (member.Status4 == "外出" || member.Status4 == "直行")
-                                                            {
-                                                                displayDate4 = dt.ToString("yyyy-MM-dd HH:mm");
-                                                            }
-                                                        }
-                                                    } }
-                                                @displayDate4
-                                            </td>
-                                            <td class="nested-cell note">@(member.Note4 ?? "")</td>
-                                        }
-                                        else
-                                        {
-                                            <td colspan="2" class="nested-cell note">@(member.Note4 ?? "")</td>
-                                        }
-                                    </tr>
-                                </table>
-                            </td>
-                        }
-                        @if (!string.IsNullOrEmpty(member.StaffName5))
-                        {
-                            <td class="@statusClass5">
-                                <table class="nested-table">
-                                    <tr>
-                                        <td colspan="2" class="nested-cell staffname">
-                                            <a href="#"
-                                               class="staff-link"
-                                               data-toggle="modal"
-                                               data-target="#staffModal"
-                                               data-sid="@member.StaffCD5"
-                                               data-did="@member.DepartmentCD"
-                                               data-status="@member.Status5"
-                                               data-returndatetime="@member.ReturnDatetime5"
-                                               data-note="@member.Note5">
-                                                @member.StaffName5
-                                            </a>
-                                            <img src="~/Content/search.png" class="search-icon" id="@member.StaffCD5"
-                                                                         data-staffname="@member.StaffName5" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        @if (member.Status5 != "休み" && member.Status5 != "在席" && member.Status5 != "帰宅")
-                                        {
-                                            <td class="nested-top date">
-                                                @{ string displayDate5 = "";
-                                                    if (!string.IsNullOrEmpty(member.ReturnDatetime5))
-                                                    {
-                                                        DateTime dt;
-                                                        if (DateTime.TryParse(member.ReturnDatetime5, out dt))
-                                                        {
-                                                            if (member.Status5 == "会議")
-                                                            {
-                                                                displayDate5 = dt.ToString("HH:mm");
-                                                            }
-                                                            else if (member.Status5 == "外出" || member.Status5 == "直行")
-                                                            {
-                                                                displayDate5 = dt.ToString("yyyy-MM-dd HH:mm");
-                                                            }
-                                                        }
-                                                    } }
-                                                @displayDate5
-                                            </td>
-                                            <td class="nested-cell note">@(member.Note5 ?? "")</td>
-                                        }
-                                        else
-                                        {
-                                            <td colspan="2" class="nested-cell note">@(member.Note5 ?? "")</td>
-                                        }
-                                    </tr>
-                                </table>
-                            </td>
-                        }
+                    string statusClass8 = "";
+                    if (member.Status8 == "在席") { statusClass8 = "status-in"; }
+                    else if (member.Status8 == "帰宅") { statusClass8 = "status-off"; }
+                    else if (member.Status8 == "外出") { statusClass8 = "status-away"; }
+                    else if (member.Status8 == "直行") { statusClass8 = "status-away"; }
+                    else if (member.Status8 == "会議") { statusClass8 = "status-meeting"; }
+                    else if (member.Status8 == "休み") { statusClass8 = "status-home"; }
 
-                    </tr>
+                <tr>
+                    @if (!string.IsNullOrEmpty(member.StaffName1))
+                    {
+                        <td class="@statusClass1">
+                            <table class="nested-table">
+                                <tr>
+                                    <td colspan="2" class="nested-cell staffname">
+                                        <a href="#"
+                                           class="staff-link"
+                                           data-toggle="modal"
+                                           data-target="#staffModal"
+                                           data-sid="@member.StaffCD1"
+                                           data-did="@member.DepartmentCD"
+                                           data-status="@member.Status1"
+                                           data-returndatetime="@member.ReturnDatetime1"
+                                           data-note="@member.Note1">
+                                            @member.StaffName1
+                                        </a>
+                                        <img src="~/Content/search.png" class="search-icon" id="@member.StaffCD1"
+                                             data-staffname="@member.StaffName1" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    @if (member.Status1 != "休み" && member.Status1 != "在席" && member.Status1 != "帰宅")
+                                    {
+                                        <td class="nested-top date">
+                                            @{ string displayDate1 = "";
+                                                if (!string.IsNullOrEmpty(member.ReturnDatetime1))
+                                                {
+                                                    DateTime dt;
+                                                    if (DateTime.TryParse(member.ReturnDatetime1, out dt))
+                                                    {
+                                                        if (member.Status1 == "会議")
+                                                        {
+                                                            displayDate1 = dt.ToString("HH:mm:");
+                                                        }
+                                                        else if (member.Status1 == "外出" || member.Status1 == "直行")
+                                                        {
+                                                            displayDate1 = dt.ToString("yyyy-MM-dd HH:mm");
+                                                        }
+                                                    }
+                                                } }
+                                            @displayDate1
+                                        </td>
+
+                                        <td class="nested-cell note">@(member.Note1 ?? "")</td>
+                                    }
+                                    else
+                                    {
+                                        <td colspan="2" class="nested-cell note">@(member.Note1 ?? "")</td>
+                                    }
+                                </tr>
+                            </table>
+                        </td>
+                    }
+                    @if (!string.IsNullOrEmpty(member.StaffName2))
+                    {
+                        <td class="@statusClass2">
+                            <table class="nested-table">
+                                <tr>
+                                    <td colspan="2" class="nested-cell staffname">
+                                        <a href="#"
+                                           class="staff-link"
+                                           data-toggle="modal"
+                                           data-target="#staffModal"
+                                           data-sid="@member.StaffCD2"
+                                           data-did="@member.DepartmentCD"
+                                           data-status="@member.Status2"
+                                           data-returndatetime="@member.ReturnDatetime2"
+                                           data-note="@member.Note2">
+                                            @member.StaffName2
+                                        </a>
+                                        <img src="~/Content/search.png" class="search-icon" id="@member.StaffCD2"
+                                             data-staffname="@member.StaffName2" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    @if (member.Status2 != "休み" && member.Status2 != "在席" && member.Status2 != "帰宅")
+                                    {
+                                        <td class="nested-top date">
+                                            @{ string displayDate2 = "";
+                                                if (!string.IsNullOrEmpty(member.ReturnDatetime2))
+                                                {
+                                                    DateTime dt;
+                                                    if (DateTime.TryParse(member.ReturnDatetime2, out dt))
+                                                    {
+                                                        if (member.Status2 == "会議")
+                                                        {
+                                                            displayDate2 = dt.ToString("HH:mm");
+                                                        }
+                                                        else if (member.Status2 == "外出" || member.Status2 == "直行")
+                                                        {
+                                                            displayDate2 = dt.ToString("yyyy-MM-dd HH:mm");
+                                                        }
+                                                    }
+                                                } }
+                                            @displayDate2
+                                        </td>
+                                        <td class="nested-cell note">@(member.Note2 ?? "")</td>
+                                    }
+                                    else
+                                    {
+                                        <td colspan="2" class="nested-cell note">@(member.Note2 ?? "")</td>
+                                    }
+                                </tr>
+                            </table>
+                        </td>
+                    }
+                    @if (!string.IsNullOrEmpty(member.StaffName3))
+                    {
+                        <td class="@statusClass3">
+                            <table class="nested-table">
+                                <tr>
+                                    <td colspan="2" class="nested-cell staffname">
+                                        <a href="#"
+                                           class="staff-link"
+                                           data-toggle="modal"
+                                           data-target="#staffModal"
+                                           data-sid="@member.StaffCD3"
+                                           data-did="@member.DepartmentCD"
+                                           data-status="@member.Status3"
+                                           data-returndatetime="@member.ReturnDatetime3"
+                                           data-note="@member.Note3">
+                                            @member.StaffName3
+                                        </a>
+                                        <img src="~/Content/search.png" class="search-icon" id="@member.StaffCD3"
+                                             data-staffname="@member.StaffName3" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    @if (member.Status3 != "休み" && member.Status3 != "在席" && member.Status3 != "帰宅")
+                                    {
+                                        <td class="nested-top date">
+                                            @{ string displayDate3 = "";
+                                                if (!string.IsNullOrEmpty(member.ReturnDatetime3))
+                                                {
+                                                    DateTime dt;
+                                                    if (DateTime.TryParse(member.ReturnDatetime3, out dt))
+                                                    {
+                                                        if (member.Status3 == "会議")
+                                                        {
+                                                            displayDate3 = dt.ToString("HH:mm");
+                                                        }
+                                                        else if (member.Status3 == "外出" || member.Status3 == "直行")
+                                                        {
+                                                            displayDate3 = dt.ToString("yyyy-MM-dd HH:mm");
+                                                        }
+                                                    }
+                                                } }
+                                            @displayDate3
+                                        </td>
+                                        <td class="nested-cell note">@(member.Note3 ?? "")</td>
+                                    }
+                                    else
+                                    {
+                                        <td colspan="2" class="nested-cell note">@(member.Note3 ?? "")</td>
+                                    }
+                                </tr>
+                            </table>
+                        </td>
+                    }
+                    @if (!string.IsNullOrEmpty(member.StaffName4))
+                    {
+                        <td class="@statusClass4">
+                            <table class="nested-table">
+                                <tr>
+                                    <td colspan="2" class="nested-cell staffname">
+                                        <a href="#"
+                                           class="staff-link"
+                                           data-toggle="modal"
+                                           data-target="#staffModal"
+                                           data-sid="@member.StaffCD4"
+                                           data-did="@member.DepartmentCD"
+                                           data-status="@member.Status4"
+                                           data-returndatetime="@member.ReturnDatetime4"
+                                           data-note="@member.Note4">
+                                            @member.StaffName4
+                                        </a>
+                                        <img src="~/Content/search.png" class="search-icon" id="@member.StaffCD4"
+                                             data-staffname="@member.StaffName4" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    @if (member.Status4 != "休み" && member.Status4 != "在席" && member.Status4 != "帰宅")
+                                    {
+                                        <td class="nested-top date">
+                                            @{ string displayDate4 = "";
+                                                if (!string.IsNullOrEmpty(member.ReturnDatetime4))
+                                                {
+                                                    DateTime dt;
+                                                    if (DateTime.TryParse(member.ReturnDatetime4, out dt))
+                                                    {
+                                                        if (member.Status4 == "会議")
+                                                        {
+                                                            displayDate4 = dt.ToString("HH:mm");
+                                                        }
+                                                        else if (member.Status4 == "外出" || member.Status4 == "直行")
+                                                        {
+                                                            displayDate4 = dt.ToString("yyyy-MM-dd HH:mm");
+                                                        }
+                                                    }
+                                                } }
+                                            @displayDate4
+                                        </td>
+                                        <td class="nested-cell note">@(member.Note4 ?? "")</td>
+                                    }
+                                    else
+                                    {
+                                        <td colspan="2" class="nested-cell note">@(member.Note4 ?? "")</td>
+                                    }
+                                </tr>
+                            </table>
+                        </td>
+                    }
+                    @if (!string.IsNullOrEmpty(member.StaffName5))
+                    {
+                        <td class="@statusClass5">
+                            <table class="nested-table">
+                                <tr>
+                                    <td colspan="2" class="nested-cell staffname">
+                                        <a href="#"
+                                           class="staff-link"
+                                           data-toggle="modal"
+                                           data-target="#staffModal"
+                                           data-sid="@member.StaffCD5"
+                                           data-did="@member.DepartmentCD"
+                                           data-status="@member.Status5"
+                                           data-returndatetime="@member.ReturnDatetime5"
+                                           data-note="@member.Note5">
+                                            @member.StaffName5
+                                        </a>
+                                        <img src="~/Content/search.png" class="search-icon" id="@member.StaffCD5"
+                                             data-staffname="@member.StaffName5" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    @if (member.Status5 != "休み" && member.Status5 != "在席" && member.Status5 != "帰宅")
+                                    {
+                                        <td class="nested-top date">
+                                            @{ string displayDate5 = "";
+                                                if (!string.IsNullOrEmpty(member.ReturnDatetime5))
+                                                {
+                                                    DateTime dt;
+                                                    if (DateTime.TryParse(member.ReturnDatetime5, out dt))
+                                                    {
+                                                        if (member.Status5 == "会議")
+                                                        {
+                                                            displayDate5 = dt.ToString("HH:mm");
+                                                        }
+                                                        else if (member.Status5 == "外出" || member.Status5 == "直行")
+                                                        {
+                                                            displayDate5 = dt.ToString("yyyy-MM-dd HH:mm");
+                                                        }
+                                                    }
+                                                } }
+                                            @displayDate5
+                                        </td>
+                                        <td class="nested-cell note">@(member.Note5 ?? "")</td>
+                                    }
+                                    else
+                                    {
+                                        <td colspan="2" class="nested-cell note">@(member.Note5 ?? "")</td>
+                                    }
+                                </tr>
+                            </table>
+                        </td>
+                    }
+
+                    @if (!string.IsNullOrEmpty(member.StaffName6))
+                    {
+                        <td class="@statusClass6">
+                            <table class="nested-table">
+                                <tr>
+                                    <td colspan="2" class="nested-cell staffname">
+                                        <a href="#"
+                                           class="staff-link"
+                                           data-toggle="modal"
+                                           data-target="#staffModal"
+                                           data-sid="@member.StaffCD6"
+                                           data-did="@member.DepartmentCD"
+                                           data-status="@member.Status6"
+                                           data-returndatetime="@member.ReturnDatetime6"
+                                           data-note="@member.Note6">
+                                            @member.StaffName6
+                                        </a>
+                                        <img src="~/Content/search.png" class="search-icon" id="@member.StaffCD6"
+                                             data-staffname="@member.StaffName6" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    @if (member.Status6 != "休み" && member.Status6 != "在席" && member.Status6 != "帰宅")
+                                    {
+                                        <td class="nested-top date">
+                                            @{ string displayDate6 = "";
+                                                if (!string.IsNullOrEmpty(member.ReturnDatetime6))
+                                                {
+                                                    DateTime dt;
+                                                    if (DateTime.TryParse(member.ReturnDatetime6, out dt))
+                                                    {
+                                                        if (member.Status6 == "会議")
+                                                        {
+                                                            displayDate6 = dt.ToString("HH:mm");
+                                                        }
+                                                        else if (member.Status6 == "外出" || member.Status6 == "直行")
+                                                        {
+                                                            displayDate6 = dt.ToString("yyyy-MM-dd HH:mm");
+                                                        }
+                                                    }
+                                                } }
+                                            @displayDate6
+                                        </td>
+                                        <td class="nested-cell note">@(member.Note6 ?? "")</td>
+                                    }
+                                    else
+                                    {
+                                        <td colspan="2" class="nested-cell note">@(member.Note6 ?? "")</td>
+                                    }
+                                </tr>
+                            </table>
+                        </td>
+                    }
+
+                    @if (!string.IsNullOrEmpty(member.StaffName7))
+                    {
+                        <td class="@statusClass7">
+                            <table class="nested-table">
+                                <tr>
+                                    <td colspan="2" class="nested-cell staffname">
+                                        <a href="#"
+                                           class="staff-link"
+                                           data-toggle="modal"
+                                           data-target="#staffModal"
+                                           data-sid="@member.StaffCD7"
+                                           data-did="@member.DepartmentCD"
+                                           data-status="@member.Status7"
+                                           data-returndatetime="@member.ReturnDatetime7"
+                                           data-note="@member.Note7">
+                                            @member.StaffName7
+                                        </a>
+                                        <img src="~/Content/search.png" class="search-icon" id="@member.StaffCD7"
+                                             data-staffname="@member.StaffName7" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    @if (member.Status7 != "休み" && member.Status7 != "在席" && member.Status7 != "帰宅")
+                                    {
+                                        <td class="nested-top date">
+                                            @{ string displayDate7 = "";
+                                                if (!string.IsNullOrEmpty(member.ReturnDatetime7))
+                                                {
+                                                    DateTime dt;
+                                                    if (DateTime.TryParse(member.ReturnDatetime7, out dt))
+                                                    {
+                                                        if (member.Status7 == "会議")
+                                                        {
+                                                            displayDate7 = dt.ToString("HH:mm");
+                                                        }
+                                                        else if (member.Status7 == "外出" || member.Status7 == "直行")
+                                                        {
+                                                            displayDate7 = dt.ToString("yyyy-MM-dd HH:mm");
+                                                        }
+                                                    }
+                                                } }
+                                            @displayDate7
+                                        </td>
+                                        <td class="nested-cell note">@(member.Note7 ?? "")</td>
+                                    }
+                                    else
+                                    {
+                                        <td colspan="2" class="nested-cell note">@(member.Note7 ?? "")</td>
+                                    }
+                                </tr>
+                            </table>
+                        </td>
+                    }
+
+
+                    @if (!string.IsNullOrEmpty(member.StaffName8))
+                    {
+                        <td class="@statusClass8">
+                            <table class="nested-table">
+                                <tr>
+                                    <td colspan="2" class="nested-cell staffname">
+                                        <a href="#"
+                                           class="staff-link"
+                                           data-toggle="modal"
+                                           data-target="#staffModal"
+                                           data-sid="@member.StaffCD8"
+                                           data-did="@member.DepartmentCD"
+                                           data-status="@member.Status8"
+                                           data-returndatetime="@member.ReturnDatetime8"
+                                           data-note="@member.Note8">
+                                            @member.StaffName8
+                                        </a>
+                                        <img src="~/Content/search.png" class="search-icon" id="@member.StaffCD8"
+                                             data-staffname="@member.StaffName8" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    @if (member.Status8 != "休み" && member.Status8 != "在席" && member.Status8 != "帰宅")
+                                    {
+                                        <td class="nested-top date">
+                                            @{ string displayDate8 = "";
+                                                if (!string.IsNullOrEmpty(member.ReturnDatetime8))
+                                                {
+                                                    DateTime dt;
+                                                    if (DateTime.TryParse(member.ReturnDatetime8, out dt))
+                                                    {
+                                                        if (member.Status8 == "会議")
+                                                        {
+                                                            displayDate8 = dt.ToString("HH:mm");
+                                                        }
+                                                        else if (member.Status8 == "外出" || member.Status8 == "直行")
+                                                        {
+                                                            displayDate8 = dt.ToString("yyyy-MM-dd HH:mm");
+                                                        }
+                                                    }
+                                                } }
+                                            @displayDate8
+                                        </td>
+                                        <td class="nested-cell note">@(member.Note8 ?? "")</td>
+                                    }
+                                    else
+                                    {
+                                        <td colspan="2" class="nested-cell note">@(member.Note8 ?? "")</td>
+                                    }
+                                </tr>
+                            </table>
+                        </td>
+                    }
+
+                </tr>
                 }
             </tbody>
         </table>

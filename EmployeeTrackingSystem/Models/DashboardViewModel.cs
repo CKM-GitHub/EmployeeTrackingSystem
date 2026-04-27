@@ -40,6 +40,18 @@ namespace EmployeeTrackingSystem.Models
         public string ReturnDatetime6 { get; set; }
         public string Note6 { get; set; }
 
+        public string StaffCD7 { get; set; }
+        public string StaffName7 { get; set; }
+        public string Status7 { get; set; }
+        public string ReturnDatetime7 { get; set; }
+        public string Note7 { get; set; }
+
+        public string StaffCD8 { get; set; }
+        public string StaffName8 { get; set; }
+        public string Status8{ get; set; }
+        public string ReturnDatetime8 { get; set; }
+        public string Note8 { get; set; }
+
         public string DepartmentCD { get; set; }
         public string DepartmentName { get; set; }
         public string CurrentShop { get; set; }
