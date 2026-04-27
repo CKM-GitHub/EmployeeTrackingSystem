@@ -31,7 +31,7 @@ namespace EmployeeTrackingSystem.Controllers
             List<DashboardViewModel> table6 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json6);
             string json7 = Get_DashboardInformation(5, "D07");
             List<DashboardViewModel> table7 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json7);
-            string json8 = Get_DashboardInformation(5, "D08");
+            string json8 = Get_DashboardInformation(2, "D08");
             List<DashboardViewModel> table8 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json8);
 
             string json_shop1 = Get_DashboardInformation(2, "S01");
