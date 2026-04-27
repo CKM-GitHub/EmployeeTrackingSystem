@@ -38,18 +38,18 @@
                 && ViewBag.StaffNames != null)
         {
             <div class="row">
-                <div class="col-12 col-sm-6 col-md-2 form-group">
+                <div class="col-12 col-sm-12 col-md-2 form-group">
                     @Html.DropDownList("department", ViewBag.Departments as SelectList,
                          new { @class = "form-control mt-2", id = "department" })
 
                 </div>
-                <div class="col-12 col-sm-6 col-md-2 form-group">
+                <div class="col-12 col-sm-12 col-md-2 form-group">
                     @Html.DropDownList("staff", ViewBag.StaffNames as SelectList,
                          new { @class = "form-control mt-2", id = "staff" })
                 </div>
                 @if (ViewBag.Detail != "Detail")
                 {
-                    <div class="col-12 col-sm-6 col-md-4 form-group">
+                    <div class="col-12 col-md-4 form-group">
                         @RenderSection("Buttons", required: false)
                     </div>
                 }
