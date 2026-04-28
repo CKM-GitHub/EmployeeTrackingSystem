@@ -39,12 +39,13 @@ namespace EmployeeTrackingSystem.Controllers
 
             foreach(var dr in staffList)
             {
-                string curshop = dr.CurrentShop == 1 ? "S01" : dr.CurrentShop == 2 ? "S02" : dr.CurrentShop == 3 ? "S03" : "";
+                string curshop = "S0" + dr.CurrentShop.ToString();
+                // curshop = dr.CurrentShop == 1 ? "S01" : dr.CurrentShop == 2 ? "S02" : dr.CurrentShop == 3 ? "S03" : "";
                 dr.CurshopName = db.T_Department.Where(d => d.DepartmentCD == curshop).Select(d => d.DepartmentName).SingleOrDefault();
             }
 
             //  Filter Department
-            if (!string.IsNullOrEmpty(department) )
+            if (!string.IsNullOrEmpty(department))
             {
                 staffList = staffList
                     .Where(x => x.DepartmentCD == department)
@@ -279,8 +280,19 @@ namespace EmployeeTrackingSystem.Controllers
 
                 if (!string.IsNullOrEmpty(model.Remark))
                     staff.Remark = model.Remark;
-              
+
+                if ((model.DepartmentCD ?? "").Trim().StartsWith("S0"))
+                {
+                    staff.SeatNo = null;
+                }
+                else
+                {
                     staff.SeatNo = model.SeatNo;
+                }
+
+                // keep existing DB value
+                //staff.SeatNo = staff.SeatNo;
+                
 
                 staff.UpdateDateTime = DateTime.Now;
                 db.SaveChanges();

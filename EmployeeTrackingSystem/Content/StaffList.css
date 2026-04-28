@@ -162,6 +162,13 @@
     width: 50px !important; /* class for short input width */
 }
 
+.seat-small {
+    width: 50px !important;
+}
+
+.seat-large {
+    width: 120px !important;
+}
 .radio-group input[type="radio"] {
     vertical-align: middle;
     margin-top: 0;

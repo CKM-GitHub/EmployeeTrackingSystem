@@ -184,7 +184,7 @@
                         </div>
 
                         <div class="form-row">
-                            <label>席番号</label>
+                            <label class="seat-label">席番号</label>
                             <input type="text" id="SeatNo" name="SeatNo" class="short-input" maxlength="2"
                                    oncompositionstart="this.c=1"
                                    oncompositionend="this.c=0;this.oninput()"
@@ -192,6 +192,8 @@
                                            if(this.c) return;
                                            this.value = this.value.replace(/\D/g,'').replace(/^0+/, '').slice(0,2);
                                          " />
+                            <input type="hidden" name="OriginalSeatNo" />
+                            <input type="hidden" name="CurshopName" />
                         </div>
 
                         <!-- Buttons -->
@@ -506,10 +508,16 @@
 
 
         $("#SeatNo").val(row.find("td").eq(4).text().trim());
+       // $("#SeatNo").val(row.find("td").eq(5).text().trim());
+        let seatNo = row.find("td").eq(4).text().trim();
+        let shopName = row.find("td").eq(6).text().trim();
 
         let enrollVal = row.find(".enroll").val();
         $("#editModal input[name='Enroll'][value='" + enrollVal + "']").prop("checked", true);
 
+
+        $("#editForm [name='OriginalSeatNo']").val(seatNo);
+        $("#editForm [name='CurshopName']").val(shopName);
         $('#editModal').modal('show');
 
         setTimeout(() => $("#StaffName").focus(), 300);
@@ -670,22 +678,50 @@
         function toggleSeatNo(formSelector) {
 
             var dept = $(formSelector + ' [name="DepartmentCD"]').val() || "";
-
             var disable = dept.startsWith('S');
 
             var $seat = $(formSelector + ' [name="SeatNo"]');
+            var $label = $(formSelector + ' .seat-label');
+            
+            // ONLY apply shopname logic for edit form
+            if (formSelector === "#editForm") {
 
-            $seat
-                .val(disable ? "" : $seat.val())
-                .prop("disabled", disable);
+                var seatNo = $(formSelector + ' [name="OriginalSeatNo"]').val();
+                var shopName = $(formSelector + ' [name="CurshopName"]').val();
 
-            // only apply date default for add form
+
+                if (disable) {
+                    $label.text("現在のショップ");
+                    $seat
+                    .removeClass("seat-small")
+                    .addClass("seat-large")
+                    .val(shopName || "")
+                    .prop("disabled", true);
+                } else {
+                    $label.text("席番号");
+                    $seat
+                    .removeClass("seat-large")
+                    .addClass("seat-small")
+                    .val(seatNo || "")
+                    .prop("disabled", false);
+                }
+
+            } else {
+                //  ADD FORM (normal behavior)
+                $label.text("席番号");
+                $seat.prop("disabled", disable);
+
+                if (disable) {
+                    $seat.val(""); 
+                }
+            }
+
+            // keep your date logic
             if (formSelector === "#addForm") {
                 $("#JoinedDateAdd").val($.datepicker.formatDate('yy/mm/dd', new Date()));
             }
         }
-
-    // ===== Helper to move focus =====
+      
     function moveToNextFieldEdit($current) {
         var $fields = $('#editForm').find('input, select, textarea').filter(':visible');
         var index = $fields.index($current);
