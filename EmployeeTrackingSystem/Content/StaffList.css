@@ -15,26 +15,29 @@
     border-collapse: separate;
     border-spacing: 0;
     font-size: 13px;
-    border: 1px solid #ccc;
+  /*  border: 1px solid #ccc;*/
 }
-    #tableStaff th {
-        position: sticky;
-        padding: 4px 6px;
-        top: 0;
-        z-index: 1;
-        height: 29px;
-        vertical-align: middle;
-        white-space: nowrap;
-    }
-
-
+    #tableStaff th,
     #tableStaff td {
-        padding: 0;
-        height: 30px; 
+        padding: 2px 4px;
+    }
+
+#tableStaff th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    height: 29px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+
+#tableStaff td {
+        height: 30px;
         vertical-align: middle;
         white-space: nowrap;
     }
-         #tableStaff td.text-center {
+#tableStaff td.text-center {
             text-align: center;
         }
 
@@ -45,12 +48,15 @@
         }
 
     /* Sticky header */
-  
 
-    
-    #tableStaff tbody tr:nth-child(even) {
-        background-color: #f2f2f2;
+    #tableStaff tbody tr:nth-child(odd) {
+        background-color: #f2f2f2; /* white */
     }
+
+    #tableStaff tbody tr:nth-child(even) {
+        background-color: #ffffff; /* light gray */
+    }
+ 
 
     
     #tableStaff th:nth-child(1) {
