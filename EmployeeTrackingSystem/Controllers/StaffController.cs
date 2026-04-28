@@ -32,9 +32,16 @@ namespace EmployeeTrackingSystem.Controllers
                                  Email =s.Email,
                                  Enroll =s.Enroll,
                                  Remark =s.Remark,
-                                 EmployeeType =s.EmployeeType
+                                 EmployeeType =s.EmployeeType,
+                                 CurrentShop = s.CurrentShop 
 
                              }).Where(s=> s.Enroll != false).ToList();
+
+            foreach(var dr in staffList)
+            {
+                string curshop = dr.CurrentShop == 1 ? "S01" : dr.CurrentShop == 2 ? "S02" : dr.CurrentShop == 3 ? "S03" : "";
+                dr.CurshopName = db.T_Department.Where(d => d.DepartmentCD == curshop).Select(d => d.DepartmentName).SingleOrDefault();
+            }
 
             //  Filter Department
             if (!string.IsNullOrEmpty(department) )

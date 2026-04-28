@@ -31,6 +31,7 @@
                         Next <br />
                         席番号
                     </th>
+                    <th class="th_center">現在のショップ</th>
                     <th class="th_center">Action</th>
                 </tr>
             </thead>
@@ -40,39 +41,40 @@
                 {
                     foreach (var item in Model)
                     {
-                        <tr>
-                            <td class="text-left"> @item.StaffCD</td>
-                            <td class="text-left">@item.StaffName</td>
-                            <td class="text-left">
-                                @item.DepartmentName
-                                <input type="hidden" class="deptCD" value="@item.DepartmentCD" />
-                                <input type="hidden" class="position" value="@item.Position" />
-                                <input type="hidden" class="email" value="@item.Email" />
-                                <input type="hidden" class="phoneNo" value="@item.PhoneNo" />
-                                <input type="hidden" class="remark" value="@item.Remark" />
-                                <input type="hidden" class="employeetype" value="@item.EmployeeType" />
-                                <input type="hidden" class="enroll" value="@item.Enroll.ToString().ToLower()" />
-                            </td>
-                            <td class="text-center">
-                                @(item.JoinedDate.HasValue ? item.JoinedDate.Value.ToString("yyyy/MM/dd") : "")
-                            </td>
-                            <td class="text-center">@item.SeatNo</td>
-                            <td class="text-center">
-                                <input type="text" class="newSeat" maxlength="2"
-                                       oncompositionstart="this.c=1"
-                                       oncompositionend="this.c=0;this.oninput()"
-                                       oninput="
+                <tr>
+                    <td class="text-left" width="10%">@item.StaffCD</td>
+                    <td class="text-left" width="15%">@item.StaffName</td>
+                    <td class="text-left" width="20%">
+                        @item.DepartmentName
+                        <input type="hidden" class="deptCD" value="@item.DepartmentCD" />
+                        <input type="hidden" class="position" value="@item.Position" />
+                        <input type="hidden" class="email" value="@item.Email" />
+                        <input type="hidden" class="phoneNo" value="@item.PhoneNo" />
+                        <input type="hidden" class="remark" value="@item.Remark" />
+                        <input type="hidden" class="employeetype" value="@item.EmployeeType" />
+                        <input type="hidden" class="enroll" value="@item.Enroll.ToString().ToLower()" />
+                    </td>
+                    <td class="text-center" width="20%">
+                        @(item.JoinedDate.HasValue ? item.JoinedDate.Value.ToString("yyyy/MM/dd") : "")
+                    </td>
+                    <td class="text-center" width="5%">@item.SeatNo</td>
+                    <td class="text-center" width="10%">
+                        <input type="text" class="newSeat" maxlength="2"
+                               oncompositionstart="this.c=1"
+                               oncompositionend="this.c=0;this.oninput()"
+                               oninput="
                                            if(this.c) return;
                                            this.value = this.value.replace(/\D/g,'').replace(/^0+/, '').slice(0,2);" />
 
-                            </td>
+                    </td>
 
-                            <td>
-                                <button class="btn btn-primary">
-                                    変更
-                                </button>
-                            </td>
-                        </tr>
+                    <td class="text-center" width="10%">@item.CurshopName</td>
+                    <td class="text-center" width="10%">
+                        <button class="btn btn-primary">
+                            変更
+                        </button>
+                    </td>
+                </tr>
                     }
                 }
                 else
@@ -80,15 +82,24 @@
 
                 }
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5"></td>  
+                    <td class="text-center">
+                        <button type="button" id="btnUpdateSeat" class="btn btn-primary">席を変わる</button>
+                    </td>
+                    <td></td>
+                </tr>
+            </tfoot>
         </table>
     </div>
 
-    <div class="btn-wrapper">
+    @*<div class="btn-wrapper">
         <button type="button" id="btnUpdateSeat"
                 class="btn_Blue btn btn-primary">
             席を変わる
         </button>
-    </div>
+    </div>*@
 
 </div>
 
@@ -455,7 +466,12 @@
     $(document).on("click", "#btnSearch", function () {
         var dept = $("#department").val();
         var staff = $("#staff").val();
-
+        if (dept.startsWith("S")) {
+            $("#btnUpdateSeat").hide();
+        }
+        else {
+            $("#btnUpdateSeat").show();
+        }
         $.ajax({
             url: '/Staff/StaffList',
             type: 'GET',

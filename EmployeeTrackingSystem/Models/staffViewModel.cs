@@ -48,6 +48,7 @@ namespace EmployeeTrackingSystem.Models
         public Nullable<System.DateTime> DeleteDateTime { get; set; }
 
         public Nullable<int> CurrentShop { get; set; }
+        public string CurshopName { get; set; }
 
     }
 }
