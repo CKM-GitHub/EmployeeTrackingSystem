@@ -63,7 +63,7 @@ namespace EmployeeTrackingSystem.Controllers
             using (var db = new EmployeeTrackingDBEntities())
             {
                 if (!string.IsNullOrEmpty(model.StaffName) &&
-             !IsUtf8Valid(model.StaffName, 50))
+                    !IsUtf8Valid(model.StaffName, 50))
                 {
                     ModelState.AddModelError("StaffName", "StaffName exceeds 50 bytes");
                 }
@@ -142,18 +142,9 @@ namespace EmployeeTrackingSystem.Controllers
                         }
                     });
                 }
-                if (model.DepartmentCD == "S01")
-                {
-                    model.CurrentShop = 1;
-                }
-                else if (model.DepartmentCD == "S02")
-                {
-                    model.CurrentShop = 2;
-                }
-                else if (model.DepartmentCD == "S03")
-                {
-                    model.CurrentShop = 3;
-                }
+               
+                model.CurrentShop = int.Parse(model.DepartmentCD.Substring(1, 2).ToString());
+
                 //  Save
 
                 try
@@ -255,7 +246,6 @@ namespace EmployeeTrackingSystem.Controllers
                     return Json(new { success = false, message = "更新失敗しました。" });
                 }
 
-
                 if (model.StaffName != null)
                     staff.StaffName = model.StaffName;
 
@@ -282,7 +272,6 @@ namespace EmployeeTrackingSystem.Controllers
 
                 if (!string.IsNullOrEmpty(model.Remark))
                     staff.Remark = model.Remark;
-
               
                     staff.SeatNo = model.SeatNo;
 
@@ -406,13 +395,7 @@ namespace EmployeeTrackingSystem.Controllers
                 status = "ok"
             }, JsonRequestBehavior.AllowGet);
         }
-        //public JsonResult CheckStaffCD(string staffCD)
-        //{
-        //    bool exists = db.T_StaffMaster.Any(x => x.StaffCD == staffCD && x.Enroll ==true);
-
-        //    return Json(new { exists = exists }, JsonRequestBehavior.AllowGet);
-        //}
-
+       
         bool IsUtf8Valid(string value, int maxBytes)
         {
             if (string.IsNullOrEmpty(value))

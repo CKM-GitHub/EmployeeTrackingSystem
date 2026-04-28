@@ -31,9 +31,7 @@ namespace EmployeeTrackingSystem.Controllers
             List<DashboardViewModel> table6 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json6);
             string json7 = Get_DashboardInformation(4, "D07");
             List<DashboardViewModel> table7 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json7);
-           // string json8 = Get_DashboardInformation(2, "D08");
-           // List<DashboardViewModel> table8 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json8);
-
+          
             string json_shop1 = Get_DashboardInformation(2, "S01");
             List<DashboardViewModel> tableshop1 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json_shop1);
 
@@ -52,14 +50,11 @@ namespace EmployeeTrackingSystem.Controllers
                 Table5 = table5,
                 Table6 = table6,
                 Table7 = table7,
-               // Table8 = table8,
-
                 Table9 = tableshop1,
                 Table10 = tableshop2,
                 Table11 = tableshop3,
                 AvailableShops = db.T_Department.Where(s => s.DepartmentCD.StartsWith("S")).ToList()
-            };
-          
+            };          
             return View(model);
         }
         public string Get_DashboardInformation(int show_column, string DepartmentCD)
@@ -99,7 +94,7 @@ namespace EmployeeTrackingSystem.Controllers
                 Note1 = Note,
                 CurrentShop= CurrentShop
             };
-            Boolean insertflag = true;
+            bool insertflag = true;
             if (!string.IsNullOrEmpty(Status))
             {
                 insertflag = Dashobard_StaffName_Click_Save(staffRecord);
@@ -119,7 +114,7 @@ namespace EmployeeTrackingSystem.Controllers
             }
             return Json(new { success = insertflag, message = TempData["Message"] });
         }
-        public Boolean Dashobard_StaffName_Click_Save(DashboardViewModel model)
+        public bool Dashobard_StaffName_Click_Save(DashboardViewModel model)
         {
             try
             {
@@ -148,8 +143,6 @@ namespace EmployeeTrackingSystem.Controllers
                     prms[5] = new SqlParameter("@CurrentShop", SqlDbType.NVarChar) { Value = model.CurrentShop };
                 else
                     prms[5] = new SqlParameter("@CurrentShop", SqlDbType.NVarChar) { Value = DBNull.Value };
-
-
 
                 InsertUpdateDeleteData("Dashobard_StaffName_Insert", prms);
                 return true;
