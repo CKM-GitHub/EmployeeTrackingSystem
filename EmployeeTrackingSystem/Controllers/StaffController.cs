@@ -1,6 +1,7 @@
 ﻿using EmployeeTrackingSystem.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -16,53 +17,19 @@ namespace EmployeeTrackingSystem.Controllers
             ViewBag.ShowDropdown = true;
             LoadDropdowns();
             // JOIN Staff + Department
-            var staffList = (from s in db.T_StaffMaster
-                             join d in db.T_Department
-                             on s.DepartmentCD equals d.DepartmentCD
-                             select new staffViewModel
-                             {
-                                 StaffCD = s.StaffCD,
-                                 StaffName = s.StaffName,
-                                 DepartmentCD = s.DepartmentCD,
-                                 JoinedDate   =s.JoinedDate,
-                                 DepartmentName = d.DepartmentName,
-                                 SeatNo = s.SeatNo,
-                                 Position =s.Position,
-                                 PhoneNo =s.PhoneNo,
-                                 Email =s.Email,
-                                 Enroll =s.Enroll,
-                                 Remark =s.Remark,
-                                 EmployeeType =s.EmployeeType,
-                                 CurrentShop = s.CurrentShop 
+            var departmentParam = string.IsNullOrEmpty(department) ? (object)DBNull.Value : department;
+            var staffParam = string.IsNullOrEmpty(staff) ? (object)DBNull.Value : staff;
 
-                             }).Where(s=> s.Enroll != false).ToList();
+            var staffList = db.Database.SqlQuery<staffViewModel>(
+                "EXEC GetStaffList @departmentcd, @staffcd",
+                new SqlParameter("@departmentcd", departmentParam),
+                new SqlParameter("@staffcd", staffParam)
+            ).ToList();
 
-            foreach(var dr in staffList)
-            {
-                string curshop = "S0" + dr.CurrentShop.ToString();
-                // curshop = dr.CurrentShop == 1 ? "S01" : dr.CurrentShop == 2 ? "S02" : dr.CurrentShop == 3 ? "S03" : "";
-                dr.CurshopName = db.T_Department.Where(d => d.DepartmentCD == curshop).Select(d => d.DepartmentName).SingleOrDefault();
-            }
-
-            //  Filter Department
-            if (!string.IsNullOrEmpty(department))
-            {
-                staffList = staffList
-                    .Where(x => x.DepartmentCD == department)
-                    .ToList();
-            }
-
-            //  Filter Staff
-            if (!string.IsNullOrEmpty(staff))
-            {
-                staffList = staffList
-                    .Where(x => x.StaffCD == staff)
-                    .ToList();
-            }
-
+            
             return View(staffList);
+           
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
