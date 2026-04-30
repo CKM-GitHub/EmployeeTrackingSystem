@@ -370,7 +370,7 @@
                 var staffCD = $this.val().trim();
                 if (staffCD !== "") {
                     $.ajax({
-                        url: '/Staff/CheckStaffCD',
+                        url: '@Url.Action("CheckStaffCD", "Staff")',
                         type: 'GET',
                         data: { staffCD: staffCD },
                         success: function (res) {
@@ -475,7 +475,7 @@
             $("#btnUpdateSeat").show();
         }
         $.ajax({
-            url: '/Staff/StaffList',
+            url: '@Url.Action("StaffList", "Staff")',
             type: 'GET',
             data: { department: dept, staff: staff },
             success: function (result) {
@@ -540,7 +540,7 @@
         $(".text-danger").text("");
 
         $.ajax({
-            url: '/Staff/Update',
+            url: '@Url.Action("Update", "Staff")',
             type: 'POST',
             data: $(this).serialize(),
             success: function (res) {
@@ -623,7 +623,7 @@
         }
 
         $.ajax({
-            url: '/Staff/UpdateSeat',
+            url:  '@Url.Action("UpdateSeat", "Staff")',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(dataList),

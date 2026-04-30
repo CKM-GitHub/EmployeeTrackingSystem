@@ -369,7 +369,7 @@
                 };
 
                 $.ajax({
-                    url: '/Home/SaveStaff',
+                   url: '@Url.Action("SaveStaff", "Home")',
                     type: 'POST',
                     data: payload,
                     success: function (response) {
@@ -513,7 +513,7 @@
             }
             // send to server
             $.ajax({
-                url: '/Home/SavePlanData',
+                url: '@Url.Action("SavePlanData", "Home")',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(list),
