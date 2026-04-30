@@ -48,7 +48,14 @@
             </div>
             <div class="row">
                 <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table3)</div>
+                <div class="col-md-6 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table7)</div>
+                <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table10)</div>
+               
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table6)</div>
                 <div class="col-md-6 col-sm-12">
+                    @*capital & tennic tokyo*@
                     <div class="row no-gap">
                         <div class="col-md-6 col-sm-12">
                             @Html.Partial("_DashboardTable", Model.Table4)
@@ -58,11 +65,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table10)</div>
-            </div>
-            <div class="row">
-                <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table6)</div>
-                <div class="col-md-6 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table7)</div>
+               
                 <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table11)</div>
             </div>           
         </div>
