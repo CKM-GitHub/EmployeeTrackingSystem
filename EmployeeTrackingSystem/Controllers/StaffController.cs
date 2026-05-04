@@ -117,8 +117,14 @@ namespace EmployeeTrackingSystem.Controllers
                         }
                     });
                 }
-               
-                model.CurrentShop = int.Parse(model.DepartmentCD.Substring(1, 2).ToString());
+
+
+                if (!string.IsNullOrEmpty(model.DepartmentCD) &&
+                    model.DepartmentCD.StartsWith("S0") &&
+                    int.TryParse(model.DepartmentCD.Substring(1, 2), out int shop))
+                {
+                    model.CurrentShop = shop;
+                }
 
                 //  Save
 
@@ -248,19 +254,19 @@ namespace EmployeeTrackingSystem.Controllers
                 if (!string.IsNullOrEmpty(model.Remark))
                     staff.Remark = model.Remark;
 
-                if ((model.DepartmentCD ?? "").Trim().StartsWith("S0"))
+                var dept = (model.DepartmentCD ?? "").Trim();
+
+                if (dept.StartsWith("S0") && 
+                    int.TryParse(dept.Substring(1, 2), out int shop))
                 {
                     staff.SeatNo = null;
+                    staff.CurrentShop = shop;
                 }
                 else
                 {
+                    staff.CurrentShop = null;
                     staff.SeatNo = model.SeatNo;
                 }
-
-                // keep existing DB value
-                //staff.SeatNo = staff.SeatNo;
-                
-
                 staff.UpdateDateTime = DateTime.Now;
                 db.SaveChanges();
                 return Json(new { success = true, message = "登録が完了しました。" });

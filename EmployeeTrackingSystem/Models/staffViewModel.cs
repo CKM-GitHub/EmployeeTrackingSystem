@@ -25,6 +25,7 @@ namespace EmployeeTrackingSystem.Models
         public string Position { get; set; }
 
         [EmailAddress]
+        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$")]
         public string Email { get; set; }
 
         [MaxLength(15)]

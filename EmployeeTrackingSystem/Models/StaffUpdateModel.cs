@@ -8,23 +8,24 @@ namespace EmployeeTrackingSystem.Models
 {
     public class StaffUpdateModel
     {
-       
+
         [MaxLength(5)]
         public string StaffCD { get; set; }
 
-       
-        
+
+
         public string StaffName { get; set; }
 
-        
+
         public string DepartmentCD { get; set; }
 
         public string DepartmentName { get; set; }
 
-        
+
         public string Position { get; set; }
 
         [EmailAddress]
+        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$")]
         public string Email { get; set; }
 
         

@@ -12,15 +12,17 @@
 #tableStaff {
     width: max-content;
     min-width: 100%;
-    border-collapse: separate;
+    border-collapse: collapse;
     border-spacing: 0;
     font-size: 13px;
-  /*  border: 1px solid #ccc;*/
+    /*  border: 1px solid #ccc;*/
 }
-    #tableStaff th,
-    #tableStaff td {
-        padding: 2px 4px;
+    #tableStaff td,
+    #tableStaff th {
+        border-bottom: 1px solid #ccc;
+        padding: 4px 6px;
     }
+    
 
 #tableStaff th {
     position: sticky;
@@ -32,8 +34,8 @@
 }
 
 
-#tableStaff td {
-        height: 30px;
+    #tableStaff td {
+        height: 35px;
         vertical-align: middle;
         white-space: nowrap;
     }
@@ -49,16 +51,15 @@
 
     /* Sticky header */
 
-    #tableStaff tbody tr:nth-child(odd) {
+ #tableStaff tbody tr:nth-child(odd) {
         background-color: #f2f2f2; /* white */
     }
 
-    #tableStaff tbody tr:nth-child(even) {
+ #tableStaff tbody tr:nth-child(even) {
         background-color: #ffffff; /* light gray */
     }
  
 
-    
     #tableStaff th:nth-child(1) {
         width: 50px;
     }
@@ -83,27 +84,24 @@
     #tableStaff th:nth-child(7) {
         width: 70px;
     }
-   
-    /* Table buttons */
-    #tableStaff button {
-        width: 70px;
-        font-size: 11px;
-        padding: 2px 6px;
-    }
 
+    #tableStaff button {
+        font-size: 14px;
+        padding: 2px 4px;
+    }
+#btnUpdateSeat {
+    width: 80px;
+}
+
+#btnChange {
+    width: 70px;
+}
 
 .newSeat {
     width: 38px !important;
     text-align: center;
     padding: 0 !important;
     border: 1px solid #ccc;
-}
-
-
-#tableStaff button {
-    width: 70px;
-    font-size: 11px;
-    padding: 2px 6px;
 }
 
 .btn-wrapper {

@@ -70,7 +70,7 @@
 
                     <td class="text-center" width="10%">@item.CurshopName</td>
                     <td class="text-center" width="10%">
-                        <button class="btn btn-primary">
+                        <button id="btnChange" class="btn btn-primary">
                             変更
                         </button>
                     </td>
@@ -104,7 +104,7 @@
 </div>
 
 <!--Update-->
-<div class="modal fade" id="editModal" tabindex="-1" autocomplete="off" >
+<div class="modal fade" id="editModal" tabindex="-1" >
     <div class="modal-dialog" style="max-width:400px;">
         <div class="modal-content">
             <!-- Header -->
@@ -112,7 +112,7 @@
                 <div class="modal-title">スタッフ修正</div>
             </div> <!-- Body -->
             <div class="modal-body">
-                <form id="editForm">
+                <form id="editForm" autocomplete="off" >
                     @Html.AntiForgeryToken()
                     <div class="form-container">
 
@@ -144,7 +144,7 @@
 
                         <div class="form-row">
                             <label>メール</label>
-                            <input type="text" name="Email" id="Email" />
+                            <input type="text" name="Email" id="Email"  autocomplete="off" />
                             <span class="text-danger" id="errEmail"></span>
                         </div>
 
@@ -210,7 +210,7 @@
 </div>
 
 <!-- ADD-->
-<div class="modal fade" id="addModal" tabindex="-1" autocomplete="off" >
+<div class="modal fade" id="addModal" tabindex="-1"  >
     <div class="modal-dialog" style="max-width:400px;">
         <div class="modal-content">
             <!-- Header -->
@@ -218,7 +218,7 @@
                 <div class="modal-title">スタッフ追加</div>
             </div> <!-- Body -->
             <div class="modal-body">
-                <form id="addForm">
+                <form id="addForm" autocomplete="off" >
                     @Html.AntiForgeryToken()
                     <div class="form-container">
 
@@ -249,7 +249,7 @@
 
                         <div class="form-row">
                             <label>メール</label>
-                            <input type="text" name="Email" data-required="true" data-validate="email" />
+                            <input type="text" name="Email" data-required="true" data-validate="email" autocomplete="off"  />
                             <span class="text-danger" id="errEmail"></span>
                         </div>
 
@@ -324,6 +324,8 @@
 
             $('#addModal').on('shown.bs.modal', function () {
                 toggleSeatNo('#addForm');
+                $("#addForm [name='StaffCD']").focus();
+
             });
 
             $('#editForm [name="DepartmentCD"]').on('change', function () {
@@ -332,18 +334,13 @@
 
             $('#editModal').on('shown.bs.modal', function () {
                 toggleSeatNo('#editForm');
+                $("#editForm [name='StaffName']").focus();
             });
 
     // =====================
     // Add Form Enter key validation
     // =====================
-        $('#addModal').on('shown.bs.modal', function () {
-            $("#addForm [name='StaffCD']").focus();
-        });
 
-        $('#editModal').on('shown.bs.modal', function () {
-            $("#editForm [name='StaffName']").focus();
-        });
 
     var requiredFields = ["StaffCD", "StaffName", "DepartmentCD"];
 
