@@ -25,7 +25,7 @@
                     <th>スタッフCD</th>
                     <th>スタッフ名</th>
                     <th>部門名</th>
-                    <th class="th_center">入会日</th>
+                    <th class="th_center">入社日</th>
                     <th class="th_center">席番号</th>
                     <th class="th_center">
                         Next <br />
@@ -83,11 +83,12 @@
                 }
             </tbody>
             <tfoot>
-                <tr>
-                    <td colspan="5"></td>  
+                <tr id="Seat_tr">
+                    <td colspan="5"></td>
                     <td class="text-center">
                         <button type="button" id="btnUpdateSeat" class="btn btn-primary">席を変わる</button>
                     </td>
+                    <td></td>
                     <td></td>
                 </tr>
             </tfoot>
@@ -178,7 +179,7 @@
                         </div>
 
                         <div class="form-row">
-                            <label class="label-remark">リマーク</label>
+                            <label class="label-remark">備考</label>
                             <textarea name="Remark" id="Remark" class="textarea-remark" rows="2"></textarea>
                             <span class="text-danger" id="errRemark"></span>
                         </div>
@@ -280,7 +281,7 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <label class="label-remark">リマーク</label>
+                            <label class="label-remark">備考</label>
                             <textarea name="Remark" class="textarea-remark" rows="2"></textarea>
                             <span class="text-danger" id="errRemark"></span>
                         </div>
@@ -467,9 +468,11 @@
         var staff = $("#staff").val();
         if (dept.startsWith("S")) {
             $("#btnUpdateSeat").hide();
+            $("#Seat_tr").hide();
         }
         else {
             $("#btnUpdateSeat").show();
+            $("#Seat_tr").show();
         }
         $.ajax({
             url: '@Url.Action("StaffList", "Staff")',
