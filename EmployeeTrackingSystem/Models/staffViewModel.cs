@@ -21,7 +21,7 @@ namespace EmployeeTrackingSystem.Models
 
         public string DepartmentName { get; set; }
 
-        [MaxLength(20)]
+        
         public string Position { get; set; }
 
         [EmailAddress]

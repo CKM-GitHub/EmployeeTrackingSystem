@@ -12,14 +12,14 @@
 #tableStaff {
     width: max-content;
     min-width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
     border-spacing: 0;
     font-size: 13px;
     /*  border: 1px solid #ccc;*/
 }
     #tableStaff td,
     #tableStaff th {
-        border-bottom: 1px solid #ccc;
+        
         padding: 4px 6px;
     }
     

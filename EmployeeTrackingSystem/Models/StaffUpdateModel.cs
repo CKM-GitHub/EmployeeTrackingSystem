@@ -11,30 +11,19 @@ namespace EmployeeTrackingSystem.Models
 
         [MaxLength(5)]
         public string StaffCD { get; set; }
-
-
-
         public string StaffName { get; set; }
-
-
         public string DepartmentCD { get; set; }
 
         public string DepartmentName { get; set; }
-
-
         public string Position { get; set; }
 
         [EmailAddress]
         [RegularExpression(@"^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$")]
         public string Email { get; set; }
-
-        
         public string PhoneNo { get; set; }
-
         public Nullable<System.DateTime> JoinedDate { get; set; }
         public string EmployeeType { get; set; }
         public bool Enroll { get; set; }
-
         [MaxLength(200)]
         public string Remark { get; set; }
         public string Status { get; set; }

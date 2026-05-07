@@ -43,12 +43,7 @@ namespace EmployeeTrackingSystem.Controllers
                     ModelState.AddModelError("StaffName", "StaffName exceeds 50 bytes");
                 }
 
-                if (!string.IsNullOrEmpty(model.Position) &&
-                    !IsUtf8Valid(model.Position, 20))
-                {
-                    ModelState.AddModelError("Position", "Position exceeds 20 bytes");
-                }
-
+                
                 if (!string.IsNullOrEmpty(model.PhoneNo) &&
                   !IsUtf8Valid(model.PhoneNo, 15))
                 {
@@ -135,7 +130,6 @@ namespace EmployeeTrackingSystem.Controllers
                         StaffCD = model.StaffCD,
                         StaffName = model.StaffName,
                         DepartmentCD = model.DepartmentCD,
-                        Position = model.Position,
                         Email = model.Email,
                         PhoneNo = model.PhoneNo,
                         JoinedDate = model.JoinedDate,
@@ -169,12 +163,6 @@ namespace EmployeeTrackingSystem.Controllers
               !IsUtf8Valid(model.StaffName, 50))
             {
                 ModelState.AddModelError("StaffName", "StaffName exceeds 50 bytes");
-            }
-
-            if (!string.IsNullOrEmpty(model.Position) &&
-                !IsUtf8Valid(model.Position, 20))
-            {
-                ModelState.AddModelError("Position", "Position exceeds 20 bytes");
             }
 
             if (!string.IsNullOrEmpty(model.PhoneNo) &&
@@ -232,9 +220,6 @@ namespace EmployeeTrackingSystem.Controllers
 
                 if (model.DepartmentCD != null)
                     staff.DepartmentCD = model.DepartmentCD;
-
-                if (!string.IsNullOrEmpty(model.Position))
-                    staff.Position = model.Position;
 
                 if (!string.IsNullOrEmpty(model.Email))
                     staff.Email = model.Email;
