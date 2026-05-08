@@ -96,23 +96,7 @@ namespace EmployeeTrackingSystem.Controllers
                     });
                 }
                 
-                //// Seat duplicate
-                bool isExist = db.T_StaffMaster.Any(x =>
-                    x.DepartmentCD == model.DepartmentCD &&
-                    x.SeatNo == model.SeatNo &&
-                    x.Enroll == true);
-
-                if (isExist)
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        errors = new[] {
-                    new { field = "SeatNo", message = "この席番号は既に使用されています" }
-                        }
-                    });
-                }
-
+              
 
                 if (!string.IsNullOrEmpty(model.DepartmentCD) &&
                     model.DepartmentCD.StartsWith("S0") &&
@@ -136,7 +120,6 @@ namespace EmployeeTrackingSystem.Controllers
                         EmployeeType = model.EmployeeType,
                         Enroll = model.Enroll,
                         Remark = model.Remark,
-                        SeatNo = model.SeatNo,
                         CurrentShop = model.CurrentShop,
                         InsertDateTime = DateTime.Now
                     };
@@ -189,22 +172,7 @@ namespace EmployeeTrackingSystem.Controllers
 
                 return Json(new { success = false, errors = errors });;
             }
-                bool isExist = db.T_StaffMaster.Any(x =>
-                    x.DepartmentCD == model.DepartmentCD &&
-                    x.SeatNo == model.SeatNo &&
-                    x.StaffCD != model.StaffCD &&
-                    x.Enroll == true);
-
-                if (isExist)
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        errors = new[] {
-                    new { field = "SeatNo", message = "この席番号は既に使用されています" }
-                        }
-                    });
-                }
+                
             try
             {
                 var staff = db.T_StaffMaster
@@ -244,13 +212,13 @@ namespace EmployeeTrackingSystem.Controllers
                 if (dept.StartsWith("S0") && 
                     int.TryParse(dept.Substring(1, 2), out int shop))
                 {
-                    staff.SeatNo = null;
+                    
                     staff.CurrentShop = shop;
                 }
                 else
                 {
                     staff.CurrentShop = null;
-                    staff.SeatNo = model.SeatNo;
+                    
                 }
                 staff.UpdateDateTime = DateTime.Now;
                 db.SaveChanges();
@@ -259,81 +227,6 @@ namespace EmployeeTrackingSystem.Controllers
             catch (Exception ex)
             {
                return Json(new { success = false, message = "更新失敗しました。" });
-            }
-        }
-        [HttpPost]
-        public ActionResult UpdateSeat(List<staffViewModel> list)
-        {
-            try
-            {
-                // 1. Load all relevant staff in affected departments
-                var deptCDs = list.Select(x => x.DepartmentCD).Distinct().ToList();
-                var staffInDepartments = db.T_StaffMaster
-                    .Where(s => deptCDs.Contains(s.DepartmentCD))
-                    .ToList();
-
-                // 2. Build current seat map (Department -> Seat -> Staff)
-                var seatMap = staffInDepartments
-                    .Where(s => s.SeatNo.HasValue && s.Enroll != false)
-                    .GroupBy(s => s.DepartmentCD)
-                    .ToDictionary(
-                        g => g.Key,
-                        g => g.ToDictionary(s => s.SeatNo.Value, s => s.StaffCD)
-                    );
-
-                // 3. Apply changes in memory
-                foreach (var model in list)
-                {
-                    if (!seatMap.ContainsKey(model.DepartmentCD))
-                        seatMap[model.DepartmentCD] = new Dictionary<int, string>();
-
-                    var deptSeats = seatMap[model.DepartmentCD];
-
-                    // Remove current staff seat temporarily
-                    var currentStaff = staffInDepartments.FirstOrDefault(s => s.StaffCD == model.StaffCD);
-                    if (currentStaff?.SeatNo != null)
-                    {
-                        deptSeats.Remove(currentStaff.SeatNo.Value);
-                    }
-
-                    // Check if the new seat is already assigned to another staff NOT in this batch
-                    if (deptSeats.TryGetValue(model.SeatNo.Value, out string existingStaff))
-                    {
-                        var inBatch = list.Any(x => x.StaffCD == existingStaff);
-                        if (!inBatch)
-                        {
-                            var deptname = db.T_Department
-                              .Where(s => s.DepartmentCD == model.DepartmentCD)
-                              .Select(s => new
-                              {
-                                DeptName = s.DepartmentName
-                              }).FirstOrDefault();
-
-                            return Content($"Error: 席 {model.SeatNo} in {deptname.DeptName} is already assigned to {existingStaff}");
-                        }
-                    }
-
-                    // Assign new seat in memory map
-                    deptSeats[model.SeatNo.Value] = model.StaffCD;
-                }
-
-                // 4. Save changes
-                foreach (var model in list)
-                {
-                    var staff = staffInDepartments.FirstOrDefault(s => s.StaffCD == model.StaffCD);
-                    if (staff != null)
-                    {
-                        staff.SeatNo = model.SeatNo;
-                        staff.UpdateDateTime = DateTime.Now;
-                    }
-                }
-
-                db.SaveChanges();
-                return Content("登録が完了しました");
-            }
-            catch (Exception ex)
-            {
-                return Content("Error: " + ex.Message);
             }
         }
 

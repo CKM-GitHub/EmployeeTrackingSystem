@@ -44,7 +44,6 @@
         }
 
         #tableStaff td:nth-child(5),
-        #tableStaff td:nth-child(6),
         #tableStaff td:nth-child(7){
             text-align: center;
         }
@@ -95,13 +94,6 @@
 
 #btnChange {
     width: 70px;
-}
-
-.newSeat {
-    width: 38px !important;
-    text-align: center;
-    padding: 0 !important;
-    border: 1px solid #ccc;
 }
 
 .btn-wrapper {
