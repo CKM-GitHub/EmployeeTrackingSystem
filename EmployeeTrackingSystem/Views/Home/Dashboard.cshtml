@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Dashboard";
 }
+
 <div class="container-fluid py-3">
     <div class="row align-items-center mb-12">
         <div class="col-12 col-sm-6 col-md-3">
@@ -187,7 +188,9 @@
     <link rel="stylesheet" href="~/Content/dashboard_01.css" />
 
     <script>
+        let draggedItem = null;
         $(document).ready(function () {
+           
             $(document).on("click", ".staff-link", function () {
                 // Clear all inputs in the modal form
                 $("#staffForm")[0].reset();
@@ -431,7 +434,73 @@
                     }
                 }
             });
+            // drag and drop
+            $('.staff-slot').on('dragstart', function (e) {
 
+                draggedItem = this;
+
+                $(this).addClass('dragging');
+            });
+
+            $('.staff-slot').on('dragend', function () {
+
+                $(this).removeClass('dragging');
+            });
+
+            $('.staff-slot').on('dragover', function (e) {
+
+                e.preventDefault();
+
+                $(this).addClass('drag-over');
+            });
+
+            $('.staff-slot').on('dragleave', function () {
+
+                $(this).removeClass('drag-over');
+            });
+
+            $('.staff-slot').on('drop', function (e) {
+                
+                e.preventDefault();
+
+                $(this).removeClass('drag-over');
+
+                if (draggedItem === this)
+                    return;
+
+                let targetItem = this;
+                //drag and drop is not working in Shop staff
+                if (!$(draggedItem).attr('data-dept').startsWith("S")) { 
+                // Read values BEFORE swap
+                let draggedSeat = $(draggedItem).attr('data-seat');
+                let targetSeat = $(targetItem).attr('data-seat');
+
+                let draggedStaff = $(draggedItem).attr('data-staffcd');
+                let targetStaff = $(targetItem).attr('data-staffcd');
+
+                let draggedDept = $(draggedItem).attr('data-dept');
+                let targetDept = $(targetItem).attr('data-dept');
+                
+                // Swap DOM positions
+                let draggedClone = $(draggedItem).clone(true);
+                let targetClone = $(targetItem).clone(true);
+
+                $(draggedItem).replaceWith(targetClone);
+                $(targetItem).replaceWith(draggedClone);                
+                    // Save DB
+                    saveSeatChange(
+                        draggedStaff,
+                        targetSeat,
+                        targetStaff,
+                        draggedSeat,
+                        draggedDept,
+                        targetDept
+                    );
+                    // Rebind
+                    bindDragDrop();
+                }                
+            });
+            //
         });
 
         function formatDate(dateString) {
@@ -448,9 +517,7 @@
             return new TextEncoder().encode(str).length;
         }
         function SavePlanData() {
-
             var list = [];
-
             $('#Plantable tbody tr').each(function () {
                 var staffid = $(this).find('td:eq(0)').text();
                 var date = $(this).find('td:eq(1)').text();   // Date column
@@ -463,7 +530,6 @@
                 });
             });
             var isValid = true;
-
             var errorMessage = "";
             $("#Plantable tbody tr").each(function (index) {
                 var $noteInput = $(this).find(".row-note");
@@ -480,7 +546,6 @@
                     $noteInput.removeClass("is-invalid");
                 }
             });
-
             if (!isValid) {
                 alert(errorMessage);
                 return; // Stop the AJAX call
@@ -506,5 +571,57 @@
             });
         }
 
+        function bindDragDrop() {
+
+            $('.staff-slot').off();
+
+            $('.staff-slot').on('dragstart', function () {
+
+                draggedItem = this;
+
+                $(this).addClass('dragging');
+            });
+
+            $('.staff-slot').on('dragend', function () {
+
+                $(this).removeClass('dragging');
+            });
+
+            $('.staff-slot').on('dragover', function (e) {
+
+                e.preventDefault();
+
+                $(this).addClass('drag-over');
+            });
+
+            $('.staff-slot').on('dragleave', function () {
+
+                $(this).removeClass('drag-over');
+            });
+
+        }
+
+        function saveSeatChange(staff1, seat1, staff2, seat2, dept1, dept2) {
+            $.ajax({
+                url: '@Url.Action("UpdateSeatChange", "Home")',
+                type: 'POST',
+                data: {
+                    staff1: staff1,
+                    seat1: seat1,
+                    staff2: staff2,
+                    seat2: seat2,
+                    dept1: dept1,
+                    dept2: dept2
+                },
+                success: function (res) {
+                    location.reload();
+                },
+                error: function () {
+
+                    alert("Save failed");
+                }
+            });
+        }
+        
     </script>
 }

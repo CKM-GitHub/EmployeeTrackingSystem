@@ -6858,6 +6858,18 @@ button.close {
     display: none !important;
   }
 }
+.staff-slot {
+    cursor: move;
+    transition: 0.2s;
+}
+
+    .staff-slot.dragging {
+        opacity: 0.5;
+    }
+
+    .staff-slot.drag-over {
+        outline: 3px dashed #333;
+    }
 /*# sourceMappingURL=bootstrap.css.map */
 
 
