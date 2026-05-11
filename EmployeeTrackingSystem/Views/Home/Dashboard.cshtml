@@ -175,7 +175,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button type="button" Onclick="SavePlanData()" class="btn btn-primary">登録</button>
+                <button type="button" id="btnSavePlan" class="btn btn-primary">登録</button>
             </div>
         </div>
     </div>
@@ -417,6 +417,61 @@
                 });
             });
 
+            $(document).on("click", "#btnSavePlan", function () {
+                var list = [];
+            $('#Plantable tbody tr').each(function () {
+                var staffid = $(this).find('td:eq(0)').text();
+                var date = $(this).find('td:eq(1)').text();   // Date column
+                var note = $(this).find('input').val();       // Input value
+
+                list.push({
+                    StaffCD: staffid,
+                    PlanDate: date,
+                    Note: note
+                });
+            });
+            var isValid = true;
+            var errorMessage = "";
+            $("#Plantable tbody tr").each(function (index) {
+                var $noteInput = $(this).find(".row-note");
+                var noteValue = getByteLength($noteInput.val());
+                var maxLength = parseInt($noteInput.attr("maxlength"));
+
+                if (noteValue > maxLength) {
+
+                    isValid = false;
+                    errorMessage = "Row " + (index + 1) + ": Note exceeds " + maxLength + " characters.";
+                    $noteInput.addClass("is-invalid"); // Highlight the error field
+                    return false; // Exit the .each() loop early
+                } else {
+                    $noteInput.removeClass("is-invalid");
+                }
+            });
+            if (!isValid) {
+                alert(errorMessage);
+                return; // Stop the AJAX call
+            }
+            // send to server
+            $.ajax({
+                url: '@Url.Action("SavePlanData", "Home")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(list),
+                success: function (res) {
+                    if (res.success)
+                    {
+                        alert('登録しました。');
+                        $("#searchModal").modal("hide");
+                        //window.location.reload();
+                        $("#staffForm")[0].reset();
+                    }
+                    else {
+                        $("#searchModal").modal("hide");
+                    }                   
+                }
+            });
+            })
+
             document.addEventListener("mouseover", function (e) {
                 // Check if the hovered element has our class
                 if (e.target.classList.contains("nested-cell")) {
@@ -516,61 +571,7 @@
             // Encodes to UTF-8 and returns the byte count
             return new TextEncoder().encode(str).length;
         }
-        function SavePlanData() {
-            var list = [];
-            $('#Plantable tbody tr').each(function () {
-                var staffid = $(this).find('td:eq(0)').text();
-                var date = $(this).find('td:eq(1)').text();   // Date column
-                var note = $(this).find('input').val();       // Input value
-
-                list.push({
-                    StaffCD: staffid,
-                    PlanDate: date,
-                    Note: note
-                });
-            });
-            var isValid = true;
-            var errorMessage = "";
-            $("#Plantable tbody tr").each(function (index) {
-                var $noteInput = $(this).find(".row-note");
-                var noteValue = getByteLength($noteInput.val());
-                var maxLength = parseInt($noteInput.attr("maxlength"));
-
-                if (noteValue > maxLength) {
-
-                    isValid = false;
-                    errorMessage = "Row " + (index + 1) + ": Note exceeds " + maxLength + " characters.";
-                    $noteInput.addClass("is-invalid"); // Highlight the error field
-                    return false; // Exit the .each() loop early
-                } else {
-                    $noteInput.removeClass("is-invalid");
-                }
-            });
-            if (!isValid) {
-                alert(errorMessage);
-                return; // Stop the AJAX call
-            }
-            // send to server
-            $.ajax({
-                url: '@Url.Action("SavePlanData", "Home")',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(list),
-                success: function (res) {
-                    if (res.success)
-                    {
-                        alert('登録しました。');
-                        $("#searchModal").modal("hide");
-                        //window.location.reload();
-                        $("#staffForm")[0].reset();
-                    }
-                    else {
-                        $("#searchModal").modal("hide");
-                    }                   
-                }
-            });
-        }
-
+     
         function bindDragDrop() {
 
             $('.staff-slot').off();
