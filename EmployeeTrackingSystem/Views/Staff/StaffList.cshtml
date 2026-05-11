@@ -454,24 +454,24 @@
         $("#StaffName").val(row.find("td").eq(1).text().trim());
         $("#DepartmentCD").val(row.find(".deptCD").val());
         $("#Email").val(row.find(".email").val());
-        $("#PhoneNo").val(row.find(".phoneNo").val());
+       
         $("#Remark").val(row.find(".remark").val());
-        $("#EmployeeType").val(row.find(".employeetype").val());
+        
 
         let joinedText = row.find("td").eq(3).text().trim();
         $("#JoinedDate").val(joinedText ? joinedText.replace(/\//g, "/") : "");
+        $("#PhoneNo").val(row.find("td").eq(4).text().trim());
+        $("#EmployeeType").val(row.find("td").eq(5).text().trim());
 
-
-        $("#SeatNo").val(row.find("td").eq(4).text().trim());
-       // $("#SeatNo").val(row.find("td").eq(5).text().trim());
-        let seatNo = row.find("td").eq(4).text().trim();
+       
+        
         let shopName = row.find("td").eq(6).text().trim();
 
         let enrollVal = row.find(".enroll").val();
         $("#editModal input[name='Enroll'][value='" + enrollVal + "']").prop("checked", true);
 
 
-        $("#editForm [name='OriginalSeatNo']").val(seatNo);
+       
         $("#editForm [name='CurshopName']").val(shopName);
         $('#editModal').modal('show');
 
