@@ -470,7 +470,7 @@
 
                 let targetItem = this;
                 //drag and drop is not working in Shop staff
-                if (!$(draggedItem).attr('data-dept').startsWith("S")) { 
+                if (!$(draggedItem).attr('data-dept').startsWith("S") && !$(targetItem).attr('data-dept').startsWith("S")) { 
                 // Read values BEFORE swap
                 let draggedSeat = $(draggedItem).attr('data-seat');
                 let targetSeat = $(targetItem).attr('data-seat');
