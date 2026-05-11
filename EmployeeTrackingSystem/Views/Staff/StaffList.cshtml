@@ -107,13 +107,13 @@
 
                         <div class="form-row">
                             <label>メール</label>
-                            <input type="text" name="Email" id="Email"  autocomplete="off" />
+                            <input type="text" name="Email" id="Email" maxlength="30" autocomplete="off" />
                             <span class="text-danger" id="errEmail"></span>
                         </div>
 
                         <div class="form-row">
                             <label>電話番号</label>
-                            <input type="text" name="PhoneNo" id="PhoneNo" />
+                            <input type="text" name="PhoneNo" id="PhoneNo" maxlength="15" />
                             <span class="text-danger" id="errPhoneNo"></span>
                         </div>
 
@@ -142,7 +142,7 @@
 
                         <div class="form-row">
                             <label class="label-remark">備考</label>
-                            <textarea name="Remark" id="Remark" class="textarea-remark" rows="2"></textarea>
+                            <textarea name="Remark" id="Remark" class="textarea-remark" maxlength="200" rows="2"></textarea>
                             <span class="text-danger" id="errRemark"></span>
                         </div>
 
@@ -187,12 +187,15 @@
 
                         <div class="form-row">
                             <label>スタッフCD</label>
-                            <input type="text" name="StaffCD" id="StaffCD" class="staff-new-code" data-ajax-check="/Staff/CheckStaffCD" autocomplete="off" tabindex="1" />
+                            <input type="text" name="StaffCD" id="StaffCD" class="staff-new-code"  data-ajax-check="/Staff/CheckStaffCD" 
+                                   maxlength="5"
+                                    
+                                   autocomplete="off" tabindex="1" />
                             <span class="text-danger" id="errStaffCD"></span>
                         </div>
                         <div class="form-row">
                             <label>スタッフ名</label>
-                            <input type="text" name="StaffName" />
+                            <input type="text" name="StaffName" data-max-bytes="50" />
                             <span class="text-danger" id="errStaffName"></span>
                         </div>
 
@@ -206,14 +209,17 @@
 
                         <div class="form-row">
                             <label>メール</label>
-                            <input type="text" name="Email" data-required="true" data-validate="email" autocomplete="off"  />
+                            <input type="text" name="Email" data-required="true" data-validate="email" maxlength="30" autocomplete="off"  />
                             <span class="text-danger" id="errEmail"></span>
                         </div>
 
                         <div class="form-row">
                             <label>電話番号</label>
-                            <input type="text" name="PhoneNo" />
-                            <span class="text-danger" id="errPhoneNo"></span>
+                            <input type="text"
+                                   name="PhoneNo"
+                                   maxlength="15"
+                                   />
+                            <span class="text-danger" id="errPhoneNo"  ></span>
                         </div>
 
                         <div class="form-row">
@@ -238,7 +244,7 @@
                         </div>
                         <div class="form-row">
                             <label class="label-remark">備考</label>
-                            <textarea name="Remark" class="textarea-remark" rows="2"></textarea>
+                            <textarea name="Remark" class="textarea-remark" maxlength="200" rows="2"></textarea>
                             <span class="text-danger" id="errRemark"></span>
                         </div>
                         <div class="form-row" style="display:none;">
@@ -270,30 +276,53 @@
     <link rel="stylesheet" href="~/Content/StaffList.css" />
     <script>
         $(document).ready(function () {
-          
+    //common check 
     $('#department').select2();
     $('#staff').select2();
             initDatePickers();
 
-            $('#addForm [name="DepartmentCD"]').on('change', function () {
-                toggleSeatNo('#addForm');
-            });
-
             $('#addModal').on('shown.bs.modal', function () {
-                toggleSeatNo('#addForm');
+
                 $("#addForm [name='StaffCD']").focus();
-
-            });
-
-            $('#editForm [name="DepartmentCD"]').on('change', function () {
-                toggleSeatNo('#editForm');
             });
 
             $('#editModal').on('shown.bs.modal', function () {
-                toggleSeatNo('#editForm');
+               
                 $("#editForm [name='StaffName']").focus();
             });
 
+            $('#addForm [name="StaffCD"]').on('input', function () {
+                this.value = this.value.replace(/[^A-Za-z0-9-]/g, '');
+                
+            });
+            $('#addForm [name="PhoneNo"], #editForm [name="PhoneNo"]').on('input', function () {
+                let v = this.value;
+
+                v = v.replace(/[^0-9+-]/g, '');   // only valid chars
+                v = v.replace(/(?!^)\+/g, '');    // + only first position
+
+                this.value = v.slice(0, 15);
+            });
+            $('input[maxlength], textarea[maxlength]').on('input', function () {
+                let max = this.maxLength;
+                if (this.value.length > max) {
+                    this.value = this.value.slice(0, max);
+                }
+            });
+            $('#addForm [name="StaffName"], #editForm [name="StaffName"], #addForm [name="Remark"], #editForm [name="Remark"]')
+                .on('input', function () {
+
+                    let maxBytes = $(this).data('max-bytes');
+                    if (!maxBytes) return;
+
+                    let value = this.value;
+
+                    while (getUtf8Bytes(value) > maxBytes) {
+                        value = value.slice(0, -1);
+                    }
+
+                    this.value = value;
+                });
     // =====================
     // Add Form Enter key validation
     // =====================
@@ -365,6 +394,11 @@
             $(this).removeClass("input-error");
         }
     });
+    $('#editForm input, #editForm select, #editForm textarea').on('input', function () {
+                if ($(this).val().trim() !== "") {
+                    $(this).removeClass("input-error");
+                }
+            });
 
     // =====================
     // ADD FORM
@@ -436,7 +470,7 @@
             data: { department: dept, staff: staff },
             success: function (result) {
                 $("#tableStaff tbody").html($(result).find("#tableStaff tbody").html());
-                applySeatRule();
+               
             },
             error: function () {
                // alert("Error loading data");
@@ -484,6 +518,7 @@
     $('#editForm input, #editForm select, #editForm textarea').on('keypress', function (e) {
         if (e.which === 13) { // Enter key
             e.preventDefault();
+            $("#editForm .input-error").removeClass("input-error");
             var $this = $(this);
 
             moveToNextFieldEdit($this);
@@ -510,8 +545,10 @@
 
                     res.errors.forEach(function (err) {
                         var fieldName = err.field.replace("model.", "");
-                        var $field = $("#editForm [name='" + fieldName + "']");
+                        var $field = $("#editForm").find("[name='" + fieldName + "'], ." + fieldName);
                         $field.addClass("input-error");
+                        console.log(fieldName);
+                        console.log($field.length);
                     });
                     var firstError = $("#editForm .input-error").first();
                     if (firstError.length) {
@@ -553,55 +590,9 @@
             if (!$("#JoinedDateAdd").val()) {
                 $("#JoinedDateAdd").val($.datepicker.formatDate('yy/mm/dd', new Date()));
             }
+        }    
+
        
-    }
-
-        function toggleSeatNo(formSelector) {
-
-            var dept = $(formSelector + ' [name="DepartmentCD"]').val() || "";
-            var disable = dept.startsWith('S');
-
-            var $seat = $(formSelector + ' [name="SeatNo"]');
-            var $label = $(formSelector + ' .seat-label');
-            
-            // ONLY apply shopname logic for edit form
-            if (formSelector === "#editForm") {
-
-                var seatNo = $(formSelector + ' [name="OriginalSeatNo"]').val();
-                var shopName = $(formSelector + ' [name="CurshopName"]').val();
-
-
-                if (disable) {
-                    $label.text("現在のショップ");
-                    $seat
-                    .removeClass("seat-small")
-                    .addClass("seat-large")
-                    .val(shopName || "")
-                    .prop("disabled", true);
-                } else {
-                    $label.text("席番号");
-                    $seat
-                    .removeClass("seat-large")
-                    .addClass("seat-small")
-                    .val(seatNo || "")
-                    .prop("disabled", false);
-                }
-
-            } else {
-                //  ADD FORM (normal behavior)
-                $label.text("席番号");
-                $seat.prop("disabled", disable);
-
-                if (disable) {
-                    $seat.val(""); 
-                }
-            }
-
-            // keep your date logic
-            if (formSelector === "#addForm") {
-                $("#JoinedDateAdd").val($.datepicker.formatDate('yy/mm/dd', new Date()));
-            }
-        }
       
     function moveToNextFieldEdit($current) {
         var $fields = $('#editForm').find('input, select, textarea').filter(':visible');
@@ -622,9 +613,10 @@
         } else {
             $('#addForm button[type="submit"]').focus();
         }
+    }
+        function getUtf8Bytes(str) {
+            return new TextEncoder().encode(str).length;
         }
-
-        
 
     </script>
 }

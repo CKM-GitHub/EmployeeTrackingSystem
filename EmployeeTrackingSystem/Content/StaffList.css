@@ -28,7 +28,7 @@
     position: sticky;
     top: 0;
     z-index: 1;
-    height: 29px;
+    height: 35px;
     vertical-align: middle;
     white-space: nowrap;
 }
@@ -144,6 +144,7 @@
     border-radius: 4px;
 }
 
+
 .form-actions button {
     margin: 0 10px;
 }
@@ -223,15 +224,15 @@
     margin: 0;
 }
 
-input.input-error,
-select.input-error,
-textarea.input-error {
-    border: 2px solid #e57373 !important;
-    /* background-color: #fdecea !important;*/
-    transition: 0.2s;
-}
 
-    input.input-error:focus {
+
+    input.input-error,
+    select.input-error,
+    textarea.input-error,
+    input.input-error:focus,
+    select.input-error:focus,
+    textarea.input-error:focus {
+        border: 2px solid #e57373 !important;
         box-shadow: 0 0 3px rgba(229,115,115,0.4) !important;
         outline: none !important;
     }
@@ -269,3 +270,12 @@ textarea.input-error {
     background-color: lightgray;
     cursor: not-allowed;
 }
+
+#editForm select.input-error,
+#addForm select.input-error {
+    border: 2px solid #e57373 !important;
+    box-shadow: 0 0 3px rgba(229,115,115,0.4) !important;
+    outline: none !important;
+    background-image: none;
+}
+

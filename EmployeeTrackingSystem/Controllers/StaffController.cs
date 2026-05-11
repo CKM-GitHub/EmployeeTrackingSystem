@@ -43,7 +43,12 @@ namespace EmployeeTrackingSystem.Controllers
                     ModelState.AddModelError("StaffName", "StaffName exceeds 50 bytes");
                 }
 
-                
+                if (!string.IsNullOrEmpty(model.Email) &&
+                    !IsUtf8Valid(model.Email, 30))
+                {
+                    ModelState.AddModelError("Email", "Email exceeds 30 bytes");
+                }
+
                 if (!string.IsNullOrEmpty(model.PhoneNo) &&
                   !IsUtf8Valid(model.PhoneNo, 15))
                 {
@@ -95,17 +100,20 @@ namespace EmployeeTrackingSystem.Controllers
                          }
                     });
                 }
-                
-              
 
+                int maxSeatNo = 0;
                 if (!string.IsNullOrEmpty(model.DepartmentCD) &&
                     model.DepartmentCD.StartsWith("S0") &&
                     int.TryParse(model.DepartmentCD.Substring(1, 2), out int shop))
                 {
                     model.CurrentShop = shop;
                 }
-
-                //  Save
+                else
+                {
+                    maxSeatNo = db.T_StaffMaster
+                  .Where(x => x.DepartmentCD == model.DepartmentCD)
+                  .Max(x => x.SeatNo).GetValueOrDefault();
+                }
 
                 try
                 {
@@ -118,10 +126,12 @@ namespace EmployeeTrackingSystem.Controllers
                         PhoneNo = model.PhoneNo,
                         JoinedDate = model.JoinedDate,
                         EmployeeType = model.EmployeeType,
+                        Status= "帰宅",
                         Enroll = model.Enroll,
                         Remark = model.Remark,
                         CurrentShop = model.CurrentShop,
-                        InsertDateTime = DateTime.Now
+                        InsertDateTime = DateTime.Now,
+                        SeatNo = maxSeatNo + 1
                     };
 
                     db.T_StaffMaster.Add(entity);
@@ -148,6 +158,11 @@ namespace EmployeeTrackingSystem.Controllers
                 ModelState.AddModelError("StaffName", "StaffName exceeds 50 bytes");
             }
 
+            if (!string.IsNullOrEmpty(model.Email) &&
+                 !IsUtf8Valid(model.Email, 30))
+            {
+                ModelState.AddModelError("Email", "Email exceeds 30 bytes");
+            }
             if (!string.IsNullOrEmpty(model.PhoneNo) &&
               !IsUtf8Valid(model.PhoneNo, 15))
             {
@@ -159,8 +174,6 @@ namespace EmployeeTrackingSystem.Controllers
             {
                 ModelState.AddModelError("Remark", "Remark exceeds 200 bytes");
             }
-
-
             if (!ModelState.IsValid)
             {
                 var errors = ModelState
@@ -183,28 +196,14 @@ namespace EmployeeTrackingSystem.Controllers
                     return Json(new { success = false, message = "更新失敗しました。" });
                 }
 
-                if (model.StaffName != null)
+                
                     staff.StaffName = model.StaffName;
-
-                if (model.DepartmentCD != null)
                     staff.DepartmentCD = model.DepartmentCD;
-
-                if (!string.IsNullOrEmpty(model.Email))
                     staff.Email = model.Email;
-
-                if (!string.IsNullOrEmpty(model.PhoneNo))
                     staff.PhoneNo = model.PhoneNo;
-
-                // If JoinedDate is nullable
-                if (model.JoinedDate.HasValue)
-                    staff.JoinedDate = model.JoinedDate.Value;
-
-                if (!string.IsNullOrEmpty(model.EmployeeType))
+                    staff.JoinedDate = model.JoinedDate;
                     staff.EmployeeType = model.EmployeeType;
-
                     staff.Enroll = model.Enroll;
-
-                if (!string.IsNullOrEmpty(model.Remark))
                     staff.Remark = model.Remark;
 
                 var dept = (model.DepartmentCD ?? "").Trim();
