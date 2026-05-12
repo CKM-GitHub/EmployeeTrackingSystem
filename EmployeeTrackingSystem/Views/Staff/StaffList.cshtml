@@ -225,7 +225,7 @@
                         <div class="form-row">
                             <label>入社日</label>
                             <div class="date-wrapper">
-                                <input type="text" name="JoinedDate" id="JoinedDateAdd" placeholder="yyyy/MM/dd" autocomplete="off" />
+                                <input type="text" name="JoinedDate" id="JoinedDateAdd" placeholder="yyyy/MM/dd" autocomplete="off" readonly/>
                             </div>
                         </div>
                         <div class="form-row">
@@ -565,22 +565,21 @@
     // DATEPICKER: Add & Edit
     // =====================
         function initDatePickers() {
+
             $("#JoinedDate, #JoinedDateAdd").datepicker({
                 dateFormat: "yy/mm/dd"
             });
 
-            // prevent invalid characters
-            $("#JoinedDate, #JoinedDateAdd").on("input", function () {
-                this.value = this.value.replace(/[^0-9\/]/g, '');
+            // prevent manual typing completely
+            $("#JoinedDate, #JoinedDateAdd").on("keydown paste input", function (e) {
+                e.preventDefault();
             });
 
             // default today for Add
             if (!$("#JoinedDateAdd").val()) {
                 $("#JoinedDateAdd").val($.datepicker.formatDate('yy/mm/dd', new Date()));
             }
-        }    
-
-       
+        }
       
     function moveToNextFieldEdit($current) {
         var $fields = $('#editForm').find('input, select, textarea').filter(':visible');

@@ -247,13 +247,11 @@
 
 .date-wrapper {
     position: relative;
-    display: inline-block;
 }
 
     .date-wrapper input {
-        width: 200px; /* adjust if needed */
+        width: 100%; 
         padding-right: 30px; /* space for icon */
-        box-sizing: border-box;
     }
 
     .date-wrapper::after {
