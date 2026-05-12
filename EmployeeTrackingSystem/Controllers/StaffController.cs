@@ -37,29 +37,7 @@ namespace EmployeeTrackingSystem.Controllers
         {
             using (var db = new EmployeeTrackingDBEntities())
             {
-                if (!string.IsNullOrEmpty(model.StaffName) &&
-                    !IsUtf8Valid(model.StaffName, 50))
-                {
-                    ModelState.AddModelError("StaffName", "StaffName exceeds 50 bytes");
-                }
-
-                if (!string.IsNullOrEmpty(model.Email) &&
-                    !IsUtf8Valid(model.Email, 30))
-                {
-                    ModelState.AddModelError("Email", "Email exceeds 30 bytes");
-                }
-
-                if (!string.IsNullOrEmpty(model.PhoneNo) &&
-                  !IsUtf8Valid(model.PhoneNo, 15))
-                {
-                    ModelState.AddModelError("PhoneNo", "PhoneNo exceeds 15 bytes");
-                }
-
-                if (!string.IsNullOrEmpty(model.Remark) &&
-                    !IsUtf8Valid(model.Remark, 200))
-                {
-                    ModelState.AddModelError("Remark", "Remark exceeds 200 bytes");
-                }
+               
                 // Other ModelState validation (optional)
                 if (!ModelState.IsValid)
                 {
@@ -152,28 +130,7 @@ namespace EmployeeTrackingSystem.Controllers
         [ValidateAntiForgeryToken]
         public JsonResult Update(StaffUpdateModel model)
         {
-            if (!string.IsNullOrEmpty(model.StaffName) &&
-              !IsUtf8Valid(model.StaffName, 50))
-            {
-                ModelState.AddModelError("StaffName", "StaffName exceeds 50 bytes");
-            }
-
-            if (!string.IsNullOrEmpty(model.Email) &&
-                 !IsUtf8Valid(model.Email, 30))
-            {
-                ModelState.AddModelError("Email", "Email exceeds 30 bytes");
-            }
-            if (!string.IsNullOrEmpty(model.PhoneNo) &&
-              !IsUtf8Valid(model.PhoneNo, 15))
-            {
-                ModelState.AddModelError("PhoneNo", "PhoneNo exceeds 15 bytes");
-            }
-
-            if (!string.IsNullOrEmpty(model.Remark) &&
-                !IsUtf8Valid(model.Remark, 200))
-            {
-                ModelState.AddModelError("Remark", "Remark exceeds 200 bytes");
-            }
+           
             if (!ModelState.IsValid)
             {
                 var errors = ModelState

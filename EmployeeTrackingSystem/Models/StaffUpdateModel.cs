@@ -21,7 +21,7 @@ namespace EmployeeTrackingSystem.Models
 
         [EmailAddress]
         [MaxLength(30)]
-        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$")]
+        [RegularExpression(@"^[a-zA-Z0-9.]+@gmail\.com$")]
         public string Email { get; set; }
 
         [MaxLength(15)]

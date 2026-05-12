@@ -93,7 +93,7 @@
 
                         <div class="form-row">
                             <label>スタッフ名</label>
-                            <input type="text" id="StaffName" name="StaffName" data-max-bytes="50" />
+                            <input type="text" id="StaffName" name="StaffName"  maxlength="50" />
                             <span class="text-danger" id="errStaffName"></span>
                         </div>
 
@@ -142,7 +142,7 @@
 
                         <div class="form-row">
                             <label class="label-remark">備考</label>
-                            <textarea name="Remark" id="Remark" class="textarea-remark" maxlength="200" rows="2"></textarea>
+                            <textarea name="Remark" id="Remark" class="textarea-remark"  maxlength="200" rows="2"></textarea>
                             <span class="text-danger" id="errRemark"></span>
                         </div>
 
@@ -195,7 +195,7 @@
                         </div>
                         <div class="form-row">
                             <label>スタッフ名</label>
-                            <input type="text" name="StaffName" data-max-bytes="50" />
+                            <input type="text" name="StaffName" maxlength="50" />
                             <span class="text-danger" id="errStaffName"></span>
                         </div>
 
@@ -303,26 +303,14 @@
 
                 this.value = v.slice(0, 15);
             });
+          
             $('input[maxlength], textarea[maxlength]').on('input', function () {
                 let max = this.maxLength;
+
                 if (this.value.length > max) {
                     this.value = this.value.slice(0, max);
                 }
             });
-            $('#addForm [name="StaffName"], #editForm [name="StaffName"], #addForm [name="Remark"], #editForm [name="Remark"]')
-                .on('input', function () {
-
-                    let maxBytes = $(this).data('max-bytes');
-                    if (!maxBytes) return;
-
-                    let value = this.value;
-
-                    while (getUtf8Bytes(value) > maxBytes) {
-                        value = value.slice(0, -1);
-                    }
-
-                    this.value = value;
-                });
     // =====================
     // Add Form Enter key validation
     // =====================
@@ -614,10 +602,7 @@
             $('#addForm button[type="submit"]').focus();
         }
     }
-        function getUtf8Bytes(str) {
-            return new TextEncoder().encode(str).length;
-        }
-
+       
     </script>
 }
 
