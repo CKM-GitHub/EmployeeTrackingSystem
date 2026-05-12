@@ -226,5 +226,50 @@ namespace EmployeeTrackingSystem.Controllers
                 res = true;
             return Json(new { success = res });
         }
+        
+
+        [HttpPost]
+        public JsonResult UpdateSeatChange(string staff1,int? seat1,string staff2,int? seat2,string dept1, string dept2)
+        {
+            try
+            {
+                using (var db = new EmployeeTrackingDBEntities())
+                {
+                    var s1 = db.T_StaffMaster
+                               .FirstOrDefault(x => x.StaffCD == staff1);
+
+                    var s2 = db.T_StaffMaster
+                               .FirstOrDefault(x => x.StaffCD == staff2);
+
+                    if (s1 != null)
+                    {
+                        seat1 = s1.SeatNo;
+                        s1.SeatNo = s2.SeatNo;
+                        s1.DepartmentCD = dept2;
+                    }
+
+                    if (s2 != null)
+                    {
+                        s2.SeatNo = seat1;
+                        s2.DepartmentCD = dept1;
+                    }
+
+                    db.SaveChanges();
+
+                    return Json(new
+                    {
+                        success = true
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+        }
     }
 }

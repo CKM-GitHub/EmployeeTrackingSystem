@@ -10,6 +10,7 @@ namespace EmployeeTrackingSystem.Models
     {
         [Required(ErrorMessage = "*")]
         [MaxLength(5)]
+        [RegularExpression(@"^[A-Za-z0-9-]+$")]
         public string StaffCD { get; set; }
 
         [Required(ErrorMessage = "*")]
@@ -21,11 +22,10 @@ namespace EmployeeTrackingSystem.Models
 
         public string DepartmentName { get; set; }
 
-        [MaxLength(20)]
-        public string Position { get; set; }
-
+        
         [EmailAddress]
-        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$")]
+        [MaxLength(30)]
+        [RegularExpression(@"^[a-zA-Z0-9.]+@gmail\.com$")]
         public string Email { get; set; }
 
         [MaxLength(15)]
@@ -37,17 +37,13 @@ namespace EmployeeTrackingSystem.Models
 
         [MaxLength(200)]
         public string Remark { get; set; }
-        public string Status { get; set; }
-        public Nullable<System.DateTime> StartDateTime { get; set; }
-        public Nullable<System.DateTime> ReturnDateTime { get; set; }
-        public string Note { get; set; }
+       
 
-        [RegularExpression(@"^[0-9]+$")]
-        public Nullable<int> SeatNo { get; set; }
+        public string Status { get; set; }
+
         public Nullable<System.DateTime> InsertDateTime { get; set; }
         public Nullable<System.DateTime> UpdateDateTime { get; set; }
-        public Nullable<System.DateTime> DeleteDateTime { get; set; }
-
+       
         public Nullable<int> CurrentShop { get; set; }
         public string CurshopName { get; set; }
 

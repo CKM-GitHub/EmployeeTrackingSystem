@@ -21,7 +21,7 @@ namespace EmployeeTrackingSystem.Controllers
                     Text = d.DepartmentName
                 }).ToList();
 
-            departments.Insert(0, new { Value = "", Text = "" });
+          //  departments.Insert(0, new { Value = "", Text = "" });
 
             ViewBag.Departments = new SelectList(departments, "Value", "Text");
 
@@ -33,7 +33,7 @@ namespace EmployeeTrackingSystem.Controllers
                     Text = s.StaffName
                 }).ToList();
 
-            staffs.Insert(0, new { Value = "", Text = "" });
+          //  staffs.Insert(0, new { Value = "", Text = "" });
 
             ViewBag.StaffNames = new SelectList(staffs, "Value", "Text");
         }

@@ -12,14 +12,14 @@
 #tableStaff {
     width: max-content;
     min-width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
     border-spacing: 0;
     font-size: 13px;
     /*  border: 1px solid #ccc;*/
 }
     #tableStaff td,
     #tableStaff th {
-        border-bottom: 1px solid #ccc;
+        
         padding: 4px 6px;
     }
     
@@ -28,7 +28,7 @@
     position: sticky;
     top: 0;
     z-index: 1;
-    height: 29px;
+    height: 35px;
     vertical-align: middle;
     white-space: nowrap;
 }
@@ -44,7 +44,6 @@
         }
 
         #tableStaff td:nth-child(5),
-        #tableStaff td:nth-child(6),
         #tableStaff td:nth-child(7){
             text-align: center;
         }
@@ -97,13 +96,6 @@
     width: 70px;
 }
 
-.newSeat {
-    width: 38px !important;
-    text-align: center;
-    padding: 0 !important;
-    border: 1px solid #ccc;
-}
-
 .btn-wrapper {
     text-align: right;
     padding-right: 42px;
@@ -151,6 +143,7 @@
     box-sizing: border-box;
     border-radius: 4px;
 }
+
 
 .form-actions button {
     margin: 0 10px;
@@ -231,15 +224,15 @@
     margin: 0;
 }
 
-input.input-error,
-select.input-error,
-textarea.input-error {
-    border: 2px solid #e57373 !important;
-    /* background-color: #fdecea !important;*/
-    transition: 0.2s;
-}
 
-    input.input-error:focus {
+
+    input.input-error,
+    select.input-error,
+    textarea.input-error,
+    input.input-error:focus,
+    select.input-error:focus,
+    textarea.input-error:focus {
+        border: 2px solid #e57373 !important;
         box-shadow: 0 0 3px rgba(229,115,115,0.4) !important;
         outline: none !important;
     }
@@ -254,13 +247,11 @@ textarea.input-error {
 
 .date-wrapper {
     position: relative;
-    display: inline-block;
 }
 
     .date-wrapper input {
-        width: 200px; /* adjust if needed */
+        width: 100%; 
         padding-right: 30px; /* space for icon */
-        box-sizing: border-box;
     }
 
     .date-wrapper::after {
@@ -277,3 +268,12 @@ textarea.input-error {
     background-color: lightgray;
     cursor: not-allowed;
 }
+
+#editForm select.input-error,
+#addForm select.input-error {
+    border: 2px solid #e57373 !important;
+    box-shadow: 0 0 3px rgba(229,115,115,0.4) !important;
+    outline: none !important;
+    background-image: none;
+}
+

@@ -37,29 +37,7 @@ namespace EmployeeTrackingSystem.Controllers
         {
             using (var db = new EmployeeTrackingDBEntities())
             {
-                if (!string.IsNullOrEmpty(model.StaffName) &&
-                    !IsUtf8Valid(model.StaffName, 50))
-                {
-                    ModelState.AddModelError("StaffName", "StaffName exceeds 50 bytes");
-                }
-
-                if (!string.IsNullOrEmpty(model.Position) &&
-                    !IsUtf8Valid(model.Position, 20))
-                {
-                    ModelState.AddModelError("Position", "Position exceeds 20 bytes");
-                }
-
-                if (!string.IsNullOrEmpty(model.PhoneNo) &&
-                  !IsUtf8Valid(model.PhoneNo, 15))
-                {
-                    ModelState.AddModelError("PhoneNo", "PhoneNo exceeds 15 bytes");
-                }
-
-                if (!string.IsNullOrEmpty(model.Remark) &&
-                    !IsUtf8Valid(model.Remark, 200))
-                {
-                    ModelState.AddModelError("Remark", "Remark exceeds 200 bytes");
-                }
+               
                 // Other ModelState validation (optional)
                 if (!ModelState.IsValid)
                 {
@@ -100,33 +78,20 @@ namespace EmployeeTrackingSystem.Controllers
                          }
                     });
                 }
-                
-                //// Seat duplicate
-                bool isExist = db.T_StaffMaster.Any(x =>
-                    x.DepartmentCD == model.DepartmentCD &&
-                    x.SeatNo == model.SeatNo &&
-                    x.Enroll == true);
 
-                if (isExist)
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        errors = new[] {
-                    new { field = "SeatNo", message = "この席番号は既に使用されています" }
-                        }
-                    });
-                }
-
-
+                int maxSeatNo = 0;
                 if (!string.IsNullOrEmpty(model.DepartmentCD) &&
                     model.DepartmentCD.StartsWith("S0") &&
                     int.TryParse(model.DepartmentCD.Substring(1, 2), out int shop))
                 {
                     model.CurrentShop = shop;
                 }
-
-                //  Save
+                else
+                {
+                    maxSeatNo = db.T_StaffMaster
+                  .Where(x => x.DepartmentCD == model.DepartmentCD)
+                  .Max(x => x.SeatNo).GetValueOrDefault();
+                }
 
                 try
                 {
@@ -135,16 +100,16 @@ namespace EmployeeTrackingSystem.Controllers
                         StaffCD = model.StaffCD,
                         StaffName = model.StaffName,
                         DepartmentCD = model.DepartmentCD,
-                        Position = model.Position,
                         Email = model.Email,
                         PhoneNo = model.PhoneNo,
                         JoinedDate = model.JoinedDate,
                         EmployeeType = model.EmployeeType,
+                        Status= "帰宅",
                         Enroll = model.Enroll,
                         Remark = model.Remark,
-                        SeatNo = model.SeatNo,
                         CurrentShop = model.CurrentShop,
-                        InsertDateTime = DateTime.Now
+                        InsertDateTime = DateTime.Now,
+                        SeatNo = maxSeatNo + 1
                     };
 
                     db.T_StaffMaster.Add(entity);
@@ -165,31 +130,7 @@ namespace EmployeeTrackingSystem.Controllers
         [ValidateAntiForgeryToken]
         public JsonResult Update(StaffUpdateModel model)
         {
-            if (!string.IsNullOrEmpty(model.StaffName) &&
-              !IsUtf8Valid(model.StaffName, 50))
-            {
-                ModelState.AddModelError("StaffName", "StaffName exceeds 50 bytes");
-            }
-
-            if (!string.IsNullOrEmpty(model.Position) &&
-                !IsUtf8Valid(model.Position, 20))
-            {
-                ModelState.AddModelError("Position", "Position exceeds 20 bytes");
-            }
-
-            if (!string.IsNullOrEmpty(model.PhoneNo) &&
-              !IsUtf8Valid(model.PhoneNo, 15))
-            {
-                ModelState.AddModelError("PhoneNo", "PhoneNo exceeds 15 bytes");
-            }
-
-            if (!string.IsNullOrEmpty(model.Remark) &&
-                !IsUtf8Valid(model.Remark, 200))
-            {
-                ModelState.AddModelError("Remark", "Remark exceeds 200 bytes");
-            }
-
-
+           
             if (!ModelState.IsValid)
             {
                 var errors = ModelState
@@ -201,22 +142,7 @@ namespace EmployeeTrackingSystem.Controllers
 
                 return Json(new { success = false, errors = errors });;
             }
-                bool isExist = db.T_StaffMaster.Any(x =>
-                    x.DepartmentCD == model.DepartmentCD &&
-                    x.SeatNo == model.SeatNo &&
-                    x.StaffCD != model.StaffCD &&
-                    x.Enroll == true);
-
-                if (isExist)
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        errors = new[] {
-                    new { field = "SeatNo", message = "この席番号は既に使用されています" }
-                        }
-                    });
-                }
+                
             try
             {
                 var staff = db.T_StaffMaster
@@ -227,31 +153,14 @@ namespace EmployeeTrackingSystem.Controllers
                     return Json(new { success = false, message = "更新失敗しました。" });
                 }
 
-                if (model.StaffName != null)
+                
                     staff.StaffName = model.StaffName;
-
-                if (model.DepartmentCD != null)
                     staff.DepartmentCD = model.DepartmentCD;
-
-                if (!string.IsNullOrEmpty(model.Position))
-                    staff.Position = model.Position;
-
-                if (!string.IsNullOrEmpty(model.Email))
                     staff.Email = model.Email;
-
-                if (!string.IsNullOrEmpty(model.PhoneNo))
                     staff.PhoneNo = model.PhoneNo;
-
-                // If JoinedDate is nullable
-                if (model.JoinedDate.HasValue)
-                    staff.JoinedDate = model.JoinedDate.Value;
-
-                if (!string.IsNullOrEmpty(model.EmployeeType))
+                    staff.JoinedDate = model.JoinedDate;
                     staff.EmployeeType = model.EmployeeType;
-
                     staff.Enroll = model.Enroll;
-
-                if (!string.IsNullOrEmpty(model.Remark))
                     staff.Remark = model.Remark;
 
                 var dept = (model.DepartmentCD ?? "").Trim();
@@ -259,13 +168,13 @@ namespace EmployeeTrackingSystem.Controllers
                 if (dept.StartsWith("S0") && 
                     int.TryParse(dept.Substring(1, 2), out int shop))
                 {
-                    staff.SeatNo = null;
+                    
                     staff.CurrentShop = shop;
                 }
                 else
                 {
                     staff.CurrentShop = null;
-                    staff.SeatNo = model.SeatNo;
+                    
                 }
                 staff.UpdateDateTime = DateTime.Now;
                 db.SaveChanges();
@@ -274,81 +183,6 @@ namespace EmployeeTrackingSystem.Controllers
             catch (Exception ex)
             {
                return Json(new { success = false, message = "更新失敗しました。" });
-            }
-        }
-        [HttpPost]
-        public ActionResult UpdateSeat(List<staffViewModel> list)
-        {
-            try
-            {
-                // 1. Load all relevant staff in affected departments
-                var deptCDs = list.Select(x => x.DepartmentCD).Distinct().ToList();
-                var staffInDepartments = db.T_StaffMaster
-                    .Where(s => deptCDs.Contains(s.DepartmentCD))
-                    .ToList();
-
-                // 2. Build current seat map (Department -> Seat -> Staff)
-                var seatMap = staffInDepartments
-                    .Where(s => s.SeatNo.HasValue && s.Enroll != false)
-                    .GroupBy(s => s.DepartmentCD)
-                    .ToDictionary(
-                        g => g.Key,
-                        g => g.ToDictionary(s => s.SeatNo.Value, s => s.StaffCD)
-                    );
-
-                // 3. Apply changes in memory
-                foreach (var model in list)
-                {
-                    if (!seatMap.ContainsKey(model.DepartmentCD))
-                        seatMap[model.DepartmentCD] = new Dictionary<int, string>();
-
-                    var deptSeats = seatMap[model.DepartmentCD];
-
-                    // Remove current staff seat temporarily
-                    var currentStaff = staffInDepartments.FirstOrDefault(s => s.StaffCD == model.StaffCD);
-                    if (currentStaff?.SeatNo != null)
-                    {
-                        deptSeats.Remove(currentStaff.SeatNo.Value);
-                    }
-
-                    // Check if the new seat is already assigned to another staff NOT in this batch
-                    if (deptSeats.TryGetValue(model.SeatNo.Value, out string existingStaff))
-                    {
-                        var inBatch = list.Any(x => x.StaffCD == existingStaff);
-                        if (!inBatch)
-                        {
-                            var deptname = db.T_Department
-                              .Where(s => s.DepartmentCD == model.DepartmentCD)
-                              .Select(s => new
-                              {
-                                DeptName = s.DepartmentName
-                              }).FirstOrDefault();
-
-                            return Content($"Error: 席 {model.SeatNo} in {deptname.DeptName} is already assigned to {existingStaff}");
-                        }
-                    }
-
-                    // Assign new seat in memory map
-                    deptSeats[model.SeatNo.Value] = model.StaffCD;
-                }
-
-                // 4. Save changes
-                foreach (var model in list)
-                {
-                    var staff = staffInDepartments.FirstOrDefault(s => s.StaffCD == model.StaffCD);
-                    if (staff != null)
-                    {
-                        staff.SeatNo = model.SeatNo;
-                        staff.UpdateDateTime = DateTime.Now;
-                    }
-                }
-
-                db.SaveChanges();
-                return Content("登録が完了しました");
-            }
-            catch (Exception ex)
-            {
-                return Content("Error: " + ex.Message);
             }
         }
 
