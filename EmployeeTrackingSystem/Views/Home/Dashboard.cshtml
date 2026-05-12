@@ -431,27 +431,27 @@
                     Note: note
                 });
             });
-            var isValid = true;
-            var errorMessage = "";
-            $("#Plantable tbody tr").each(function (index) {
-                var $noteInput = $(this).find(".row-note");
-                var noteValue = getByteLength($noteInput.val());
-                var maxLength = parseInt($noteInput.attr("maxlength"));
+            //var isValid = true;
+            //var errorMessage = "";
+            //$("#Plantable tbody tr").each(function (index) {
+            //    var $noteInput = $(this).find(".row-note");
+            //    var noteValue = getByteLength($noteInput.val());
+            //    var maxLength = parseInt($noteInput.attr("maxlength"));
+            //    alert(noteValue);
+            //    if (noteValue > maxLength) {
 
-                if (noteValue > maxLength) {
-
-                    isValid = false;
-                    errorMessage = "Row " + (index + 1) + ": Note exceeds " + maxLength + " characters.";
-                    $noteInput.addClass("is-invalid"); // Highlight the error field
-                    return false; // Exit the .each() loop early
-                } else {
-                    $noteInput.removeClass("is-invalid");
-                }
-            });
-            if (!isValid) {
-                alert(errorMessage);
-                return; // Stop the AJAX call
-            }
+            //        isValid = false;
+            //        errorMessage = "Row " + (index + 1) + ": Note exceeds " + maxLength + " characters.";
+            //        $noteInput.addClass("is-invalid"); // Highlight the error field
+            //        return false; // Exit the .each() loop early
+            //    } else {
+            //        $noteInput.removeClass("is-invalid");
+            //    }
+            //});
+            //if (!isValid) {
+            //    alert(errorMessage);
+            //    return; // Stop the AJAX call
+            //}
             // send to server
             $.ajax({
                 url: '@Url.Action("SavePlanData", "Home")',
@@ -569,11 +569,12 @@
            // return year + "/" + month + "/" + day;
         }
 
-        function getByteLength(str) {
-            // Encodes to UTF-8 and returns the byte count
-            return new TextEncoder().encode(str).length;
-        }
-     
+        //function getByteLength(str) {
+        //    // Encodes to UTF-8 and returns the byte count
+        //    return new TextEncoder().encode(str).length;
+        //}
+
+       
         function bindDragDrop() {
 
             $('.staff-slot').off();
@@ -606,6 +607,7 @@
 
         function saveSeatChange(staff1, seat1, staff2, seat2, dept1, dept2) {
             $.ajax({
+
                 url: '@Url.Action("UpdateSeatChange", "Home")',
                 type: 'POST',
                 data: {
