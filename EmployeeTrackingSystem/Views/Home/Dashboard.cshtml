@@ -110,7 +110,7 @@
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
                         </div>
-                        <input type="text" id="Note-out" name="Note-out" class="form-control status-input" placeholder="Note" />
+                        <input type="text" id="Note-out" name="Note-out" class="form-control status-input" placeholder="Note" maxlength="200"/>
                     </div>
                     <!-- 会議 -->
                     <div class="form-group status-option">
@@ -121,12 +121,12 @@
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
                         </div>
-                        <input type="text" id="Note-meeting" name="Note-meeting" class="form-control status-input" placeholder="Note" />
+                        <input type="text" id="Note-meeting" name="Note-meeting" class="form-control status-input" placeholder="Note" maxlength="200"/>
                     </div>
                     <!-- 休み -->
                     <div class="form-group status-option">
                         <label class="status-label"><input type="radio" name="Status" value="休み" /> 休み</label>
-                        <input type="text" id="Note-leave" style="width:100% !important" name="Note-leave" class="form-control status-input" placeholder="Note" />
+                        <input type="text" id="Note-leave" style="width:100% !important" name="Note-leave" class="form-control status-input" placeholder="Note" maxlength="200" />
                     </div>
                     <!-- 直行 -->
                     <div class="form-group status-option">
@@ -137,7 +137,7 @@
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
                         </div>
-                        <input type="text" id="Note-visit" name="Note-visit" class="form-control status-input" placeholder="Note" />
+                        <input type="text" id="Note-visit" name="Note-visit" class="form-control status-input" placeholder="Note" maxlength="200" />
                     </div>
                 </div>
 
@@ -190,6 +190,7 @@
     <script>
         let draggedItem = null;
         $(document).ready(function () {
+
            
             $(document).on("click", ".staff-link", function () {
                 // Clear all inputs in the modal form
@@ -558,6 +559,7 @@
             //
         });
 
+        
         function formatDate(dateString) {
             var date = new Date(dateString);
             var day = ("0" + date.getDate()).slice(-2);
