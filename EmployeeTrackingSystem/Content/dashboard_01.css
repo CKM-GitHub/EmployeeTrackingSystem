@@ -595,10 +595,15 @@ body {
         width: 100%;
     }
 
+    /*.nested-table td.staffname {
+        width: 40vw;*/ /* relative width for narrow screens */
+    /*}*/
     .nested-table td.staffname {
-        width: 40vw; /* relative width for narrow screens */
+        min-width: 330px;
+        width: 100%;
+        max-width: 430px;
+        border: none;
     }
-
     .nested-cell.staffname img.search-icon {
         width: 0.8em;
         height: 0.8em;
