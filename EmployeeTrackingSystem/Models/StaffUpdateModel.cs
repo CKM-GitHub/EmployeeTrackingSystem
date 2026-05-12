@@ -25,6 +25,7 @@ namespace EmployeeTrackingSystem.Models
         public string Email { get; set; }
 
         [MaxLength(15)]
+        [RegularExpression(@"^\+?[0-9\-]+$", ErrorMessage = "Invalid phone number format")]
         public string PhoneNo { get; set; }
         public DateTime? JoinedDate { get; set; }
         public string EmployeeType { get; set; }
