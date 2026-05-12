@@ -41,12 +41,12 @@
         {
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-2 form-group">
-                    @Html.DropDownList("department", ViewBag.Departments as SelectList,
+                    @Html.DropDownList("department", ViewBag.Departments as SelectList, "-- Select Department --",
                          new { @class = "form-control mt-2", id = "department" })
 
                 </div>
                 <div class="col-12 col-sm-12 col-md-2 form-group">
-                    @Html.DropDownList("staff", ViewBag.StaffNames as SelectList,
+                    @Html.DropDownList("staff", ViewBag.StaffNames as SelectList, "-- Select Staff --",
                          new { @class = "form-control mt-2", id = "staff" })
                 </div>
                 @if (ViewBag.Detail != "Detail")
@@ -100,7 +100,7 @@
 
                 // Clear the current options and show a placeholder
                 $staffDropdown.empty();
-                $staffDropdown.append('<option value="">Loading...</option>');
+                //$staffDropdown.append('<option value="">Loading...</option>');
 
                 if (selectedDeptId) {
                     $.ajax({
@@ -109,7 +109,7 @@
                         data: { departmentId: selectedDeptId },
                         success: function (data) {
                             $staffDropdown.empty();
-                            $staffDropdown.append('<option value=""></option>');
+                            $staffDropdown.append('<option value="">-- Select Staff --</option>');
 
                             // Loop through the JSON data and add options
                             $.each(data, function (index, item) {
@@ -131,7 +131,7 @@
                         data: { departmentId: selectedDeptId },
                         success: function (data) {
                             $staffDropdown.empty();
-                            $staffDropdown.append('<option value=""></option>');
+                            $staffDropdown.append('<option value="">-- Select Staff --</option>');
 
                             // Loop through the JSON data and add options
                             $.each(data, function (index, item) {
