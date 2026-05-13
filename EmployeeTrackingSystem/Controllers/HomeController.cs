@@ -97,20 +97,43 @@ namespace EmployeeTrackingSystem.Controllers
             bool insertflag = true;
             if (!string.IsNullOrEmpty(Status))
             {
-                insertflag = Dashobard_StaffName_Click_Save(staffRecord);
-                if (insertflag)
+                if(Status== "外出" || Status== "会議" || Status == "休み" || Status == "直行")
                 {
-                    TempData["Message"] = "登録しました。";
+                    if(String.IsNullOrWhiteSpace(ReturnDateTime) || String.IsNullOrWhiteSpace(Note))
+                    {
+                        insertflag = false;
+                        TempData["Message"] = "Please fill data completely!!";
+                    }
+                    else
+                    {
+                        insertflag = Dashobard_StaffName_Click_Save(staffRecord);
+                        if (insertflag)
+                        {
+                            TempData["Message"] = "登録しました。";
+                        }
+                        else
+                        {
+                            TempData["Message"] = "登録失敗しました。";
+                        }
+                    }
                 }
                 else
                 {
-                    TempData["Message"] = "登録失敗しました。";
+                    insertflag = Dashobard_StaffName_Click_Save(staffRecord);
+                    if (insertflag)
+                    {
+                        TempData["Message"] = "登録しました。";
+                    }
+                    else
+                    {
+                        TempData["Message"] = "登録失敗しました。";
+                    }
                 }
             }
             else
             {
                 insertflag = false;
-                TempData["Message"] = "Plz choose at least one status to update!!";
+                TempData["Message"] = "Please choose at least one status to update!!";
             }
             return Json(new { success = insertflag, message = TempData["Message"] });
         }
