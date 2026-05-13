@@ -304,11 +304,25 @@
                 this.value = v.slice(0, 15);
             });
           
-            $('input[maxlength], textarea[maxlength]').on('input', function () {
+            $('input[maxlength]').on('input', function () {
                 let max = this.maxLength;
 
                 if (this.value.length > max) {
                     this.value = this.value.slice(0, max);
+                }
+
+            });
+
+            $('textarea[maxlength]').on('input', function () {
+
+                const max = parseInt(this.maxLength);
+                let sqlLength = this.value.replace(/\n/g, '\r\n').length;
+
+                while (sqlLength > max) {
+
+                    this.value = this.value.slice(0, -1);
+
+                    sqlLength = this.value.replace(/\n/g, '\r\n').length;
                 }
             });
     // =====================
