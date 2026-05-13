@@ -352,8 +352,45 @@
                     data: payload,
                     success: function (response) {
                         alert(response.message);
-                        $("#staffModal").modal("hide");
-                        location.reload();
+                        
+                        if (response.message === 'Please fill data completely!!') {
+                            if (status === "外出") {
+                                if (returnDateTime === '') {
+                                    $("#datetimepicker-out").find("input").focus();
+                                    document.querySelector("input[name='ReturnDateTime-out']").focus();
+                                    setTimeout(function () {
+                                        $("input[name='ReturnDateTime-out']")[0].focus();
+                                    }, 100);
+                                }
+                                else
+                                    $("#Note-out").focus();
+                            } else if (status === "会議") {
+                                if (returnDateTime === '') {
+                                    $("#datetimepicker-meeting").find("input").focus();
+                                    document.querySelector("input[name='ReturnDateTime-meeting']").focus();
+                                    setTimeout(function () {
+                                        $("input[name='ReturnDateTime-meeting']")[0].focus();
+                                    }, 100);
+                                }
+                                else
+                                    $("#Note-meeting").focus();
+                            } else if (status === "休み") {
+                                $("#Note-leave").focus();
+                            } else if (status === "直行") {
+                                if (returnDateTime === '') {
+                                    $("#datetimepicker-visit").find("input").focus();
+                                    document.querySelector("input[name='ReturnDateTime-visit']").focus();
+                                    setTimeout(function () {
+                                        $("input[name='ReturnDateTime-visit']")[0].focus();
+                                    }, 100);
+                                }
+                                else
+                                    $("#Note-visit").focus();
+                            }
+                        }else {
+                            $("#staffModal").modal("hide");
+                            location.reload();
+                        }
                     },
                     error: function () {
                         alert("An error occurred while saving.");
