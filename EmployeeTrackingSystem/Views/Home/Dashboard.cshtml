@@ -310,9 +310,34 @@
                     $("#ReturnDateTime-visit").prop("disabled", false).val(formatted);
                     $("#Note-visit").prop("disabled", false).val(note);
                 }
+                var status = $("input[name='Status']:checked").val();
+
+                // Clear all requirements first
+                $("input[name^='ReturnDateTime']").prop("required", false).prop("disabled", true);
+                $("#Note-out, #Note-meeting, #Note-leave, #Note-visit").prop("required", false).prop("disabled", true);
+
+                // Enable + require based on status
+                if (status === "外出") {
+                    $("input[name='ReturnDateTime-out']").prop("disabled", false).prop("required", true);
+                    $("#Note-out").prop("disabled", false).prop("required", true);
+                } else if (status === "会議") {
+                    $("input[name='ReturnDateTime-meeting']").prop("disabled", false).prop("required", true);
+                    $("#Note-meeting").prop("disabled", false).prop("required", true);
+                } else if (status === "休み") {
+                    $("#Note-leave").prop("disabled", false).prop("required", true);
+                } else if (status === "直行") {
+                    $("input[name='ReturnDateTime-visit']").prop("disabled", false).prop("required", true);
+                    $("#Note-visit").prop("disabled", false).prop("required", true);
+                }
             });
 
             $("#staffForm").on("submit", function (e) {
+                // If invalid, let browser show its tooltip
+                if (!this.checkValidity()) {
+                    e.preventDefault(); // stop only if invalid
+                    this.reportValidity(); // force tooltip display
+                    return;
+                }
                 e.preventDefault();
 
                 var status = $("input[name='Status']:checked").val();
@@ -352,45 +377,8 @@
                     data: payload,
                     success: function (response) {
                         alert(response.message);
-                        
-                        if (response.message === 'Please fill data completely!!') {
-                            if (status === "外出") {
-                                if (returnDateTime === '') {
-                                    $("#datetimepicker-out").find("input").focus();
-                                    document.querySelector("input[name='ReturnDateTime-out']").focus();
-                                    setTimeout(function () {
-                                        $("input[name='ReturnDateTime-out']")[0].focus();
-                                    }, 100);
-                                }
-                                else
-                                    $("#Note-out").focus();
-                            } else if (status === "会議") {
-                                if (returnDateTime === '') {
-                                    $("#datetimepicker-meeting").find("input").focus();
-                                    document.querySelector("input[name='ReturnDateTime-meeting']").focus();
-                                    setTimeout(function () {
-                                        $("input[name='ReturnDateTime-meeting']")[0].focus();
-                                    }, 100);
-                                }
-                                else
-                                    $("#Note-meeting").focus();
-                            } else if (status === "休み") {
-                                $("#Note-leave").focus();
-                            } else if (status === "直行") {
-                                if (returnDateTime === '') {
-                                    $("#datetimepicker-visit").find("input").focus();
-                                    document.querySelector("input[name='ReturnDateTime-visit']").focus();
-                                    setTimeout(function () {
-                                        $("input[name='ReturnDateTime-visit']")[0].focus();
-                                    }, 100);
-                                }
-                                else
-                                    $("#Note-visit").focus();
-                            }
-                        }else {
-                            $("#staffModal").modal("hide");
-                            location.reload();
-                        }
+                        $("#staffModal").modal("hide");
+                        location.reload();
                     },
                     error: function () {
                         alert("An error occurred while saving.");
