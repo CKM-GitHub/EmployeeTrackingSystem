@@ -250,18 +250,35 @@
 }
 
     .date-wrapper input {
-        width: 100%; 
-        padding-right: 30px; /* space for icon */
+        width: 100%;
+        padding-right: 32px;
     }
 
+    /* CSS-only calendar icon */
     .date-wrapper::after {
-        content: "📅";
+        content: "";
         position: absolute;
-        right: 8px;
+        right: 10px;
         top: 50%;
         transform: translateY(-50%);
+        width: 14px;
+        height: 14px;
+        border: 2px solid #666;
+        border-radius: 2px;
+        box-sizing: border-box;
         pointer-events: none;
-        font-size: 14px;
+    }
+
+    /* top line */
+    .date-wrapper::before {
+        content: "";
+        position: absolute;
+        right: 10px;
+        top: calc(50% - 5px);
+        width: 14px;
+        height: 4px;
+        background: #666;
+        pointer-events: none;
     }
 #addForm input:disabled,
 #editForm input:disabled {

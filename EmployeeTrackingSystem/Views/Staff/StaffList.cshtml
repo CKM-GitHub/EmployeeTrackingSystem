@@ -225,7 +225,7 @@
                         <div class="form-row">
                             <label>入社日</label>
                             <div class="date-wrapper">
-                                <input type="text" name="JoinedDate" id="JoinedDateAdd" placeholder="yyyy/MM/dd" autocomplete="off" readonly/>
+                                <input type="text" name="JoinedDate" id="JoinedDateAdd" placeholder="yyyy/MM/dd" autocomplete="off" />
                             </div>
                         </div>
                         <div class="form-row">
@@ -584,10 +584,11 @@
                 dateFormat: "yy/mm/dd"
             });
 
-            // prevent manual typing completely
-            $("#JoinedDate, #JoinedDateAdd").on("keydown paste input", function (e) {
-                e.preventDefault();
+            // prevent invalid characters
+            $("#JoinedDate, #JoinedDateAdd").on("input", function () {
+                this.value = this.value.replace(/[^0-9\/]/g, '');
             });
+
 
             // default today for Add
             if (!$("#JoinedDateAdd").val()) {
