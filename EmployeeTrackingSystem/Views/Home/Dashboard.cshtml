@@ -456,27 +456,7 @@
                     Note: note
                 });
             });
-            //var isValid = true;
-            //var errorMessage = "";
-            //$("#Plantable tbody tr").each(function (index) {
-            //    var $noteInput = $(this).find(".row-note");
-            //    var noteValue = getByteLength($noteInput.val());
-            //    var maxLength = parseInt($noteInput.attr("maxlength"));
-            //    alert(noteValue);
-            //    if (noteValue > maxLength) {
-
-            //        isValid = false;
-            //        errorMessage = "Row " + (index + 1) + ": Note exceeds " + maxLength + " characters.";
-            //        $noteInput.addClass("is-invalid"); // Highlight the error field
-            //        return false; // Exit the .each() loop early
-            //    } else {
-            //        $noteInput.removeClass("is-invalid");
-            //    }
-            //});
-            //if (!isValid) {
-            //    alert(errorMessage);
-            //    return; // Stop the AJAX call
-            //}
+          
             // send to server
             $.ajax({
                 url: '@Url.Action("SavePlanData", "Home")',
