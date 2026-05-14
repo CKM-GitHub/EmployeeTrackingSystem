@@ -8,7 +8,7 @@
     if (!string.IsNullOrEmpty(first.StaffName1)) { staffCount++; }
     if (!string.IsNullOrEmpty(first.StaffName2)) { staffCount++; }
 
-    <div class="table-responsive">
+    <div class="table-responsive department-area"  draggable="true" data-deptCD=@first.DepartmentCD>
         <table class="board-table">
             <thead>
                 <tr>

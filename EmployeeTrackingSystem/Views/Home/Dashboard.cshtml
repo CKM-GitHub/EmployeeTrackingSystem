@@ -36,41 +36,41 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 
-        @model EmployeeTrackingSystem.Models.DashboardTablesViewModel
+    @model EmployeeTrackingSystem.Models.DashboardTablesViewModel
 
-        <div class="tables-container">
-            <div class="row">
-                <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table1)</div>
-                <div class="col-md-6 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table2)</div>
-                <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table9)</div>
-            </div>
-            <div class="row">
-                <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table3)</div>
-                <div class="col-md-6 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table7)</div>
-                <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table10)</div>
-               
-            </div>
-            <div class="row">
-                <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table6)</div>
-                <div class="col-md-6 col-sm-12">
-                    @*capital & tennic tokyo*@
-                    <div class="row no-gap">
-                        <div class="col-md-6 col-sm-12">
-                            @Html.Partial("_DashboardTable", Model.Table4)
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            @Html.Partial("_DashboardTable", Model.Table5)
-                        </div>
+    <div class="tables-container">
+        <div class="row">
+            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table1)</div>
+            <div class="col-md-6 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table2)</div>
+            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table9)</div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table3)</div>
+            <div class="col-md-6 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table7)</div>
+            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table10)</div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table6)</div>
+            <div class="col-md-6 col-sm-12">
+                @*capital & tennic tokyo*@
+                <div class="row no-gap">
+                    <div class="col-md-6 col-sm-12">
+                        @Html.Partial("_DashboardTable", Model.Table4)
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        @Html.Partial("_DashboardTable", Model.Table5)
                     </div>
                 </div>
-               
-                <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table11)</div>
-            </div>           
+            </div>
+
+            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table11)</div>
         </div>
     </div>
+</div>
 
 
 @*staffname click popup*@
@@ -110,7 +110,7 @@
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
                         </div>
-                        <input type="text" id="Note-out" name="Note-out" class="form-control status-input" placeholder="Note" maxlength="200"/>
+                        <input type="text" id="Note-out" name="Note-out" class="form-control status-input" placeholder="Note" maxlength="200" />
                     </div>
                     <!-- 会議 -->
                     <div class="form-group status-option">
@@ -121,7 +121,7 @@
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
                         </div>
-                        <input type="text" id="Note-meeting" name="Note-meeting" class="form-control status-input" placeholder="Note" maxlength="200"/>
+                        <input type="text" id="Note-meeting" name="Note-meeting" class="form-control status-input" placeholder="Note" maxlength="200" />
                     </div>
                     <!-- 休み -->
                     <div class="form-group status-option">
@@ -180,6 +180,19 @@
         </div>
     </div>
 </div>
+<!-- Success Message Box -->
+<div id="successBox" class="message-box hidden">
+    <div class="message-header">成功!</div>
+    <div class="message-body" id="successMessage"></div>
+    <button class="message-button" onclick="closeSuccessBox()">はい</button>
+</div>
+
+<!-- Error Message Box -->
+<div id="errorBox" class="message-box hidden">
+    <div class="message-header error">エラー!</div>
+    <div class="message-body" id="errorMessage"></div>
+    <button class="message-button error" onclick="closeErrorBox()">はい</button>
+</div>
 
 
 @section Scripts {
@@ -190,7 +203,7 @@
         let draggedItem = null;
         $(document).ready(function () {
 
-           
+
             $(document).on("click", ".staff-link", function () {
                 // Clear all inputs in the modal form
                 $("#staffForm")[0].reset();
@@ -375,13 +388,24 @@
                     type: 'POST',
                     data: payload,
                     success: function (response) {
-                        alert(response.message);
-                        $("#staffModal").modal("hide");
-                        location.reload();
+                        if (response.message === '登録しました。') {
+
+                            $("#successMessage").text(response.message);
+                            $("#successBox").removeClass("hidden");
+                            $("#staffModal").modal("hide");
+                        }
+                        else {
+                            $("#errorMessage").text(response.message);
+                            $("#errorBox").removeClass("hidden");
+                            $("#staffModal").modal("hide");
+                        }
+                        //location.reload();
                     },
                     error: function () {
-                        alert("An error occurred while saving.");
+                        $("#errorMessage").text("An error occurred while saving.");
+                        $("#errorBox").removeClass("hidden");
                     }
+
                 });
             });
 
@@ -455,7 +479,7 @@
                     Note: note
                 });
             });
-          
+
             // send to server
             $.ajax({
                 url: '@Url.Action("SavePlanData", "Home")',
@@ -465,14 +489,17 @@
                 success: function (res) {
                     if (res.success)
                     {
-                        alert('登録しました。');
+                        //alert('登録しました。');
+                        $("#successMessage").text('登録しました。');
+                        $("#successBox").removeClass("hidden");
+
                         $("#searchModal").modal("hide");
                         //window.location.reload();
-                        $("#staffForm")[0].reset();
+                        //$("#staffForm")[0].reset();
                     }
                     else {
                         $("#searchModal").modal("hide");
-                    }                   
+                    }
                 }
             });
             })
@@ -520,7 +547,7 @@
             });
 
             $('.staff-slot').on('drop', function (e) {
-                
+
                 e.preventDefault();
 
                 $(this).removeClass('drag-over');
@@ -530,7 +557,7 @@
 
                 let targetItem = this;
                 //drag and drop is not working in Shop staff
-                if (!$(draggedItem).attr('data-dept').startsWith("S") && !$(targetItem).attr('data-dept').startsWith("S")) { 
+                if (!$(draggedItem).attr('data-dept').startsWith("S") && !$(targetItem).attr('data-dept').startsWith("S")) {
                 // Read values BEFORE swap
                 let draggedSeat = $(draggedItem).attr('data-seat');
                 let targetSeat = $(targetItem).attr('data-seat');
@@ -540,13 +567,13 @@
 
                 let draggedDept = $(draggedItem).attr('data-dept');
                 let targetDept = $(targetItem).attr('data-dept');
-                
+
                 // Swap DOM positions
                 let draggedClone = $(draggedItem).clone(true);
                 let targetClone = $(targetItem).clone(true);
 
                 $(draggedItem).replaceWith(targetClone);
-                $(targetItem).replaceWith(draggedClone);                
+                $(targetItem).replaceWith(draggedClone);
                     // Save DB
                     saveSeatChange(
                         draggedStaff,
@@ -558,12 +585,80 @@
                     );
                     // Rebind
                     bindDragDrop();
-                }                
+                }
             });
             //
+
+
+            //
+            $(".department-area").on("dragenter", function () {
+                $(this).addClass("drag-over");
+            });
+
+            $(".department-area").on("dragleave drop", function () {
+                $(this).removeClass("drag-over");
+            });
+            let draggedStaff = null;
+
+            $(document).on("dragstart", ".staff-slot", function (e) {
+
+                draggedStaff = $(this);
+
+                e.originalEvent.dataTransfer.setData(
+                    "staffcd",
+                    $(this).data("staffcd")
+                );
+            });
+
+            $(".department-area").on("dragover", function (e) {
+                e.preventDefault();
+            });
+
+            $(".department-area").on("drop", function (e) {
+
+                e.preventDefault();
+
+                let staffCD = e.originalEvent.dataTransfer.getData("staffcd");
+                let targetDept = $(this).attr('data-deptCD');
+                let card = draggedStaff;
+                if (!$(draggedItem).attr('data-dept').startsWith("S") && !targetDept.startsWith("S")) {
+                    $.ajax({
+                        url: '@Url.Action("ChangeDepartment", "Home")',
+                        type: 'POST',
+                        data: {
+                            staffCD: staffCD,
+                            departmentCD: targetDept
+                        },
+                        success: function (res) {
+
+                            if (res.success) {
+
+                                //// move card UI
+                                //card.appendTo(
+                                //    $('[data-deptCD="' + targetDept + '"]')
+                                //);
+                                location.reload();
+
+                            } else {
+                                //alert(res.message);
+                                $("#errorMessage").text(res.message);
+                                $("#errorBox").removeClass("hidden");
+
+                            }
+                        },
+                        error: function () {
+                            //alert("Error");
+                            $("#errorMessage").text("Error");
+                            $("#errorBox").removeClass("hidden");
+                        }
+                    });
+                }
+
+            });
+
         });
 
-        
+
         function formatDate(dateString) {
             var date = new Date(dateString);
             var day = ("0" + date.getDate()).slice(-2);
@@ -578,7 +673,7 @@
         //    return new TextEncoder().encode(str).length;
         //}
 
-       
+
         function bindDragDrop() {
 
             $('.staff-slot').off();
@@ -627,10 +722,22 @@
                 },
                 error: function () {
 
-                    alert("Save failed");
+                    //alert("Save failed");
+                    $("#errorMessage").text("Save failed");
+                    $("#errorBox").removeClass("hidden");
+
                 }
             });
         }
-        
+        // Close functions
+        function closeSuccessBox() {
+            $("#successBox").addClass("hidden");
+            location.reload(); // reload after closing
+        }
+
+        function closeErrorBox() {
+            $("#errorBox").addClass("hidden");
+        }
+
     </script>
 }

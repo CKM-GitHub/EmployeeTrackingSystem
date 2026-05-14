@@ -6872,6 +6872,72 @@ button.close {
     }
 /*# sourceMappingURL=bootstrap.css.map */
 
+.message-box {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f0fff4; /* very light green background */
+    border: 2px solid #90ee90; /* light green border */
+    border-radius: 8px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 9999;
+    overflow: hidden;
+}
 
+/* Title bar style */
+.message-header {
+    background: #90ee90; /* light green header */
+    color: #155724;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 12px;
+    text-align: center;
+}
+
+    .message-header.error {
+        background: #f8d7da; /* light red/pink header */
+        color: #721c24;
+    }
+
+.message-body {
+    margin: 20px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Button styled with lighter colors */
+.message-button {
+    background: #a8e6a1; /* lighter green button */
+    color: #155724;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 15px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+    .message-button.error {
+        background: #f5b5b5; /* lighter red button */
+        color: #721c24;
+    }
+
+    .message-button:hover {
+        background: #90ee90; /* slightly darker green on hover */
+        transform: scale(1.05);
+    }
+
+    .message-button.error:hover {
+        background: #f08a8a; /* slightly darker red on hover */
+        transform: scale(1.05);
+    }
+
+.hidden {
+    display: none;
+}
 
 

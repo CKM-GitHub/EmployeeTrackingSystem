@@ -38,5 +38,6 @@ namespace EmployeeTrackingSystem.Models
        
         public Nullable<System.DateTime> UpdateDateTime { get; set; }
         public Nullable<int> CurrentShop { get; set; }
+        public string oldDeptCD { get; set; }
     }
 }
