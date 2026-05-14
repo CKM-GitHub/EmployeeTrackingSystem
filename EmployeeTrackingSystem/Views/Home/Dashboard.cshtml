@@ -622,37 +622,38 @@
                 let staffCD = e.originalEvent.dataTransfer.getData("staffcd");
                 let targetDept = $(this).attr('data-deptCD');
                 let card = draggedStaff;
+                if (!$(draggedItem).attr('data-dept').startsWith("S") && !targetDept.startsWith("S")) {
+                    $.ajax({
+                        url: '@Url.Action("ChangeDepartment", "Home")',
+                        type: 'POST',
+                        data: {
+                            staffCD: staffCD,
+                            departmentCD: targetDept
+                        },
+                        success: function (res) {
 
-                $.ajax({
-                    url: '@Url.Action("ChangeDepartment", "Home")',
-                    type: 'POST',
-                    data: {
-                        staffCD: staffCD,
-                        departmentCD: targetDept
-                    },
-                    success: function (res) {
+                            if (res.success) {
 
-                        if (res.success) {
+                                //// move card UI
+                                //card.appendTo(
+                                //    $('[data-deptCD="' + targetDept + '"]')
+                                //);
+                                location.reload();
 
-                            //// move card UI
-                            //card.appendTo(
-                            //    $('[data-deptCD="' + targetDept + '"]')
-                            //);
-                            location.reload();
+                            } else {
+                                //alert(res.message);
+                                $("#errorMessage").text(res.message);
+                                $("#errorBox").removeClass("hidden");
 
-                        } else {
-                            //alert(res.message);
-                            $("#errorMessage").text(res.message);
+                            }
+                        },
+                        error: function () {
+                            //alert("Error");
+                            $("#errorMessage").text("Error");
                             $("#errorBox").removeClass("hidden");
-
                         }
-                    },
-                    error: function () {
-                        //alert("Error");
-                        $("#errorMessage").text("Error");
-                        $("#errorBox").removeClass("hidden");
-                    }
-                });
+                    });
+                }
 
             });
 
