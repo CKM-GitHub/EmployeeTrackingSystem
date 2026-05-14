@@ -93,7 +93,7 @@
 
                         <div class="form-row">
                             <label>スタッフ名</label>
-                            <input type="text" id="StaffName" name="StaffName"  maxlength="50" />
+                            <input type="text" id="StaffName" name="StaffName" maxlength="50" />
                             <span class="text-danger" id="errStaffName"></span>
                         </div>
 
@@ -142,7 +142,7 @@
 
                         <div class="form-row">
                             <label class="label-remark">備考</label>
-                            <textarea name="Remark" id="Remark" class="textarea-remark"  maxlength="200" rows="2"></textarea>
+                            <textarea name="Remark" id="Remark" class="textarea-remark" maxlength="200" rows="2"></textarea>
                             <span class="text-danger" id="errRemark"></span>
                         </div>
 
@@ -164,7 +164,7 @@
                             <button type="button" class="btn-cancel" data-dismiss="modal">取消</button>
                             <button type="submit" class="btn-submit">修正</button>
                         </div>
-
+                        <input type="hidden"  id="oldDeptCD" name="oldDeptCD" />
                     </div>
                 </form>
             </div>
@@ -499,8 +499,8 @@
         $("#PhoneNo").val(row.find("td").eq(4).text().trim());
         $("#EmployeeType").val(row.find("td").eq(5).text().trim());
 
-       
-        
+        $("#oldDeptCD").val(row.find(".deptCD").val()); // 20260514 
+        alert($("#oldDeptCD").val());
         let shopName = row.find("td").eq(6).text().trim();
 
         let enrollVal = row.find(".enroll").val();
