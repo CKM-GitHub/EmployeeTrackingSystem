@@ -4,150 +4,201 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - EmployeeTrackingSystem</title>
+
     <link rel="icon" type="image/png" href="@Url.Content("~/Content/favicon.png")" />
+
     @Styles.Render("~/bundles/css")
     @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
 </head>
 
-<body>    
+<body>
+
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
+
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+
+                <button type="button"
+                        class="navbar-toggle"
+                        data-toggle="collapse"
+                        data-target=".navbar-collapse">
+
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
+
                 </button>
-                <img src="@Url.Content("~/Content/Logo.png")" class="img-responsive" />
+
+                <img src="@Url.Content("~/Content/Logo.png")"
+                     class="img-responsive" />
+
             </div>
+
             <div class="navbar-collapse collapse">
+
                 <ul class="nav navbar-nav" id="menu">
-                    <li class="nav-item"><a class="nav-link" href="~/Home/Dashboard">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="~/Staff/StaffList">Staff List</a></li>
-                    <li class="nav-item"><a class="nav-link" href="~/Detail/DetailList">Log List</a></li>
-                    @*<li class="nav-item"><a class="nav-link" href="~/Home/DragDrapDashboard">DragDropDashboard</a></li>*@
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="~/Home/Dashboard">Dashboard</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="~/Staff/StaffList">Staff List</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="~/Detail/DetailList">Log List</a>
+                    </li>
+
                 </ul>
+
             </div>
         </div>
     </div>
 
     <div class="container-fluid body-content">
+
         @if (ViewBag.ShowDropdown == true
-                && ViewBag.Departments != null
-                && ViewBag.StaffNames != null)
+            && ViewBag.Departments != null
+            && ViewBag.StaffNames != null)
         {
             <div class="row">
-                <div class="col-12 col-sm-12 col-md-2 form-group">
-                    @Html.DropDownList("department", ViewBag.Departments as SelectList, "-- Select Department --",
-                         new { @class = "form-control mt-2", id = "department" })
+
+                <div class="col-xs-12 col-sm-12 col-md-2 form-group">
+
+                    @Html.DropDownList(
+                        "department",
+                        ViewBag.Departments as SelectList,
+                        "-- Select Department --",
+                        new
+                        {
+                            @class = "form-control mt-2",
+                            id = "department"
+                        })
 
                 </div>
-                <div class="col-12 col-sm-12 col-md-2 form-group">
-                    @Html.DropDownList("staff", ViewBag.StaffNames as SelectList, "-- Select Staff --",
-                         new { @class = "form-control mt-2", id = "staff" })
+
+                <div class="col-xs-12 col-sm-12 col-md-2 form-group">
+
+                    @Html.DropDownList(
+                        "staff",
+                        ViewBag.StaffNames as SelectList,
+                        "-- Select Staff --",
+                        new
+                        {
+                            @class = "form-control mt-2",
+                            id = "staff"
+                        })
+
                 </div>
+
                 @if (ViewBag.Detail != "Detail")
                 {
-                    <div class="col-12 col-md-4 form-group">
+                    <div class="col-xs-12 col-md-4 form-group">
                         @RenderSection("Buttons", required: false)
                     </div>
                 }
+
             </div>
+
             if (ViewBag.Detail == "Detail")
-            { 
-            <div class="row">
-                <div class="col-12 col-sm-12 col-md-2 form-group">
-                    <input type="date" id="fromDate" class="form-control mt-2" value="@ViewBag.FromDate">
+            {
+                <div class="row">
+
+                    <div class="col-xs-12 col-sm-12 col-md-2 form-group">
+                        <input type="date"
+                               id="fromDate"
+                               class="form-control mt-2"
+                               value="@ViewBag.FromDate">
+                    </div>
+
+                    <div class="col-xs-12 col-sm-12 col-md-2 form-group">
+                        <input type="date"
+                               id="toDate"
+                               class="form-control mt-2"
+                               value="@ViewBag.ToDate">
+                    </div>
+
+                    <div class="col-xs-12 col-md-4 form-group">
+                        @RenderSection("Buttons", required: false)
+                    </div>
+
                 </div>
-                <div class="col-12 col-sm-12 col-md-2 form-group">
-                    <input type="date" id="toDate" class="form-control mt-2" value="@ViewBag.ToDate">
-                </div>
-                <div class="col-12 col-md-4 form-group">
-                    @RenderSection("Buttons", required: false)
-                </div>
-            </div>
             }
         }
+
         <div class="row">
             @RenderBody()
         </div>
+
     </div>
 
-        <script>
-        document.addEventListener("DOMContentLoaded", function () {
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    <script>
+
+        $(document).ready(function () {
+
+            // active menu
             const menuLinks = document.querySelectorAll("#menu .nav-link");
             const currentPath = window.location.pathname.toLowerCase();
 
             menuLinks.forEach(link => {
-                // Check if the link href matches current path
-                if (link.getAttribute("href").toLowerCase() === currentPath) {
+
+                const href = link.getAttribute("href")
+                    .replace("~", "")
+                    .toLowerCase();
+
+                if (currentPath.includes(href)) {
                     link.classList.add("active");
                 }
 
-                // Optional: set active on click (for SPA-like effect)
-                link.addEventListener("click", function () {
-                    menuLinks.forEach(l => l.classList.remove("active"));
-                    this.classList.add("active");
-                });
             });
-        });
-          $("#department").change(function () {
+
+           
+           
+            // department dropdown
+            $("#department").change(function () {
+
                 var selectedDeptId = $(this).val();
                 var $staffDropdown = $("#staff");
 
-                // Clear the current options and show a placeholder
                 $staffDropdown.empty();
-                //$staffDropdown.append('<option value="">Loading...</option>');
+                $staffDropdown.append('<option value="">-- Select Staff --</option>');
 
-                if (selectedDeptId) {
-                    $.ajax({
-                        url: '@Url.Action("GetStaffByDepartment", "Detail")',
-                        type: "GET",
-                        data: { departmentId: selectedDeptId },
-                        success: function (data) {
-                            $staffDropdown.empty();
-                            $staffDropdown.append('<option value="">-- Select Staff --</option>');
+                $.ajax({
 
-                            // Loop through the JSON data and add options
-                            $.each(data, function (index, item) {
-                                $staffDropdown.append($('<option>', {
-                                    value: item.Value,
-                                    text: item.Text
-                                }));
-                            });
-                        },
-                        error: function () {
-                            alert("Error loading staff members.");
-                        }
-                    });
-                } else {
-                    $staffDropdown.empty();
-                    $.ajax({//20260420
-                        url: '@Url.Action("GetStaffByDepartment", "Detail")',
-                        type: "GET",
-                        data: { departmentId: selectedDeptId },
-                        success: function (data) {
-                            $staffDropdown.empty();
-                            $staffDropdown.append('<option value="">-- Select Staff --</option>');
+                    url: '@Url.Action("GetStaffByDepartment", "Detail")',
+                    type: "GET",
+                    data: { departmentId: selectedDeptId },
 
-                            // Loop through the JSON data and add options
-                            $.each(data, function (index, item) {
-                                $staffDropdown.append($('<option>', {
-                                    value: item.Value,
-                                    text: item.Text
-                                }));
-                            });
-                        },
-                        error: function () {
-                            alert("Error loading staff members.");
-                        }
-                    });
-                }
+                    success: function (data) {
+
+                        $.each(data, function (index, item) {
+
+                            $staffDropdown.append($('<option>', {
+                                value: item.Value,
+                                text: item.Text
+                            }));
+
+                        });
+
+                    },
+
+                    error: function () {
+                        alert("Error loading staff members.");
+                    }
+
+                });
+
             });
 
-        </script>
+        });
+
+    </script>
+
+    @RenderSection("scripts", required: false)
+
 </body>
 </html>

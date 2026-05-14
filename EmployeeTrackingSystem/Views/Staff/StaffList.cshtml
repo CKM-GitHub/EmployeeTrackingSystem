@@ -37,28 +37,28 @@
                 {
                     foreach (var item in Model)
                     {
-                        <tr>
-                            <td class="text-left" width="10%">@item.StaffCD</td>
-                            <td class="text-left" width="15%">@item.StaffName</td>
-                            <td class="text-left" width="20%">
-                                @item.DepartmentName
-                                <input type="hidden" class="deptCD" value="@item.DepartmentCD" />
-                                <input type="hidden" class="email" value="@item.Email" />
-                                <input type="hidden" class="remark" value="@item.Remark" />
-                                <input type="hidden" class="enroll" value="@item.Enroll.ToString().ToLower()" />
-                            </td>
-                            <td class="text-center" width="10%">
-                                @(item.JoinedDate.HasValue ? item.JoinedDate.Value.ToString("yyyy/MM/dd") : "")
-                            </td>
-                            <td class="phoneNo text-center" width="10%">@item.PhoneNo</td>
-                            <td class="employeetype text-left" width="10%">@item.EmployeeType</td>
-                            <td class="text-center" width="10%">@item.CurshopName</td>
-                            <td class="text-center" width="10%">
-                                <button id="btnChange" class="btn btn-primary">
-                                    変更
-                                </button>
-                            </td>
-                        </tr>
+                <tr>
+                    <td class="text-left" width="10%">@item.StaffCD</td>
+                    <td class="text-left" width="15%">@item.StaffName</td>
+                    <td class="text-left" width="20%">
+                        @item.DepartmentName
+                        <input type="hidden" class="deptCD" value="@item.DepartmentCD" />
+                        <input type="hidden" class="email" value="@item.Email" />
+                        <input type="hidden" class="remark" value="@item.Remark" />
+                        <input type="hidden" class="enroll" value="@item.Enroll.ToString().ToLower()" />
+                    </td>
+                    <td class="text-center" width="10%">
+                        @(item.JoinedDate.HasValue ? item.JoinedDate.Value.ToString("yyyy/MM/dd") : "")
+                    </td>
+                    <td class="phoneNo text-center" width="10%" >@item.PhoneNo</td>
+                    <td class="employeetype text-left" width="10%">@item.EmployeeType</td>
+                    <td class="text-center" width="10%">@item.CurshopName</td>
+                    <td class="text-center" width="10%">
+                        <button id="btnChange" class="btn btn-primary">
+                            変更
+                        </button>
+                    </td>
+                </tr>
                     }
                 }
                 else
@@ -69,11 +69,11 @@
         </table>
     </div>
 
-
+   
 </div>
 
 <!--Update-->
-<div class="modal fade" id="editModal" tabindex="-1">
+<div class="modal fade" id="editModal" tabindex="-1" >
     <div class="modal-dialog" style="max-width:400px;">
         <div class="modal-content">
             <!-- Header -->
@@ -81,7 +81,7 @@
                 <div class="modal-title">スタッフ修正</div>
             </div> <!-- Body -->
             <div class="modal-body">
-                <form id="editForm" autocomplete="off">
+                <form id="editForm" autocomplete="off" >
                     @Html.AntiForgeryToken()
                     <div class="form-container">
 
@@ -164,7 +164,7 @@
                             <button type="button" class="btn-cancel" data-dismiss="modal">取消</button>
                             <button type="submit" class="btn-submit">修正</button>
                         </div>
-
+                        <input type="hidden"  id="oldDeptCD" name="oldDeptCD" />
                     </div>
                 </form>
             </div>
@@ -173,7 +173,7 @@
 </div>
 
 <!-- ADD-->
-<div class="modal fade" id="addModal" tabindex="-1">
+<div class="modal fade" id="addModal" tabindex="-1"  >
     <div class="modal-dialog" style="max-width:400px;">
         <div class="modal-content">
             <!-- Header -->
@@ -181,14 +181,15 @@
                 <div class="modal-title">スタッフ追加</div>
             </div> <!-- Body -->
             <div class="modal-body">
-                <form id="addForm" autocomplete="off">
+                <form id="addForm" autocomplete="off" >
                     @Html.AntiForgeryToken()
                     <div class="form-container">
 
                         <div class="form-row">
                             <label>スタッフCD</label>
-                            <input type="text" name="StaffCD" id="StaffCD" class="staff-new-code" data-ajax-check="/Staff/CheckStaffCD"
+                            <input type="text" name="StaffCD" id="StaffCD" class="staff-new-code"  data-ajax-check="/Staff/CheckStaffCD" 
                                    maxlength="5"
+                                    
                                    autocomplete="off" tabindex="1" />
                             <span class="text-danger" id="errStaffCD"></span>
                         </div>
@@ -208,7 +209,7 @@
 
                         <div class="form-row">
                             <label>メール</label>
-                            <input type="text" name="Email" data-required="true" data-validate="email" maxlength="30" autocomplete="off" />
+                            <input type="text" name="Email" data-required="true" data-validate="email" maxlength="30" autocomplete="off"  />
                             <span class="text-danger" id="errEmail"></span>
                         </div>
 
@@ -216,8 +217,9 @@
                             <label>電話番号</label>
                             <input type="text"
                                    name="PhoneNo"
-                                   maxlength="15" />
-                            <span class="text-danger" id="errPhoneNo"></span>
+                                   maxlength="15"
+                                   />
+                            <span class="text-danger" id="errPhoneNo"  ></span>
                         </div>
 
                         <div class="form-row">
@@ -267,26 +269,14 @@
         </div>
     </div>
 </div>
-<!-- Success Message Box -->
-<div id="successBox" class="message-box hidden">
-    <div class="message-header">成功!</div>
-    <div class="message-body" id="successMessage"></div>
-    <button class="message-button" onclick="closeSuccessBox()">はい</button>
-</div>
 
-<!-- Error Message Box -->
-<div id="errorBox" class="message-box hidden">
-    <div class="message-header error">エラー!</div>
-    <div class="message-body" id="errorMessage"></div>
-    <button class="message-button error" onclick="closeErrorBox()">はい</button>
-</div>
 
 @section scripts {
     <link rel="stylesheet" href="~/Content/bootstrap.css" />
     <link rel="stylesheet" href="~/Content/StaffList.css" />
     <script>
         $(document).ready(function () {
-    //common check
+    //common check 
     $('#department').select2();
     $('#staff').select2();
             initDatePickers();
@@ -297,13 +287,13 @@
             });
 
             $('#editModal').on('shown.bs.modal', function () {
-
+               
                 $("#editForm [name='StaffName']").focus();
             });
 
             $('#addForm [name="StaffCD"]').on('input', function () {
                 this.value = this.value.replace(/[^A-Za-z0-9-]/g, '');
-
+                
             });
             $('#addForm [name="PhoneNo"], #editForm [name="PhoneNo"]').on('input', function () {
                 let v = this.value;
@@ -313,7 +303,7 @@
 
                 this.value = v.slice(0, 15);
             });
-
+          
             $('input[maxlength]').on('input', function () {
                 let max = this.maxLength;
 
@@ -370,10 +360,7 @@
                         data: { staffCD: staffCD },
                         success: function (res) {
                             if (res.errorType === "inactive") {
-                                //alert(res.message);
-                                $("#errorMessage").text(res.message);
-                                $("#errorBox").removeClass("hidden");
-
+                                alert(res.message);
                                 $this.addClass("input-error");
                                 return;
                             }
@@ -393,9 +380,9 @@
                             console.error("Error checking StaffCD");
                         }
                     });
-                    return;
+                    return; 
                 } else {
-                    return;
+                    return; 
                 }
             }
             // =====  Move to next field if no error =====
@@ -430,18 +417,12 @@
             data: $(this).serialize(),
             success: function (res) {
                 if (res.success) {
-                    //alert("登録成功しました");
-                    $("#successMessage").text('登録成功しました。');
-                    $("#successBox").removeClass("hidden");
-
+                    alert("登録成功しました");
                     $("#addModal").modal('hide');
-                    //location.reload();
+                    location.reload();
                 } else if (res.errorType === "inactive") {
-
-                    //alert(res.message);
-                    $("#errorMessage").text(res.message);
-                    $("#errorBox").removeClass("hidden");
-
+                   
+                    alert(res.message);
                     var $field = $("#addForm [name='StaffCD']");
                     $field.addClass("input-error");
                     $field.focus();
@@ -491,7 +472,7 @@
             data: { department: dept, staff: staff },
             success: function (result) {
                 $("#tableStaff tbody").html($(result).find("#tableStaff tbody").html());
-
+               
             },
             error: function () {
                // alert("Error loading data");
@@ -509,24 +490,24 @@
         $("#StaffName").val(row.find("td").eq(1).text().trim());
         $("#DepartmentCD").val(row.find(".deptCD").val());
         $("#Email").val(row.find(".email").val());
-
+       
         $("#Remark").val(row.find(".remark").val());
-
+        
 
         let joinedText = row.find("td").eq(3).text().trim();
         $("#JoinedDate").val(joinedText ? joinedText.replace(/\//g, "/") : "");
         $("#PhoneNo").val(row.find("td").eq(4).text().trim());
         $("#EmployeeType").val(row.find("td").eq(5).text().trim());
 
-
-
+        $("#oldDeptCD").val(row.find(".deptCD").val()); // 20260514 
+        alert($("#oldDeptCD").val());
         let shopName = row.find("td").eq(6).text().trim();
 
         let enrollVal = row.find(".enroll").val();
         $("#editModal input[name='Enroll'][value='" + enrollVal + "']").prop("checked", true);
 
 
-
+       
         $("#editForm [name='CurshopName']").val(shopName);
         $('#editModal').modal('show');
 
@@ -557,12 +538,9 @@
             success: function (res) {
                 if (res.success) {
 
-                    //alert("登録成功しました");
-                    $("#successMessage").text('登録成功しました。');
-                    $("#successBox").removeClass("hidden");
-
+                    alert("登録成功しました");
                     $("#editModal").modal('hide');
-                    //location.reload();
+                    location.reload();
 
                 }
                 else if (res.errors) {
@@ -617,7 +595,7 @@
                 $("#JoinedDateAdd").val($.datepicker.formatDate('yy/mm/dd', new Date()));
             }
         }
-
+      
     function moveToNextFieldEdit($current) {
         var $fields = $('#editForm').find('input, select, textarea').filter(':visible');
         var index = $fields.index($current);
@@ -638,15 +616,7 @@
             $('#addForm button[type="submit"]').focus();
         }
     }
-        // Close functions
-        function closeSuccessBox() {
-            $("#successBox").addClass("hidden");
-            location.reload(); // reload after closing
-        }
-
-        function closeErrorBox() {
-            $("#errorBox").addClass("hidden");
-        }
+       
     </script>
 }
 

@@ -153,30 +153,62 @@ namespace EmployeeTrackingSystem.Controllers
                     return Json(new { success = false, message = "更新失敗しました。" });
                 }
 
-                
-                    staff.StaffName = model.StaffName;
-                    staff.DepartmentCD = model.DepartmentCD;
-                    staff.Email = model.Email;
-                    staff.PhoneNo = model.PhoneNo;
-                    staff.JoinedDate = model.JoinedDate;
-                    staff.EmployeeType = model.EmployeeType;
-                    staff.Enroll = model.Enroll;
-                    staff.Remark = model.Remark;
+                staff.StaffName = model.StaffName;
+                staff.DepartmentCD = model.DepartmentCD;
+                staff.Email = model.Email;
+                staff.PhoneNo = model.PhoneNo;
+                staff.JoinedDate = model.JoinedDate;
+                staff.EmployeeType = model.EmployeeType;
+                staff.Enroll = model.Enroll;
+                staff.Remark = model.Remark;
 
                 var dept = (model.DepartmentCD ?? "").Trim();
 
                 if (dept.StartsWith("S0") && 
                     int.TryParse(dept.Substring(1, 2), out int shop))
-                {
-                    
+                {                    
                     staff.CurrentShop = shop;
                 }
                 else
                 {
-                    staff.CurrentShop = null;
-                    
+                    staff.CurrentShop = null;     
+                    //20260514 ttw 
+                    var oldDept = model.oldDeptCD;
+                    if (oldDept != model.DepartmentCD)
+                    {
+                        // old department reorder
+                        var oldList = db.T_StaffMaster
+                            .Where(s =>
+                                s.DepartmentCD == oldDept &&
+                                s.StaffCD != model.StaffCD &&
+                                s.Enroll != false)
+                            .OrderBy(s => s.SeatNo)
+                            .ToList();
+
+                        int no = 1;
+
+                        foreach (var s in oldList)
+                        {
+                            s.SeatNo = no++;
+                        }
+
+                        // new department max seat
+                        int maxSeatNo = db.T_StaffMaster
+                            .Where(x =>
+                                x.DepartmentCD == model.DepartmentCD &&
+                                x.Enroll != false)
+                            .Max(x => (int?)x.SeatNo) ?? 0;
+
+                        // move current staff
+                        staff.DepartmentCD = model.DepartmentCD;
+                        staff.SeatNo = maxSeatNo + 1;
+                    }
+                    if (model.Enroll == false)
+                        staff.SeatNo = 0;
                 }
+
                 staff.UpdateDateTime = DateTime.Now;
+
                 db.SaveChanges();
                 return Json(new { success = true, message = "登録が完了しました。" });
             }

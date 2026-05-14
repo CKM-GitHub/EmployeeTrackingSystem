@@ -271,5 +271,62 @@ namespace EmployeeTrackingSystem.Controllers
                 });
             }
         }
+
+        [HttpPost]
+        public JsonResult ChangeDepartment(string staffCD,string departmentCD)
+        {
+            using (var db = new EmployeeTrackingDBEntities())
+            {
+                var staff = db.T_StaffMaster
+                    .FirstOrDefault(x => x.StaffCD == staffCD);
+
+                if (staff == null)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Staff not found"
+                    });
+                }
+                //20260514 ttw 
+                var oldDept = staff.DepartmentCD;
+                if (oldDept != departmentCD)
+                {
+                    // old department reorder
+                    var oldList = db.T_StaffMaster
+                        .Where(s =>
+                            s.DepartmentCD == oldDept &&
+                            s.StaffCD != staffCD &&
+                            s.Enroll != false)
+                        .OrderBy(s => s.SeatNo)
+                        .ToList();
+
+                    int no = 1;
+
+                    foreach (var s in oldList)
+                    {
+                        s.SeatNo = no++;
+                    }
+
+                    // new department max seat
+                    int maxSeatNo = db.T_StaffMaster
+                        .Where(x =>
+                            x.DepartmentCD == departmentCD &&
+                            x.Enroll != false)
+                        .Max(x => (int?)x.SeatNo) ?? 0;
+
+                    // move current staff
+                    staff.DepartmentCD = departmentCD;
+                    staff.SeatNo = maxSeatNo + 1;
+                }
+                
+                db.SaveChanges();
+
+                return Json(new
+                {
+                    success = true
+                });
+            }
+        }
     }
 }
