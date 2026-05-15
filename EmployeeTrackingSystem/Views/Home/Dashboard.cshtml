@@ -556,8 +556,7 @@
                     return;
 
                 let targetItem = this;
-                //drag and drop is not working in Shop staff
-                if (!$(draggedItem).attr('data-dept').startsWith("S") && !$(targetItem).attr('data-dept').startsWith("S")) {
+               
                 // Read values BEFORE swap
                 let draggedSeat = $(draggedItem).attr('data-seat');
                 let targetSeat = $(targetItem).attr('data-seat');
@@ -568,6 +567,10 @@
                 let draggedDept = $(draggedItem).attr('data-dept');
                 let targetDept = $(targetItem).attr('data-dept');
 
+                if (draggedDept == null || targetDept == null)
+                        return;
+                //drag and drop is not working in Shop staff
+                if (!$(draggedItem).attr('data-dept').startsWith("S") && !$(targetItem).attr('data-dept').startsWith("S")) {
                 // Swap DOM positions
                 let draggedClone = $(draggedItem).clone(true);
                 let targetClone = $(targetItem).clone(true);
