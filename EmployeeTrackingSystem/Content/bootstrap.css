@@ -4422,6 +4422,15 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     display: none;
   }
 }
+
+@media (max-width: 1200px) {
+
+    .table-dt {
+        height: 30vh;
+        overflow-y: auto;
+        overflow-x: visible;
+    }
+}
 .navbar-nav {
   margin: 7.5px -15px;
 }

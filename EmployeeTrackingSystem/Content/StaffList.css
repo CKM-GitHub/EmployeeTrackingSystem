@@ -1,11 +1,19 @@
 ﻿
-/*StaffList css*/
 .table-wrapper {
     border: 1px solid #ccc;
     border-radius: 6px;
-    overflow: auto;
+    overflow:auto;
+   
 }
 
+@media (max-width: 1200px) {
+
+    .table-wrapper {
+        height:70vh;
+        overflow-y: auto;
+        overflow-x: visible;
+    }
+}
 /* =========================
    STAFF TABLE
 ========================= */
@@ -102,11 +110,7 @@
     padding-top: 5px;
 }
 
-@media (max-width: 576px) {
-    .btn-wrapper {
-        padding-right: 0px;
-    }
-}
+
 
 .form-container {
     width: 400px;
