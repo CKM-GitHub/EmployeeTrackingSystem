@@ -48,7 +48,7 @@
                                 <input type="hidden" class="enroll" value="@item.Enroll.ToString().ToLower()" />
                             </td>
                             <td class="text-center" width="10%">
-                                @(item.JoinedDate.HasValue ? item.JoinedDate.Value.ToString("yyyy/MM/dd") : "")
+                                @(item.JoinedDate.HasValue ? item.JoinedDate.Value.ToString("yyyy-MM-dd") : "")
                             </td>
                             <td class="phoneNo text-center" width="10%">@item.PhoneNo</td>
                             <td class="employeetype text-left" width="10%">@item.EmployeeType</td>
@@ -120,7 +120,7 @@
                         <div class="form-row">
                             <label>入社日</label>
                             <div class="date-wrapper">
-                                <input type="text" id="JoinedDate" name="JoinedDate" placeholder="yyyy/MM/dd" autocomplete="off" />
+                                <input type="text" id="JoinedDate" name="JoinedDate" placeholder="yyyy-MM-dd" autocomplete="off" />
                             </div>
                         </div>
 
@@ -223,7 +223,7 @@
                         <div class="form-row">
                             <label>入社日</label>
                             <div class="date-wrapper">
-                                <input type="text" name="JoinedDate" id="JoinedDateAdd" placeholder="yyyy/MM/dd" autocomplete="off" />
+                                <input type="text" name="JoinedDate" id="JoinedDateAdd" placeholder="yyyy-MM-dd" autocomplete="off" />
                             </div>
                         </div>
                         <div class="form-row">
@@ -600,18 +600,43 @@
         function initDatePickers() {
 
             $("#JoinedDate, #JoinedDateAdd").datepicker({
-                dateFormat: "yy/mm/dd"
+                dateFormat: "yy-mm-dd"
             });
 
-            // prevent invalid characters
             $("#JoinedDate, #JoinedDateAdd").on("input", function () {
-                this.value = this.value.replace(/[^0-9\/]/g, '');
+
+                let v = this.value.replace(/\D/g, ''); // numbers only
+
+                // max 8 digits
+                v = v.substring(0, 8);
+
+                // yyyy-MM-dd format
+                if (v.length > 4) {
+                    v = v.substring(0, 4) + '-' + v.substring(4);
+                }
+
+                if (v.length > 7) {
+                    v = v.substring(0, 7) + '-' + v.substring(7);
+                }
+
+                this.value = v;
             });
 
+            // validate when leave
+            $("#JoinedDate, #JoinedDateAdd").on("blur", function () {
 
-            // default today for Add
+                const regex = /^\d{4}-\d{2}-\d{2}$/;
+
+                if (this.value && !regex.test(this.value)) {
+                    this.value = '';
+                }
+            });
+
+            // default today
             if (!$("#JoinedDateAdd").val()) {
-                $("#JoinedDateAdd").val($.datepicker.formatDate('yy/mm/dd', new Date()));
+                $("#JoinedDateAdd").val(
+                    $.datepicker.formatDate('yy-mm-dd', new Date())
+                );
             }
         }
 
