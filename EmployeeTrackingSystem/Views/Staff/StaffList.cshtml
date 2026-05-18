@@ -430,8 +430,8 @@
             data: $(this).serialize(),
             success: function (res) {
                 if (res.success) {
-                    //alert("登録成功しました");
-                    $("#successMessage").text('登録成功しました。');
+                    
+                    $("#successMessage").text('登録しました。');
                     $("#successBox").removeClass("hidden");
                     $("#addModal").modal('hide');
                     //location.reload();
@@ -556,7 +556,7 @@
                 if (res.success) {
 
                     //alert("登録成功しました");
-                    $("#successMessage").text('登録成功しました。');
+                    $("#successMessage").text('修正しました。');
                     $("#successBox").removeClass("hidden");
                     $("#editModal").modal('hide');
                     //location.reload();
@@ -633,11 +633,7 @@
             });
 
             // default today
-            if (!$("#JoinedDateAdd").val()) {
-                $("#JoinedDateAdd").val(
-                    $.datepicker.formatDate('yy-mm-dd', new Date())
-                );
-            }
+            
         }
 
     function moveToNextFieldEdit($current) {
