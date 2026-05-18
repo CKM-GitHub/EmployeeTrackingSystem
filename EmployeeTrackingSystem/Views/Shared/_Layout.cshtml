@@ -197,8 +197,25 @@
                 });
 
             });
+            resetTimer();
 
+            // Detect user activity
+            window.onload = resetTimer;
+            document.onmousemove = resetTimer;
+            document.onkeypress = resetTimer;
+            document.onclick = resetTimer;
+            document.onscroll = resetTimer;
         });
+
+        let timer;
+        function resetTimer() {
+
+            clearTimeout(timer);
+
+            timer = setTimeout(function () {
+                location.reload();
+            }, 5 * 60 * 1000); // 10 mins
+        }
 
     </script>
 
