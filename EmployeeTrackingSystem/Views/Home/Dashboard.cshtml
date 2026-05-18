@@ -623,8 +623,10 @@
 
                 let staffCD = e.originalEvent.dataTransfer.getData("staffcd");
                 let targetDept = $(this).attr('data-deptCD');
-                let card = draggedStaff;
-                if (!$(draggedItem).attr('data-dept').startsWith("S") && !targetDept.startsWith("S")) {
+                if (staffCD == null || staffCD == "")
+                    return;
+
+                else if (!$(draggedItem).attr('data-dept').startsWith("S") && !targetDept.startsWith("S")) {
                     $.ajax({
                         url: '@Url.Action("ChangeDepartment", "Home")',
                         type: 'POST',
