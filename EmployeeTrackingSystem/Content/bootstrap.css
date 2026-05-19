@@ -2567,6 +2567,25 @@ th {
     overflow-x: auto;
     overflow-y: visible !important; 
 }
+
+
+#detailtb {
+    min-width: 900px;
+}
+
+    #detailtb th,
+    #detailtb td {
+        white-space: nowrap;
+        vertical-align: middle !important;
+    }
+
+@media (max-width:1200px) {
+
+    .detail-wrapper {
+        height: 55vh;
+        overflow-y: auto !important;
+    }
+}
 @media screen and (max-width: 767px) {
   .table-responsive {
     width: 100%;
@@ -4423,14 +4442,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
 }
 
-@media (max-width: 1200px) {
 
-    .table-dt {
-        height: 30vh;
-        overflow-y: auto;
-        overflow-x: visible;
-    }
-}
 .navbar-nav {
   margin: 7.5px -15px;
 }
@@ -6768,7 +6780,12 @@ button.close {
 @media (min-width: 992px) and (max-width: 1199px) {
   .visible-md-inline-block {
     display: inline-block !important;
+
   }
+
+    .detailtb{
+        background-color:red;
+    }
 }
 @media (min-width: 1200px) {
   .visible-lg {

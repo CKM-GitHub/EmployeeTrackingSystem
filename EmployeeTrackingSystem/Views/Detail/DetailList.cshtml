@@ -10,7 +10,7 @@
         <button class="btn_Blue btn btn-primary" id="btn_Excel">Excel</button>
     }
 
-    <div class="table-dt table-v-scroll table-responsive">
+    <div class="detail-wrapper table-v-scroll table-responsive">
         <table id="detailtb" class="table table-striped table-hover">
             <thead>
                 <tr class="table-header">
@@ -26,11 +26,11 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td class="truncate-logic">@item.StaffName</td>
-                        <td>@item.DepartmentName</td>
-                        <td class="th_center" style="background-color:@GetStatusColor(item.Status)">@item.Status</td>
-                        <td class="th_center">@(item.StartDateTime.HasValue ? item.StartDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>
-                        <td class="th_center">@(item.ReturnDateTime.HasValue ? item.ReturnDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>
+                        <td class="truncate-logic" >@item.StaffName</td>
+                        <td >@item.DepartmentName</td>
+                        <td class="th_center" style="background-color:@GetStatusColor(item.Status)" >@item.Status</td>
+                        <td class="th_center" >@(item.StartDateTime.HasValue ? item.StartDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>
+                        <td class="th_center" >@(item.ReturnDateTime.HasValue ? item.ReturnDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>
                         <td>
                             <div class="truncate-logic">
                                 @item.Note
