@@ -201,9 +201,8 @@
 
     <script>
         let draggedItem = null;
+        let targetItem = null;
         $(document).ready(function () {
-
-
             $(document).on("click", ".staff-link", function () {
                 // Clear all inputs in the modal form
                 $("#staffForm")[0].reset();
@@ -555,7 +554,7 @@
                 if (draggedItem === this)
                     return;
 
-                let targetItem = this;
+                 targetItem = this;
                
                 // Read values BEFORE swap
                 let draggedSeat = $(draggedItem).attr('data-seat');
@@ -574,7 +573,7 @@
                 // Swap DOM positions
                 let draggedClone = $(draggedItem).clone(true);
                 let targetClone = $(targetItem).clone(true);
-
+                  //  alert(draggedStaff + "_" + targetStaff + "_" + draggedDept + "_" + targetDept);
                 $(draggedItem).replaceWith(targetClone);
                 $(targetItem).replaceWith(draggedClone);
                     // Save DB
@@ -601,7 +600,7 @@
             $(".department-area").on("dragleave drop", function () {
                 $(this).removeClass("drag-over");
             });
-            let draggedStaff = null;
+           
 
             $(document).on("dragstart", ".staff-slot", function (e) {
 
@@ -616,51 +615,53 @@
             $(".department-area").on("dragover", function (e) {
                 e.preventDefault();
             });
+          
+          //  if ($(targetItem).attr('data-staffcd') == null || $(targetItem).attr('data-staffcd')== "") {
+                $(".department-area").on("drop", function (e) {
 
-            $(".department-area").on("drop", function (e) {
+                    e.preventDefault();
+                    let staffCD = e.originalEvent.dataTransfer.getData("staffcd");
+                    let targetDept = $(this).attr('data-deptCD');
+                   // alert($(draggedItem).attr('data-dept') + "_" + targetDept + "_" + $(targetItem).attr('data-staffcd'));
+                    if (staffCD == null || staffCD == "")
+                        return;
 
-                e.preventDefault();
+                    else if (!$(draggedItem).attr('data-dept').startsWith("S") && !targetDept.startsWith("S")) {
+                        $.ajax({
+                            url: '@Url.Action("ChangeDepartment", "Home")',
+                            type: 'POST',
+                            data: {
+                                staffCD: staffCD,
+                                draggedDept: $(draggedItem).attr('data-dept'),
+                                targetDept: targetDept,
+                                targetstaff: $(targetItem).attr('data-staffcd')
+                            },
+                            success: function (res) {
 
-                let staffCD = e.originalEvent.dataTransfer.getData("staffcd");
-                let targetDept = $(this).attr('data-deptCD');
-                if (staffCD == null || staffCD == "")
-                    return;
+                                if (res.success) {
 
-                else if (!$(draggedItem).attr('data-dept').startsWith("S") && !targetDept.startsWith("S")) {
-                    $.ajax({
-                        url: '@Url.Action("ChangeDepartment", "Home")',
-                        type: 'POST',
-                        data: {
-                            staffCD: staffCD,
-                            departmentCD: targetDept
-                        },
-                        success: function (res) {
+                                    //// move card UI
+                                    //card.appendTo(
+                                    //    $('[data-deptCD="' + targetDept + '"]')
+                                    //);
+                                    location.reload();
 
-                            if (res.success) {
+                                } else {
+                                    //alert(res.message);
+                                    $("#errorMessage").text(res.message);
+                                    $("#errorBox").removeClass("hidden");
 
-                                //// move card UI
-                                //card.appendTo(
-                                //    $('[data-deptCD="' + targetDept + '"]')
-                                //);
-                                location.reload();
-
-                            } else {
-                                //alert(res.message);
-                                $("#errorMessage").text(res.message);
+                                }
+                            },
+                            error: function () {
+                                //alert("Error");
+                                $("#errorMessage").text("Error");
                                 $("#errorBox").removeClass("hidden");
-
                             }
-                        },
-                        error: function () {
-                            //alert("Error");
-                            $("#errorMessage").text("Error");
-                            $("#errorBox").removeClass("hidden");
-                        }
-                    });
-                }
-
-            });
-
+                        });
+                    }
+                });
+          //  }
         });
 
 
