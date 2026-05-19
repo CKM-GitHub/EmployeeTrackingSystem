@@ -273,14 +273,14 @@ namespace EmployeeTrackingSystem.Controllers
         }
 
         [HttpPost]
-        public JsonResult ChangeDepartment(string staffCD,string departmentCD)
+        public JsonResult ChangeDepartment(string staffCD,string draggedDept,string targetDept, string targetstaff)
         {
             using (var db = new EmployeeTrackingDBEntities())
             {
                 var staff = db.T_StaffMaster
                     .FirstOrDefault(x => x.StaffCD == staffCD);
 
-                if (staff == null)
+                if (staffCD == null)
                 {
                     return Json(new
                     {
@@ -289,13 +289,13 @@ namespace EmployeeTrackingSystem.Controllers
                     });
                 }
                 //20260514 ttw 
-                var oldDept = staff.DepartmentCD;
-                if (oldDept != departmentCD)
+
+                if (draggedDept != targetDept && targetstaff == null)
                 {
                     // old department reorder
                     var oldList = db.T_StaffMaster
                         .Where(s =>
-                            s.DepartmentCD == oldDept &&
+                            s.DepartmentCD == draggedDept &&
                             s.StaffCD != staffCD &&
                             s.Enroll != false)
                         .OrderBy(s => s.SeatNo)
@@ -311,16 +311,15 @@ namespace EmployeeTrackingSystem.Controllers
                     // new department max seat
                     int maxSeatNo = db.T_StaffMaster
                         .Where(x =>
-                            x.DepartmentCD == departmentCD &&
+                            x.DepartmentCD == targetDept &&
                             x.Enroll != false)
                         .Max(x => (int?)x.SeatNo) ?? 0;
 
                     // move current staff
-                    staff.DepartmentCD = departmentCD;
+                    staff.DepartmentCD = targetDept;
                     staff.SeatNo = maxSeatNo + 1;
+                    db.SaveChanges();
                 }
-                
-                db.SaveChanges();
 
                 return Json(new
                 {
