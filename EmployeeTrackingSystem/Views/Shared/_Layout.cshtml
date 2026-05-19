@@ -67,68 +67,61 @@
             && ViewBag.StaffNames != null)
         {
             <div class="row">
-
-                <div class="col-xs-12 col-sm-12 col-md-2 form-group">
-
-                    @Html.DropDownList(
-                        "department",
-                        ViewBag.Departments as SelectList,
-                        "-- Select Department --",
-                        new
-                        {
-                            @class = "form-control mt-2",
-                            id = "department"
-                        })
-
-                </div>
-
-                <div class="col-xs-12 col-sm-12 col-md-2 form-group">
-
-                    @Html.DropDownList(
-                        "staff",
-                        ViewBag.StaffNames as SelectList,
-                        "-- Select Staff --",
-                        new
-                        {
-                            @class = "form-control mt-2",
-                            id = "staff"
-                        })
-
-                </div>
-
-                @if (ViewBag.Detail != "Detail")
-                {
-                    <div class="col-xs-12 col-md-4 form-group">
-                        @RenderSection("Buttons", required: false)
+                    <div class="col-lg-2 col-md-3 col-sm-10 col-xs-10 form-group">
+                        @Html.DropDownList(
+                            "department",
+                            ViewBag.Departments as SelectList,
+                            "-- Select Department --",
+                            new
+                            {
+                                @class = "form-control select2 mt-2",
+                                id = "department"
+                            })
                     </div>
-                }
 
+                    <div class="col-lg-2 col-md-3 col-sm-10 col-xs-10 form-group">
+                        @Html.DropDownList(
+                            "staff",
+                            ViewBag.StaffNames as SelectList,
+                            "-- Select Staff --",
+                            new
+                            {
+                                @class = "form-control select2 mt-2",
+                                id = "staff"
+                            })
+                    </div>
+                    @if (ViewBag.Detail != "Detail")
+                    {
+                        <div class="col-lg-4 col-md-6 col-sm-10 col-xs-12 form-group">
+                            @RenderSection("Buttons", required: false)
+                        </div>
+                    }
             </div>
+
+
 
             if (ViewBag.Detail == "Detail")
             {
                 <div class="row">
+                        <div class="col-lg-2 col-md-3 col-sm-10 col-xs-10 form-group">
+                            <input type="date"
+                                   id="fromDate"
+                                   class="form-control"
+                                   value="@ViewBag.FromDate">
+                        </div>
 
-                    <div class="col-xs-12 col-sm-12 col-md-2 form-group">
-                        <input type="date"
-                               id="fromDate"
-                               class="form-control mt-2"
-                               value="@ViewBag.FromDate">
-                    </div>
+                        <div class="col-lg-2 col-md-3 col-sm-10 col-xs-10 form-group">
+                            <input type="date"
+                                   id="toDate"
+                                   class="form-control"
+                                   value="@ViewBag.ToDate">
+                        </div>
 
-                    <div class="col-xs-12 col-sm-12 col-md-2 form-group">
-                        <input type="date"
-                               id="toDate"
-                               class="form-control mt-2"
-                               value="@ViewBag.ToDate">
-                    </div>
-
-                    <div class="col-xs-12 col-md-4 form-group">
-                        @RenderSection("Buttons", required: false)
-                    </div>
-
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 form-group">
+                            @RenderSection("Buttons", required: false)
+                        </div>
                 </div>
-            }
+            }            
         }
 
         <div class="row">
@@ -143,7 +136,7 @@
     <script>
 
         $(document).ready(function () {
-
+            initSelect2();
             // active menu
             const menuLinks = document.querySelectorAll("#menu .nav-link");
             const currentPath = window.location.pathname.toLowerCase();
@@ -157,10 +150,7 @@
                 if (currentPath.includes(href)) {
                     link.classList.add("active");
                 }
-
             });
-
-
 
             // department dropdown
             $("#department").change(function () {
@@ -172,7 +162,6 @@
                 $staffDropdown.append('<option value="">-- Select Staff --</option>');
 
                 $.ajax({
-
                     url: '@Url.Action("GetStaffByDepartment", "Detail")',
                     type: "GET",
                     data: { departmentId: selectedDeptId },
@@ -187,15 +176,11 @@
                             }));
 
                         });
-
                     },
-
                     error: function () {
                         alert("Error loading staff members.");
                     }
-
                 });
-
             });
             resetTimer();
 
@@ -215,6 +200,21 @@
             timer = setTimeout(function () {
                 location.reload();
             }, 5 * 60 * 1000); // 10 mins
+        }
+
+        function initSelect2() {
+
+            $('.select2').each(function () {
+
+                if ($(this).hasClass("select2-hidden-accessible")) {
+                    $(this).select2('destroy');
+                }
+
+                $(this).select2({
+                    width: '100%'
+                });
+
+            });
         }
 
     </script>
