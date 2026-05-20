@@ -71,9 +71,9 @@
                 var searchParams = {
                 departMent: $('#department').val(),
                 staffName: $('#staff').val(),
-                fromDate: $('#fromDate').val(),
-                toDate: $('#toDate').val()
-                };
+                    fromDate: $("input[name='fromDate']").val(),
+                    toDate:   $("input[name='toDate']").val()
+                };               
                 $.ajax({
                 url: '@Url.Action("GetFilteredData", "Detail")',
                 type: 'POST',
@@ -105,8 +105,8 @@
                 var filters = {
                     departMent: $('#department').val(),
                     staffName: $('#staff').val(),
-                    fromDate: $('#fromDate').val(),
-                    toDate: $('#toDate').val()
+                    fromDate: $("input[name='fromDate']").val(),
+                    toDate: $("input[name='toDate']").val()
                 };
                 // Create a hidden form dynamically
                 var $form = $('<form>', {
