@@ -81,7 +81,7 @@
                 <input type="hidden" id="StaffCd" name="StaffCd" />
                 <input type="hidden" id="DepartmentCd" name="DepartmentCd" />
                 <div class="modal-header">
-                    <h5 class="modal-title">Data入力 &nbsp;&nbsp;&nbsp; <span id="staffName"></span></h5>
+                    <h5 class="modal-title">Data入力 &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp; <span id="staffName"></span></h5>
                 </div>
 
                 <div class="modal-body">
@@ -212,6 +212,9 @@
 
                 $("#StaffCd").val($(this).data("sid")); // staffcd from link
                 $("#DepartmentCd").val($(this).data("did")); // DepartmentCD from link
+
+                // 2. Insert the name into the span inside the modal
+                $('#staffName').text($(this).data('staffname'));
 
                 // Radio button (Status)
                 var status = $(this).data("status");
