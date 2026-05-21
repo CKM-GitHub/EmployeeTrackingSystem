@@ -299,9 +299,9 @@ body {
     }
 
     .modal-footer .btn-secondary {
-        background-color: #ccc;
+        background-color: #8F8786;
         border-color: #ccc;
-        color: #000;
+        color: #FFFFFF;
     }
 
 /* Flex container for each status option */
