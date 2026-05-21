@@ -62,7 +62,7 @@ namespace EmployeeTrackingSystem.Controllers
                     {
                         success = false,
                         errorType = "inactive",
-                        message = "Inactive CD already exist"
+                        message = "Inactive CD が既に存在します。"
                     });
                 }
 
@@ -210,11 +210,11 @@ namespace EmployeeTrackingSystem.Controllers
                 staff.UpdateDateTime = DateTime.Now;
 
                 db.SaveChanges();
-                return Json(new { success = true, message = "登録が完了しました。" });
+                return Json(new { success = true, message = "登録しました。" });
             }
             catch (Exception ex)
             {
-               return Json(new { success = false, message = "更新失敗しました。" });
+               return Json(new { success = false, message = "登録失敗しました。" });
             }
         }
 
@@ -232,7 +232,7 @@ namespace EmployeeTrackingSystem.Controllers
                 {
                     exists = true,
                     errorType = "inactive",
-                    message = "Inactive CD already exist"
+                    message = "Inactive CD が既に存在します。"
 
                 }, JsonRequestBehavior.AllowGet);
             }

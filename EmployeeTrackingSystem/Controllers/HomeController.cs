@@ -110,7 +110,7 @@ namespace EmployeeTrackingSystem.Controllers
             else
             {
                 insertflag = false;
-                TempData["Message"] = "Please choose at least one status to update!!";
+                TempData["Message"] = "更新するステータスを少なくとも1つ選択してください！";
             }
             return Json(new { success = insertflag, message = TempData["Message"] });
         }
@@ -285,7 +285,7 @@ namespace EmployeeTrackingSystem.Controllers
                     return Json(new
                     {
                         success = false,
-                        message = "Staff not found"
+                        message = "スタッフが見つかりません。"
                     });
                 }
                 //20260514 ttw 
@@ -327,5 +327,6 @@ namespace EmployeeTrackingSystem.Controllers
                 });
             }
         }
+        
     }
 }
