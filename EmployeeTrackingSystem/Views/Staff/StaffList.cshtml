@@ -573,11 +573,15 @@
 
             // Initialize the datepicker
             $('#datetimepicker-add').datetimepicker({
-                format: 'YYYY-MM-DD'
+                format: 'YYYY-MM-DD',
+                showClear: true,
+                showClose: true
             });
 
             $('#datetimepicker-edit').datetimepicker({
-                format: 'YYYY-MM-DD'
+                format: 'YYYY-MM-DD',
+                showClear: true,
+                showClose: true
             });
 
             // 1. Format as they type (numbers only, max 8 digits, inserts hyphens)
