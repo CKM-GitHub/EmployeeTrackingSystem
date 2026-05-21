@@ -72,6 +72,7 @@ namespace EmployeeTrackingSystem.Controllers
                     {
                         success = false,
                         errorType = "duplicate",
+                        message = "既に存在します。",
                         errors = new[]
                         {
                     new { field = "StaffCD", message = "" }
@@ -232,7 +233,7 @@ namespace EmployeeTrackingSystem.Controllers
                 {
                     exists = true,
                     errorType = "inactive",
-                    message = "Inactive CD が既に存在します。"
+                    message = "Inactive CD が既に存在しました。"
 
                 }, JsonRequestBehavior.AllowGet);
             }
@@ -243,7 +244,7 @@ namespace EmployeeTrackingSystem.Controllers
                 {
                     exists = true,
                     errorType = "duplicate",
-                    message = "Invalid use"
+                    message = "既に存在しました。"
 
                 }, JsonRequestBehavior.AllowGet);
             }
