@@ -282,7 +282,7 @@
                 $("#editForm [name='StaffName']").focus();
             });
 
-            
+
 
             $('#addForm [name="StaffCD"]').on('input', function () {
                 this.value = this.value.replace(/[^A-Za-z0-9-]/g, '');
@@ -312,6 +312,10 @@
                 }
             });
 
+            $("#JoinedDate, #JoinedDateAdd").on("input", function () {
+                formatDateInput($(this));
+            });
+
             // =====================
             // Add Form Enter key validation
             // =====================
@@ -321,20 +325,30 @@
                 if (e.which === 13) { // Enter key
                     e.preventDefault();
 
-                    
+
 
 
                     $("#addForm .input-error").removeClass("input-error");
                     var $this = $(this);
+                    if ($this.attr("name") === "JoinedDate") {
+
+                        if (!validateJoinedDate($this)) {
+                            $this.focus();
+                            return;
+                        }
+                    }
+
                     var fieldName = $this.attr('name');
 
                     // =====  Check required fields =====
                     requiredFields.forEach(function (name) {
-                        var value = $("#addForm [name='" + name + "']").val().trim();
+                        var $input = $("#addForm [name='" + name + "']");
+                        var value = $input.val().trim();
+
                         if (value === "") {
-                            $("#addForm #err" + name).text("*");
+                            $input.addClass("input-error");
                         } else {
-                            $("#addForm #err" + name).text(""); // clear if filled
+                            $input.removeClass("input-error");
                         }
                     });
 
@@ -354,7 +368,7 @@
                                         $("#StaffCD").focus();
                                         return;
                                     }
-                                    else if (res.errorType === "duplicate") {                                       
+                                    else if (res.errorType === "duplicate") {
                                         $("#errorMessage").text(res.message);
                                         $("#errorBox").removeClass("hidden");
                                         $this.addClass("input-error");
@@ -516,11 +530,19 @@
                     e.preventDefault();
 
                     // Force the datepicker element to close and commit its value immediately
-                  
-                  
+
+
 
                     $("#editForm .input-error").removeClass("input-error");
                     var $this = $(this);
+
+                    if ($this.attr("name") === "JoinedDate") {
+
+                        if (!validateJoinedDate($this)) {
+                            $this.focus();
+                            return;
+                        }
+                    }
                     moveToNextFieldEdit($this);
                 }
             });
@@ -575,91 +597,79 @@
             $('#datetimepicker-add').datetimepicker({
                 format: 'YYYY-MM-DD',
                 showClear: true,
-                showClose: true
+                showClose: true,
+                useStrict: true,
+                keepInvalid: true
             });
 
             $('#datetimepicker-edit').datetimepicker({
                 format: 'YYYY-MM-DD',
                 showClear: true,
-                showClose: true
+                showClose: true,
+                useStrict: true,
+                keepInvalid: true,
+
             });
-
-            // 1. Format as they type (numbers only, max 8 digits, inserts hyphens)
-            $("#JoinedDate, #JoinedDateAdd").on("input", function () {
-                let v = this.value.replace(/\D/g, ''); // numbers only
-
-                // max 8 digits
-                v = v.substring(0, 8);
-
-                // yyyy-MM-dd format
-                if (v.length > 4) {
-                    v = v.substring(0, 4) + '-' + v.substring(4);
-                }
-
-                if (v.length > 7) {
-                    v = v.substring(0, 7) + '-' + v.substring(7);
-                }
-
-                this.value = v;
-            });
-
-            // 2. Validate when leaving the input or selecting a date from the calendar
-            $("#JoinedDate, #JoinedDateAdd").on("blur change", function () {
-                const regex = /^\d{4}-\d{2}-\d{2}$/;
-                const $field = $(this);
-                const val = $field.val();
-
-                // If field has text and it fails the yyyy-MM-dd format check
-                if (val && !regex.test(val)) {
-                    // Keep the value but mark it red
-                    $field.addClass("input-error");
-                } else {
-                    // If it's valid (or empty), remove the red styling
-                    $field.removeClass("input-error");
-                }
-            });
-
-            // default today
-
         }
-        //function initDatePickers() {
-        //    $('#datetimepicker-add').datetimepicker({
-        //        format: 'YYYY-MM-DD'
-        //    });
+        function formatDateInput($field) {
 
-        //    $('#datetimepicker-edit').datetimepicker({
-        //        format: 'YYYY-MM-DD'
-        //    });
+            let v = $field.val();
 
-           
-        //    // 1. Format as they type
-        //    $("#JoinedDate, #JoinedDateAdd").on("input", function () {
-        //        let v = this.value.replace(/\D/g, ''); // numbers only
-        //        v = v.substring(0, 8); // max 8 digits
+            // keep only numbers
+            v = v.replace(/\D/g, '');
 
-        //        if (v.length > 4) {
-        //            v = v.substring(0, 4) + '-' + v.substring(4);
-        //        }
-        //        if (v.length > 7) {
-        //            v = v.substring(0, 7) + '-' + v.substring(7);
-        //        }
-        //        this.value = v;
-        //    });
+            // limit 8 digits
+            if (v.length > 8) {
+                v = v.substring(0, 8);
+            }
 
-        //    // 2. Validate format without clearing text
-        //    $("#JoinedDate, #JoinedDateAdd").on("blur change", function () {
-        //        const regex = /^\d{4}-\d{2}-\d{2}$/;
-        //        const $field = $(this);
-        //        const val = $field.val();
+            // format only
+            if (v.length >= 5 && v.length <= 6) {
+                v = v.substring(0, 4) + '-' + v.substring(4);
+            }
+            else if (v.length >= 7) {
+                v = v.substring(0, 4) + '-' +
+                    v.substring(4, 6) + '-' +
+                    v.substring(6, 8);
+            }
 
-        //        if (val && !regex.test(val)) {
-        //            $field.addClass("input-error");
-        //        } else {
-        //            $field.removeClass("input-error");
-        //        }
-        //    });
-        //}
+            $field.val(v);
+        }
 
+        function validateJoinedDate($field) {
+
+            let val = $field.val().trim();
+
+            if (val === "") {
+                $field.removeClass("input-error");
+                return true;
+            }
+
+            // format check
+            let regex = /^\d{4}-\d{2}-\d{2}$/;
+
+            if (!regex.test(val)) {
+                $field.addClass("input-error");
+                return false;
+            }
+
+            let [y, m, d] = val.split('-').map(Number);
+
+            let date = new Date(y, m - 1, d);
+
+            // invalid real date check (reject only)
+            if (
+                date.getFullYear() !== y ||
+                date.getMonth() !== m - 1 ||
+                date.getDate() !== d
+            ) {
+                $field.addClass("input-error");
+                return false;
+            }
+
+            $field.removeClass("input-error");
+            return true;
+        }
         function moveToNextFieldEdit($current) {
             var $fields = $('#editForm').find('input, select, textarea').filter(':visible');
             var index = $fields.index($current);
