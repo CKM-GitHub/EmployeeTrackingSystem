@@ -26,9 +26,9 @@ namespace EmployeeTrackingSystem.Controllers
                 new SqlParameter("@staffcd", staffParam)
             ).ToList();
 
-            
+
             return View(staffList);
-           
+
         }
 
         [HttpPost]
@@ -37,24 +37,29 @@ namespace EmployeeTrackingSystem.Controllers
         {
             using (var db = new EmployeeTrackingDBEntities())
             {
-               
-                // Other ModelState validation (optional)
-                if (!ModelState.IsValid)
-                {
-                    var errors = ModelState
-                        .Where(x => x.Value.Errors.Count > 0)
-                        .Select(x => new {
-                            field = x.Key.Replace("model.", ""),
-                            message = x.Value.Errors.First().ErrorMessage
-                        }).ToList();
 
-                    return Json(new { success = false, errors = errors });
+
+                if (string.IsNullOrWhiteSpace(model.StaffCD))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        errors = new[]
+                        {
+                        new {
+                            field = "StaffCD",
+                             message = ""
+                            }
+                        }
+                    });
                 }
+
+
                 var existsActive = db.T_StaffMaster
-                    .Any(x => x.StaffCD == model.StaffCD  && x.Enroll == true);
+                    .Any(x => x.StaffCD == model.StaffCD && x.Enroll == true);
 
                 var existsInactive = db.T_StaffMaster
-                    .Any(x => x.StaffCD == model.StaffCD  && x.Enroll == false);
+                    .Any(x => x.StaffCD == model.StaffCD && x.Enroll == false);
 
                 if (existsInactive)
                 {
@@ -78,6 +83,33 @@ namespace EmployeeTrackingSystem.Controllers
                     new { field = "StaffCD", message = "" }
                          }
                     });
+                }
+                if (string.IsNullOrWhiteSpace(model.StaffName))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        errors = new[]
+                        {
+                          new {
+                              field = "StaffName",
+                               message = ""
+                             }
+                         }
+                    });
+                }
+                // Other ModelState validation (optional)
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState
+                        .Where(x => x.Value.Errors.Count > 0)
+                        .Select(x => new
+                        {
+                            field = x.Key.Replace("model.", ""),
+                            message = x.Value.Errors.First().ErrorMessage
+                        }).ToList();
+
+                    return Json(new { success = false, errors = errors });
                 }
 
                 int maxSeatNo = 0;
@@ -105,7 +137,7 @@ namespace EmployeeTrackingSystem.Controllers
                         PhoneNo = model.PhoneNo,
                         JoinedDate = model.JoinedDate,
                         EmployeeType = model.EmployeeType,
-                        Status= "帰宅",
+                        Status = "帰宅",
                         Enroll = model.Enroll,
                         Remark = model.Remark,
                         CurrentShop = model.CurrentShop,
@@ -118,20 +150,20 @@ namespace EmployeeTrackingSystem.Controllers
 
                     return Json(new { success = true });
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return Json(new { success = false, message = ex.Message });
                 }
-              
+
             }
         }
-       
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult Update(StaffUpdateModel model)
         {
-           
+
             if (!ModelState.IsValid)
             {
                 var errors = ModelState
@@ -141,9 +173,9 @@ namespace EmployeeTrackingSystem.Controllers
                            message = x.Value.Errors.First().ErrorMessage
                        }).ToList();
 
-                return Json(new { success = false, errors = errors });;
+                return Json(new { success = false, errors = errors }); ;
             }
-                
+
             try
             {
                 var staff = db.T_StaffMaster
@@ -165,14 +197,14 @@ namespace EmployeeTrackingSystem.Controllers
 
                 var dept = (model.DepartmentCD ?? "").Trim();
 
-                if (dept.StartsWith("S0") && 
+                if (dept.StartsWith("S0") &&
                     int.TryParse(dept.Substring(1, 2), out int shop))
-                {                    
+                {
                     staff.CurrentShop = shop;
                 }
                 else
                 {
-                    staff.CurrentShop = null;     
+                    staff.CurrentShop = null;
                     //20260514 ttw 
                     var oldDept = model.oldDeptCD;
                     if (oldDept != model.DepartmentCD)
@@ -215,7 +247,7 @@ namespace EmployeeTrackingSystem.Controllers
             }
             catch (Exception ex)
             {
-               return Json(new { success = false, message = "登録失敗しました。" });
+                return Json(new { success = false, message = "登録失敗しました。" });
             }
         }
 
@@ -254,7 +286,7 @@ namespace EmployeeTrackingSystem.Controllers
                 status = "ok"
             }, JsonRequestBehavior.AllowGet);
         }
-       
+
         bool IsUtf8Valid(string value, int maxBytes)
         {
             if (string.IsNullOrEmpty(value))
