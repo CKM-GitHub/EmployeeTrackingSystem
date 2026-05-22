@@ -204,6 +204,14 @@
         let draggedItem = null;
         let targetItem = null;
         $(document).ready(function () {
+            // check flag after reload
+            let container = document.querySelector(".tables-container"); // same scrollable div
+            let savedPos = localStorage.getItem("scrollPos");
+
+            if (container && savedPos !== null) {
+                container.scrollTop = savedPos;
+                localStorage.removeItem("scrollPos"); // clear after use
+            }
             $(document).on("click", ".staff-link", function () {
                 // Clear all inputs in the modal form
                 $("#staffForm")[0].reset();
@@ -648,6 +656,10 @@
                                     //card.appendTo(
                                     //    $('[data-deptCD="' + targetDept + '"]')
                                     //);
+                                    let container = document.querySelector(".tables-container"); // your scrollable div
+                                    if (container) {
+                                        localStorage.setItem("scrollPos", container.scrollTop);
+                                    }
                                     location.reload();
 
                                 } else {
