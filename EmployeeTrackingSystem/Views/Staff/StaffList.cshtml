@@ -120,7 +120,7 @@
                         <div class="form-row">
                             <label>入社日</label>
                             <div class='input-group date' id='datetimepicker-edit'>
-                                <input type="text" name="JoinedDate" class="form-control" id="JoinedDate" placeholder="yyyy-MM-dd" autocomplete="off" />
+                                <input type="text" name="JoinedDate" class="form-control" id="JoinedDate"  autocomplete="off" />
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
@@ -214,7 +214,7 @@
                         <div class="form-row">
                             <label>入社日</label>
                             <div class='input-group date' id='datetimepicker-add'>
-                                <input type="text" name="JoinedDate" class="form-control" id="JoinedDateAdd" placeholder="yyyy-MM-dd" autocomplete="off" />
+                                <input type="text" name="JoinedDate" class="form-control" id="JoinedDateAdd"  autocomplete="off" />  
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
@@ -606,6 +606,7 @@
 
             // Initialize the datepicker
             $('#datetimepicker-add').datetimepicker({
+                date: new Date(),
                 format: 'YYYY-MM-DD',
                 showClear: true,
                 showClose: true,
@@ -613,7 +614,7 @@
                 keepInvalid: true
             });
 
-            $('#datetimepicker-edit').datetimepicker({
+            $('#datetimepicker-edit').datetimepicker({               
                 format: 'YYYY-MM-DD',
                 showClear: true,
                 showClose: true,

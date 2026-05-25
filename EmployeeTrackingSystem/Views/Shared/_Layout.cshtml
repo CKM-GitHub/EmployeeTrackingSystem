@@ -67,7 +67,7 @@
             && ViewBag.StaffNames != null)
         {
         <div class="row">
-            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6 form-group">
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-10 form-group">
                 @Html.DropDownList(
                     "department",
                     ViewBag.Departments as SelectList,
@@ -78,7 +78,7 @@
                         id = "department"
                     })
             </div>
-            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6 form-group">
+            <div class="col-lg-2 col-md-4 col-sm-4 col-xs-10 form-group">
                 @Html.DropDownList(
                     "staff",
                     ViewBag.StaffNames as SelectList,
@@ -103,7 +103,7 @@
             if (ViewBag.Detail == "Detail")
             {
             <div class="row">
-                <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6 form-group">
+                <div class="col-lg-2 col-md-4 col-sm-4 col-xs-10 form-group">
                     <div class='input-group date' id="fromDate">
                         <input type='text' name="fromDate" class="form-control" value="@ViewBag.FromDate" />
                         <span class="input-group-addon">
@@ -112,7 +112,7 @@
                     </div>
                 </div>
 
-                <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6 form-group">
+                <div class="col-lg-2 col-md-4 col-sm-4 col-xs-10 form-group">
                     <div class='input-group date' id="toDate">
                         <input type='text' name="toDate" class="form-control" value="@ViewBag.ToDate" />
                         <span class="input-group-addon">
