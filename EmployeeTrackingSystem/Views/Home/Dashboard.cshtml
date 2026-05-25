@@ -754,6 +754,10 @@
         // Close functions
         function closeSuccessBox() {
             $("#successBox").addClass("hidden");
+            let container = document.querySelector(".tables-container"); // your scrollable div
+            if (container) {
+                localStorage.setItem("scrollPos", container.scrollTop);
+            }
             location.reload(); // reload after closing
         }
 
