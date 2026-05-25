@@ -384,10 +384,25 @@
                             return;
                         }
                     }
-                    var fieldName = $this.attr('name');
-
+                  
                     // ===== Email validation =====
+                    if (fieldName === "Email") {
+                        var email = $this.val().trim();
 
+                        if (email !== "") {
+
+                            var regexEmailGmail = /^[a-zA-Z0-9.]+@@gmail\.com$/;
+
+                            if (!regexEmailGmail.test(email)) {
+
+
+                                $this.addClass("input-error");
+                                $this.focus();
+                                return;
+                            }
+                        }
+                        $this.removeClass("input-error");
+                    }
 
                     moveToNextFieldAdd($this);
                 }
@@ -546,7 +561,23 @@
                             return;
                         }
                     }
+                    if (fieldName === "Email") {
+                        var email = $this.val().trim();
 
+                        if (email !== "") {
+
+                            var regexEmailGmail = /^[a-zA-Z0-9.]+@@gmail\.com$/;
+
+                            if (!regexEmailGmail.test(email)) {
+
+
+                                $this.addClass("input-error");
+                                $this.focus();
+                                return;
+                            }
+                        }
+                        $this.removeClass("input-error");
+                    }
                     if ($this.attr("name") === "JoinedDate") {
 
                         if (!validateJoinedDate($this)) {
