@@ -643,26 +643,5 @@ body {
     width: 1em;    /* responsive icon size */
     height: 1em;
   }
-
-    .input-group-addon,
-    .input-group-btn,
-    .input-group .form-control {
-        width: 73%; /* full width */
-        box-sizing: border-box;
-        margin-bottom: 8px; /* spacing between stacked items */
-    }
-    .input-group.date input.form-control {
-        max-width: 225px !important;
-    }
-    .input-group input, select, textarea {
-        max-width: 276px !important;
-    }
-    .input-group {
-        display: block !important; /* break out of table layout */
-        width: 100% !important;
-    }
-
-    .input-group-addon {
-        padding: 8px 12px 8.5px 12px;
-    }
+  
 }
