@@ -9,7 +9,12 @@
 
 
     @Styles.Render("~/bundles/css")
-   <link rel="stylesheet" href="~/Content/dashboard_01.css" />
+
+    @if (ViewContext.RouteData.Values["Controller"].ToString() == "Home"
+      && ViewContext.RouteData.Values["Action"].ToString() == "Dashboard")
+    {
+        <link rel="stylesheet" href="~/Content/dashboard_01.css" />
+    }
 
     @Scripts.Render("~/bundles/modernizr")
 
