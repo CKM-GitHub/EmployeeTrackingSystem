@@ -70,6 +70,8 @@ body {
 }
 /*20260414 added scroll to container by ttw*/
 .tables-container {
+    display: flex; /*20260528*/
+    flex-wrap: wrap;
     margin: 10px 0 10px 0;
     max-height: 750px; /* control height */
     overflow-y: auto; /* enable vertical scroll */
@@ -467,11 +469,103 @@ body {
     /* Changes cursor to indicate more info is available */
 }
 
-
-
-
+/* Hide by default 20260528*/
+.tablet-mobile-only {
+    display: none;
+}
 /* Tablets and small laptops */
+@media (max-width: 990px) {
+    .tablet-mobile-only {
+        display: block;
+    }
+
+    .tb1 {
+        order: 1;
+    }
+
+    .tb2 {
+        order: 2;
+    }
+
+    .tb3 {
+        order: 3;
+    }
+
+    .tb4 {
+        order: 4;
+    }
+
+    .tb5 {
+        order: 5;
+    }
+
+    .tb6 {
+        order: 6;
+    }
+
+    .tb7 {
+        order: 7;
+    }
+
+    .tb9 {
+        order: 8;
+    }
+
+    .tb10 {
+        order: 9;
+    }
+
+    .tb11 {
+        order: 10;
+    }
+}
+
+
+/* Tablets and small laptops 20260528 */
 @media (max-width: 768px) {
+    .tablet-mobile-only {
+        display: block;
+    }
+
+    .tb1 {
+        order: 1;
+    }
+
+    .tb2 {
+        order: 2;
+    }
+
+    .tb3 {
+        order: 3;
+    }
+
+    .tb4 {
+        order: 4;
+    }
+
+    .tb5 {
+        order: 5;
+    }
+
+    .tb6 {
+        order: 6;
+    }
+
+    .tb7 {
+        order: 7;
+    }
+
+    .tb9 {
+        order: 8;
+    }
+
+    .tb10 {
+        order: 9;
+    }
+
+    .tb11 {
+        order: 10;
+    }
     .col-md-4 {
         width: 100%;
         margin-bottom: 20px;
@@ -535,7 +629,7 @@ body {
         height:25px;
     }
     .nested-table td.staffname {
-        min-width: 380px;
+        /*min-width: 380px; 20260528*/
         width: 100%;
         max-width: 480px;
         border: none;
@@ -621,7 +715,7 @@ body {
         width: 40vw;*/ /* relative width for narrow screens */
     /*}*/
     .nested-table td.staffname {
-        min-width: 330px;
+        /*min-width: 330px; 20260528*/
         width: 100%;
         max-width: 430px;
         border: none;
@@ -637,11 +731,34 @@ body {
 @media only screen and (max-width: 390px) {
   /* Styles for narrow portrait mode */
   .nested-table td.staffname {
-    width: 80vw;   /* relative width for text cells */
+    /*width: 80vw;*/   /* relative width for text cells */
   }
   .search-icon {
     width: 1em;    /* responsive icon size */
     height: 1em;
   }
   
+}
+@media (max-width: 390px) {
+    .status-legend {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 6px;
+        align-items: center;
+    }
+
+    .status-item {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 6px;
+        box-sizing: border-box;
+    }
+
+        .status-item .dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
 }
