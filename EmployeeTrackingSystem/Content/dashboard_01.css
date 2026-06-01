@@ -86,7 +86,6 @@ body {
     table-layout: fixed;
     background-color: white;
     border-radius: 12px;
-   
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     border-spacing: 2px; /* controls gap (horizontal + vertical) */
 }
@@ -112,16 +111,13 @@ body {
     padding: 8px;
     min-height: 80px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    line-height:normal;
-   
+    line-height: normal;
 }
 
     .nested-table td {
         padding: 4px;
         text-align: left;
         border-radius: 10px;
-
-       
     }
 
         /* Only dotted borders for staff detail cells */
@@ -160,6 +156,7 @@ body {
     vertical-align: middle;
     cursor: pointer;
 }
+
 .search-icon {
     /*float: right;*/
     /* margin-right: 5px;*/
@@ -170,51 +167,50 @@ body {
     cursor: pointer;
 }
 
-        .nested-table td.date,
-        .nested-table td.note {
-            border-top: 1px dotted #000000;
-            border-bottom: 1px dotted #000000;
-            border-left: 1px dotted #000000;
-            border-right: none;
-            padding: 4px;
-            text-align: left;
-            white-space: normal; /* allow wrapping */
-            word-wrap: break-word; /* break long words if needed */
-            word-break: break-word; /* ensures wrapping even without spaces */
-            max-width: 200px; /* optional: limit width so wrapping happens */         
-          
-        }
+.nested-table td.date,
+.nested-table td.note {
+    border-top: 1px dotted #000000;
+    border-bottom: 1px dotted #000000;
+    border-left: 1px dotted #000000;
+    border-right: none;
+    padding: 4px;
+    text-align: left;
+    white-space: normal; /* allow wrapping */
+    word-wrap: break-word; /* break long words if needed */
+    word-break: break-word; /* ensures wrapping even without spaces */
+    max-width: 200px; /* optional: limit width so wrapping happens */
+}
 
-        .nested-table td.date {
-            font-size: 11px;
-        }
+.nested-table td.date {
+    font-size: 11px;
+}
 
-        .nested-table td.note {
-            font-size: 11px;
-            max-width: 150px; /* Adjust this width to fit your table design  20260417 ttw*/
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            position: relative;
-        }
+.nested-table td.note {
+    font-size: 11px;
+    max-width: 150px; /* Adjust this width to fit your table design  20260417 ttw*/
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+}
 
 
-    /* Remove outer edges */
-    .nested-table tr:first-child td {
-        border-top: none;
-    }
+/* Remove outer edges */
+.nested-table tr:first-child td {
+    border-top: none;
+}
 
-    .nested-table tr:last-child td {
-        border-bottom: none;
-    }
+.nested-table tr:last-child td {
+    border-bottom: none;
+}
 
-    .nested-table tr td:first-child {
-        border-left: none;
-    }
+.nested-table tr td:first-child {
+    border-left: none;
+}
 
-    .nested-table tr td:last-child {
-        border-right: none;
-    }
+.nested-table tr td:last-child {
+    border-right: none;
+}
 /* make the two cells equal width */
 .nested-cell {
     width: 50%;
@@ -566,6 +562,7 @@ body {
     .tb11 {
         order: 10;
     }
+
     .col-md-4 {
         width: 100%;
         margin-bottom: 20px;
@@ -625,15 +622,17 @@ body {
                 font-weight: bold;
                 text-align: left;
             }
-    .nested-table td{
-        height:25px;
+
+    .nested-table td {
+        height: 25px;
     }
-    .nested-table td.staffname {
-        /*min-width: 380px; 20260528*/
-        width: 100%;
-        max-width: 480px;
-        border: none;
-    }
+
+        .nested-table td.staffname {
+            /*min-width: 380px; 20260528*/
+            width: 100%;
+            max-width: 480px;
+            border: none;
+        }
 
     .nested-cell.staffname img.search-icon {
         width: 1em;
@@ -645,6 +644,7 @@ body {
         max-width: 480px;
         border: none;
     }
+
     .nested-table tr:first-child td {
         border: 1px dotted #000000;
     }
@@ -672,73 +672,72 @@ body {
 
 /* Mobile phones */
 @media (max-width: 480px) {
-    .input-group-addon,
-    .input-group-btn,
-    .input-group .form-control {
-        width: 83%; /* full width */
-        box-sizing: border-box;
-        margin-bottom: 8px; /* spacing between stacked items */
-    }
 
-    .input-group {
-        display: block; /* break out of table layout */
-        width: 100%;
-    }
-    .input-group-addon {
-        padding: 8px 12px 8.5px 12px;
-    }
-    .input-group.date input.form-control {
-        max-width: 280px !important;
-    }
-
-    .input-group input, select, textarea {
-        max-width: 293px !important;
-    }
     .modal-dialog {
-        max-width: 95%; /* almost full width */
+        width: 95%;
+        margin: 10px auto;
     }
 
-    .modal-body label {
-        display: block; /* stack labels vertically */
-    }
-
+    /* make each status block vertical */
     .status-option {
+        display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
     }
 
+    /* datetime group */
+    .input-group.date {
+        display: flex !important;
+        width: 100%;
+    }
+
+        /* textbox */
+        .input-group.date .form-control {
+            width: 1% !important;
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+    /* calendar button */
+    .input-group-addon {
+        width: auto !important;
+        white-space: nowrap;
+    }
+
+    /* note textbox */
     .status-input {
-        width: 100%;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
-    /*.nested-table td.staffname {
-        width: 40vw;*/ /* relative width for narrow screens */
-    /*}*/
-    .nested-table td.staffname {
-        /*min-width: 330px; 20260528*/
-        width: 100%;
-        max-width: 430px;
-        border: none;
+    /* prevent overflow */
+    .modal-body input,
+    .modal-body select,
+    .modal-body textarea {
+        max-width: 100% !important;
+        box-sizing: border-box;
     }
-    .nested-cell.staffname img.search-icon {
-        width: 0.8em;
-        height: 0.8em;
+
+    /* title smaller on tiny screens */
+    .modal-title {
+        font-size: 18px;
     }
 }
 
 
 /* Target iPhone 12 Pro and similar devices */
 @media only screen and (max-width: 390px) {
-  /* Styles for narrow portrait mode */
-  .nested-table td.staffname {
-    /*width: 80vw;*/   /* relative width for text cells */
-  }
-  .search-icon {
-    width: 1em;    /* responsive icon size */
-    height: 1em;
-  }
-  
+    /* Styles for narrow portrait mode */
+    .nested-table td.staffname {
+        /*width: 80vw;*/ /* relative width for text cells */
+    }
+
+    .search-icon {
+        width: 1em; /* responsive icon size */
+        height: 1em;
+    }
 }
+
 @media (max-width: 390px) {
     .status-legend {
         display: grid;

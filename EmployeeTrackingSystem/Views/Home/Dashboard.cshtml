@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "Dashboard";
 }
-
 <div class="container-fluid py-3">
     <div class="row align-items-center mb-12">
         <div class="col-12 col-sm-6 col-md-3">
@@ -37,25 +36,35 @@
             </div>
         </div>
 
+        @*<div class="col-12 col-sm-6 col-md-3  tablet-mobile-only">
+            @Html.DropDownList(
+                "SelectedDepartment",
+                new SelectList(Model.Alldepartments, "DepartmentCD", "DepartmentName"),
+                "-- Select Department --",
+                new { @class = "form-control", @id = "departmentDropdown" }
+            )
+        </div>*@
     </div>
 
     @model EmployeeTrackingSystem.Models.DashboardTablesViewModel
+       
 
-    <div class="tables-container">
-        <div class="row">
-            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table1)</div>
-            <div class="col-md-6 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table2)</div>
-            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table9)</div>
-        </div>
-        <div class="row">
-            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table3)</div>
-            <div class="col-md-6 col-sm-12">@Html.Partial("_DashboardTable5Col", Model.Table7)</div>
-            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table10)</div>
+        <div id="tables-container" class="tables-container d-flex flex-wrap">
+            <!-- Table 1–2–9 -->
+            <div class="col-md-3 col-sm-12 tb1">@Html.Partial("_DashboardTable", Model.Table1)</div>
+            <div class="col-md-6 col-sm-12 tb2">@Html.Partial("_DashboardTable5Col", Model.Table2)</div>
+            <div class="col-md-3 col-sm-12 tb9">@Html.Partial("_DashboardTable", Model.Table9)</div>
 
-        </div>
-        <div class="row">
-            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table6)</div>
-            <div class="col-md-6 col-sm-12">
+            <!-- Table 3–7–10 -->
+            <div class="col-md-3 col-sm-12 tb3">@Html.Partial("_DashboardTable", Model.Table3)</div>
+            <div class="col-md-6 col-sm-12 tb4">@Html.Partial("_DashboardTable5Col", Model.Table7)</div>
+            <div class="col-md-3 col-sm-12 tb10">@Html.Partial("_DashboardTable", Model.Table10)</div>
+
+            <!-- Table 6–4–5–11 -->
+            <div class="col-md-3 col-sm-12 tb5">@Html.Partial("_DashboardTable", Model.Table6)</div>
+            @*<div class="col-md-3 col-sm-12 tb6">@Html.Partial("_DashboardTable", Model.Table4)</div>
+                <div class="col-md-3 col-sm-12 tb7">@Html.Partial("_DashboardTable", Model.Table5)</div>*@
+            <div class="col-md-6 col-sm-12 tb6">
                 @*capital & tennic tokyo*@
                 <div class="row no-gap">
                     <div class="col-md-6 col-sm-12">
@@ -67,9 +76,9 @@
                 </div>
             </div>
 
-            <div class="col-md-3 col-sm-12">@Html.Partial("_DashboardTable", Model.Table11)</div>
+            <div class="col-md-3 col-sm-12 tb11">@Html.Partial("_DashboardTable", Model.Table11)</div>
+            
         </div>
-    </div>
 </div>
 
 
@@ -155,8 +164,10 @@
         <!-- wider for table layout -->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">予定の登録 &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;
-                <span id="displayStaffName"></span></h5>
+                <h5 class="modal-title">
+                    予定の登録 &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;
+                    <span id="displayStaffName"></span>
+                </h5>
             </div>
 
             <div class="modal-body">
@@ -181,6 +192,7 @@
         </div>
     </div>
 </div>
+    
 <!-- Success Message Box -->
 <div id="successBox" class="message-box hidden">
     <div class="message-header">成功!</div>
@@ -195,23 +207,21 @@
     <button class="message-button error" onclick="closeErrorBox()">はい</button>
 </div>
 
-
 @section Scripts {
-   
-    
 
-    <script>
+<script>
         let draggedItem = null;
         let targetItem = null;
+        let staffdrop = null;
         $(document).ready(function () {
             // check flag after reload
-            let container = document.querySelector(".tables-container"); // same scrollable div
-            let savedPos = localStorage.getItem("scrollPos");
+            //let container = document.querySelector(".tables-container"); // same scrollable div
+            //let savedPos = localStorage.getItem("scrollPos");
 
-            if (container && savedPos !== null) {
-                container.scrollTop = savedPos;
-                localStorage.removeItem("scrollPos"); // clear after use
-            }
+            //if (container && savedPos !== null) {
+            //    container.scrollTop = savedPos;
+            //    localStorage.removeItem("scrollPos"); // clear after use
+            //}
             $(document).on("click", ".staff-link", function () {
                 // Clear all inputs in the modal form
                 $("#staffForm")[0].reset();
@@ -533,151 +543,10 @@
                 }
             });
             // drag and drop
-            $('.staff-slot').on('dragstart', function (e) {
 
-                draggedItem = this;
-
-                $(this).addClass('dragging');
-            });
-
-            $('.staff-slot').on('dragend', function () {
-
-                $(this).removeClass('dragging');
-            });
-
-            $('.staff-slot').on('dragover', function (e) {
-
-                e.preventDefault();
-
-                $(this).addClass('drag-over');
-            });
-
-            $('.staff-slot').on('dragleave', function () {
-
-                $(this).removeClass('drag-over');
-            });
-
-            $('.staff-slot').on('drop', function (e) {
-
-                e.preventDefault();
-
-                $(this).removeClass('drag-over');
-
-                if (draggedItem === this)
-                    return;
-
-                 targetItem = this;
-               
-                // Read values BEFORE swap
-                let draggedSeat = $(draggedItem).attr('data-seat');
-                let targetSeat = $(targetItem).attr('data-seat');
-
-                let draggedStaff = $(draggedItem).attr('data-staffcd');
-                let targetStaff = $(targetItem).attr('data-staffcd');
-
-                let draggedDept = $(draggedItem).attr('data-dept');
-                let targetDept = $(targetItem).attr('data-dept');
-
-                if (draggedDept == null || targetDept == null)
-                        return;
-                //drag and drop is not working in Shop staff
-                if (!$(draggedItem).attr('data-dept').startsWith("S") && !$(targetItem).attr('data-dept').startsWith("S")) {
-                // Swap DOM positions
-                let draggedClone = $(draggedItem).clone(true);
-                let targetClone = $(targetItem).clone(true);
-                  //  alert(draggedStaff + "_" + targetStaff + "_" + draggedDept + "_" + targetDept);
-                $(draggedItem).replaceWith(targetClone);
-                $(targetItem).replaceWith(draggedClone);
-                    // Save DB
-                    saveSeatChange(
-                        draggedStaff,
-                        targetSeat,
-                        targetStaff,
-                        draggedSeat,
-                        draggedDept,
-                        targetDept
-                    );
-                    // Rebind
-                    bindDragDrop();
-                }
-            });
-            //
+            initGlobalDragDrop();
 
 
-            //
-            $(".department-area").on("dragenter", function () {
-                $(this).addClass("drag-over");
-            });
-
-            $(".department-area").on("dragleave drop", function () {
-                $(this).removeClass("drag-over");
-            });
-           
-
-            $(document).on("dragstart", ".staff-slot", function (e) {
-
-                draggedStaff = $(this);
-
-                e.originalEvent.dataTransfer.setData(
-                    "staffcd",
-                    $(this).data("staffcd")
-                );
-            });
-
-            $(".department-area").on("dragover", function (e) {
-                e.preventDefault();
-            });
-          
-          //  if ($(targetItem).attr('data-staffcd') == null || $(targetItem).attr('data-staffcd')== "") {
-                $(".department-area").on("drop", function (e) {
-
-                    e.preventDefault();
-                    let staffCD = e.originalEvent.dataTransfer.getData("staffcd");
-                    let targetDept = $(this).attr('data-deptCD');
-                   // alert($(draggedItem).attr('data-dept') + "_" + targetDept + "_" + $(targetItem).attr('data-staffcd'));
-                    if (staffCD == null || staffCD == "")
-                        return;
-
-                    else if (!$(draggedItem).attr('data-dept').startsWith("S") && !targetDept.startsWith("S")) {
-                        $.ajax({
-                            url: '@Url.Action("ChangeDepartment", "Home")',
-                            type: 'POST',
-                            data: {
-                                staffCD: staffCD,
-                                draggedDept: $(draggedItem).attr('data-dept'),
-                                targetDept: targetDept,
-                                targetstaff: $(targetItem).attr('data-staffcd')
-                            },
-                            success: function (res) {
-
-                                if (res.success) {
-
-                                    //// move card UI
-                                    //card.appendTo(
-                                    //    $('[data-deptCD="' + targetDept + '"]')
-                                    //);
-                                    let container = document.querySelector(".tables-container"); // your scrollable div
-                                    if (container) {
-                                        localStorage.setItem("scrollPos", container.scrollTop);
-                                    }
-                                    location.reload();
-
-                                } else {
-                                    //alert(res.message);
-                                    $("#errorMessage").text(res.message);
-                                    $("#errorBox").removeClass("hidden");
-
-                                }
-                            },
-                            error: function () {
-                                //alert("Error");
-                                $("#errorMessage").text("Error");
-                                $("#errorBox").removeClass("hidden");
-                            }
-                        });
-                    }
-                });
-          //  }
         });
 
 
@@ -690,41 +559,151 @@
            // return year + "/" + month + "/" + day;
         }
 
-        //function getByteLength(str) {
-        //    // Encodes to UTF-8 and returns the byte count
-        //    return new TextEncoder().encode(str).length;
-        //}
+
+        function initGlobalDragDrop() {
 
 
-        function bindDragDrop() {
+    $(document).off('dragstart dragend dragover dragleave drop', '.staff-slot, .department-area');
 
-            $('.staff-slot').off();
+    var draggedItem = null;
 
-            $('.staff-slot').on('dragstart', function () {
 
-                draggedItem = this;
+    $(document).on('dragstart', '.staff-slot', function (ev) {
+        ev.stopPropagation();
 
-                $(this).addClass('dragging');
-            });
+        var staffCd = $(this).attr('data-staffcd');
 
-            $('.staff-slot').on('dragend', function () {
-
-                $(this).removeClass('dragging');
-            });
-
-            $('.staff-slot').on('dragover', function (e) {
-
-                e.preventDefault();
-
-                $(this).addClass('drag-over');
-            });
-
-            $('.staff-slot').on('dragleave', function () {
-
-                $(this).removeClass('drag-over');
-            });
-
+        if (!staffCd) {
+            ev.preventDefault();
+            return;
         }
+
+        draggedItem = this;
+        ev.originalEvent.dataTransfer.setData("text/plain", staffCd);
+
+        $('.staff-slot').removeClass('is-dragging');
+        $(this).addClass('is-dragging');
+    });
+
+
+    $(document).on('dragend', '.staff-slot', function () {
+        $(this).removeClass('is-dragging');
+        $('.staff-slot, .department-area').removeClass('drag-over');
+    });
+
+
+    $(document).on('dragover', '.staff-slot, .department-area', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).addClass('drag-over');
+    });
+
+    $(document).on('dragleave', '.staff-slot, .department-area', function (e) {
+        e.stopPropagation();
+        $(this).removeClass('drag-over');
+    });
+
+
+    $(document).on('drop', '.staff-slot, .department-area', function (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        $('.staff-slot, .department-area').removeClass('drag-over');
+
+        if (!draggedItem) return;
+
+
+        var dropTarget = $(ev.target);
+
+        // (SWAP LOGIC check)
+        var targetStaffSlot = dropTarget.closest('.staff-slot');
+
+        // 🚨 Staff Code あれば -> SWAP
+        if (targetStaffSlot.length > 0 && targetStaffSlot.attr('data-staffcd') && targetStaffSlot[0] !== draggedItem) {
+
+            let targetItem = targetStaffSlot[0];
+
+            let draggedSeat = $(draggedItem).data('seat');
+            let targetSeat = $(targetItem).data('seat');
+            let draggedStaff = $(draggedItem).data('staffcd');
+            let targetStaff = $(targetItem).data('staffcd');
+            let draggedDept = $(draggedItem).data('dept');
+            let targetDept = $(targetItem).data('dept');
+          
+            if (!draggedDept || !targetDept) return;
+            if ((draggedDept.startsWith("S") && !targetDept.startsWith("S")) || (!draggedDept.startsWith("S") && targetDept.startsWith("S"))) return;
+            
+         
+            // HTML Elements　change
+            let draggedClone = $(draggedItem).clone(false);
+            let targetClone = $(targetItem).clone(false);
+            $(draggedClone).removeClass('is-dragging drag-over');
+            $(targetClone).removeClass('is-dragging drag-over');
+
+            $(draggedItem).replaceWith(targetClone);
+            $(targetItem).replaceWith(draggedClone);
+
+            // Database Update
+            if (typeof saveSeatChange === "function") {
+                saveSeatChange(draggedStaff, targetSeat, targetStaff, draggedSeat, draggedDept, targetDept);
+            }
+        }
+        // 🚨  MOVE Process
+        else {
+            var targetDeptArea = dropTarget.closest('.department-area');
+            var newDeptCd = targetDeptArea.attr('data-deptCD');
+            let staffCd = $(draggedItem).data("staffcd");
+            var oldDeptCd = $(draggedItem).data('dept');
+
+            if (!staffCd || !newDeptCd || !oldDeptCd) return;
+           // if (oldDeptCd.startsWith("S") || newDeptCd.startsWith("S")) return;
+            if ((oldDeptCd.startsWith("S") && !newDeptCd.startsWith("S")) || (!oldDeptCd.startsWith("S") && newDeptCd.startsWith("S"))) {
+                $("#errorMessage").text("動きはできません。");
+                return;
+            }
+            if (oldDeptCd === newDeptCd) return;
+
+            // Database Update
+            $.ajax({
+                url: '@Url.Action("ChangeDepartment", "Home")',
+                type: 'POST',
+                data: {
+                    staffCd: staffCd,
+                    draggedDept: oldDeptCd,
+                    targetDept: newDeptCd
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Dynamic HTML Refresh
+                        refreshDepartmentTable(oldDeptCd);
+                        refreshDepartmentTable(newDeptCd);
+                    } else {
+                        alert("Error: " + response.message);
+                    }
+                },
+                error: function() {
+                    alert("Error!");
+                }
+            });
+        }
+    });
+}
+
+
+         function refreshDepartmentTable(deptCd) {
+            $.ajax({
+          url: '@Url.Action("GetRefreshDepartment", "Home")',
+            type: 'GET',
+            data: { departmentCd: deptCd },
+            success: function (htmlResult) {
+                $('#dept-container-' + deptCd).html(htmlResult);
+            },
+            error: function () {
+                console.log("Error:" + deptCd + " is not ok to refresh!");
+            }
+        });
+        }
+
 
         function saveSeatChange(staff1, seat1, staff2, seat2, dept1, dept2) {
             $.ajax({
@@ -740,11 +719,11 @@
                     dept2: dept2
                 },
                 success: function (res) {
-                    location.reload();
+                  // Dynamic HTML Refresh
+                        refreshDepartmentTable(dept1);
+                        refreshDepartmentTable(dept2);
                 },
                 error: function () {
-
-                    //alert("Save failed");
                     $("#errorMessage").text("Save failed");
                     $("#errorBox").removeClass("hidden");
 
@@ -765,5 +744,5 @@
             $("#errorBox").addClass("hidden");
         }
 
-    </script>
+</script>
 }

@@ -20,5 +20,8 @@ namespace EmployeeTrackingSystem.Models
         public IEnumerable<DashboardViewModel> Table11 { get; set; }
 
         public List<T_Department> AvailableShops { get; set; }
+        public List<T_Department> Alldepartments { get; set; }
+
+        public IEnumerable<DashboardViewModel> divtb { get; set; }
     }
 }

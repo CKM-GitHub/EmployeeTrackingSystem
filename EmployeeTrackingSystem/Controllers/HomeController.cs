@@ -15,32 +15,42 @@ namespace EmployeeTrackingSystem.Controllers
     {
         public string conStr = ConfigurationManager.ConnectionStrings["SQLConnection"].ConnectionString;
         private EmployeeTrackingDBEntities db = new EmployeeTrackingDBEntities();
+        List<DashboardViewModel> table1 = null;
+        List<DashboardViewModel> table2 = null;
+        List<DashboardViewModel> table3 = null;
+        List<DashboardViewModel> table4 = null;
+        List<DashboardViewModel> table5 = null;
+        List<DashboardViewModel> table6 = null;
+        List<DashboardViewModel> table7 = null;
+        List<DashboardViewModel> tableshop1 = null;
+        List<DashboardViewModel> tableshop2 = null;
+        List<DashboardViewModel> tableshop3 = null;
         public ActionResult Dashboard()
-        {            
+        {
             string json1 = Get_DashboardInformation(2, "D01");
-            List<DashboardViewModel> table1 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json1);
+            table1 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json1);
             string json2 = Get_DashboardInformation(4, "D02");
-            List<DashboardViewModel> table2 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json2);
+             table2 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json2);
             string json3 = Get_DashboardInformation(2, "D03");
-            List<DashboardViewModel> table3 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json3);
+             table3 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json3);
             string json4 = Get_DashboardInformation(2, "D04");
-            List<DashboardViewModel> table4 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json4);
+             table4 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json4);
             string json5 = Get_DashboardInformation(2, "D05");
-            List<DashboardViewModel> table5 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json5);
+            table5 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json5);
             string json6 = Get_DashboardInformation(2, "D06");
-            List<DashboardViewModel> table6 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json6);
+             table6 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json6);
             string json7 = Get_DashboardInformation(4, "D07");
-            List<DashboardViewModel> table7 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json7);
-          
+             table7 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json7);
+
             string json_shop1 = Get_DashboardInformation(2, "S01");
-            List<DashboardViewModel> tableshop1 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json_shop1);
+             tableshop1 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json_shop1);
 
             string json_shop2 = Get_DashboardInformation(2, "S02");
-            List<DashboardViewModel> tableshop2 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json_shop2);
+             tableshop2 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json_shop2);
 
             string json_shop3 = Get_DashboardInformation(2, "S03");
-            List<DashboardViewModel> tableshop3 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json_shop3);
-            
+            tableshop3 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json_shop3);
+                
             var model = new DashboardTablesViewModel
             {
                 Table1 = table1,
@@ -53,9 +63,86 @@ namespace EmployeeTrackingSystem.Controllers
                 Table9 = tableshop1,
                 Table10 = tableshop2,
                 Table11 = tableshop3,
-                AvailableShops = db.T_Department.Where(s => s.DepartmentCD.StartsWith("S")).ToList()
-            };          
+                AvailableShops = db.T_Department.Where(s => s.DepartmentCD.StartsWith("S")).ToList(),
+                Alldepartments = db.T_Department.ToList()               
+            };
             return View(model);
+        }
+        [HttpGet]
+        public ActionResult GetRefreshDepartment(string departmentCd) // 20260601 ttw
+        {
+
+            DashboardTablesViewModel model = new DashboardTablesViewModel();
+            if (departmentCd == "D01")
+            {
+                string json1 = Get_DashboardInformation(2, "D01");
+                table1 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json1);
+                model.divtb = table1;
+            }
+            else if (departmentCd == "D02")
+            {
+                string json2 = Get_DashboardInformation(4, "D02");
+                table2 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json2);
+                model.divtb = table2;
+            }
+            else if (departmentCd == "D03")
+            {
+                string json3 = Get_DashboardInformation(2, "D03");
+                table3 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json3);
+                model.divtb = table3;
+            }
+            else if (departmentCd == "D04")
+            {
+                string json4 = Get_DashboardInformation(2, "D04");
+                table4 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json4);
+                model.divtb = table4;
+            }
+            else if (departmentCd == "D05")
+            {
+                string json5 = Get_DashboardInformation(2, "D05");
+                table5 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json5);
+                model.divtb = table5;
+            }
+            else if (departmentCd == "D06")
+            {
+                string json6 = Get_DashboardInformation(2, "D06");
+                table6 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json6);
+                model.divtb = table6;
+            }
+            else if (departmentCd == "D07")
+            {
+                string json7 = Get_DashboardInformation(4, "D07");
+                table7 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json7);
+                model.divtb = table7;
+            }
+            else if(departmentCd == "S01")
+            {
+                string json_shop1 = Get_DashboardInformation(2, "S01");
+                tableshop1 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json_shop1);
+                model.divtb = tableshop1;
+            }
+            else if (departmentCd == "S02")
+            {
+                string json_shop2 = Get_DashboardInformation(2, "S02");
+                tableshop2 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json_shop2);
+                model.divtb = tableshop2;
+            }
+            else if (departmentCd == "S03")
+            {
+                string json_shop3 = Get_DashboardInformation(2, "S03");
+                tableshop3 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json_shop3);
+                model.divtb = tableshop3;
+            }           
+
+            string partialview = string.Empty;
+            if (departmentCd == "D02" || departmentCd == "D07")
+            {
+                partialview = "_DashboardTable5Col";
+            }
+            else
+                partialview = "_DashboardTable";
+            
+            return PartialView(partialview, model.divtb);
         }
         public string Get_DashboardInformation(int show_column, string DepartmentCD)
         {
@@ -253,6 +340,11 @@ namespace EmployeeTrackingSystem.Controllers
                         s2.SeatNo = seat1;
                         s2.DepartmentCD = dept1;
                     }
+                    if(dept1.StartsWith("S") && dept2.StartsWith("S"))
+                    {                       
+                        s1.CurrentShop = int.Parse(s1.DepartmentCD.Substring(1));
+                        s2.CurrentShop = int.Parse(s2.DepartmentCD.Substring(1));
+                    }
 
                     db.SaveChanges();
 
@@ -273,14 +365,14 @@ namespace EmployeeTrackingSystem.Controllers
         }
 
         [HttpPost]
-        public JsonResult ChangeDepartment(string staffCD,string draggedDept,string targetDept, string targetstaff)
+        public JsonResult ChangeDepartment(string staffCD,string draggedDept,string targetDept)
         {
             using (var db = new EmployeeTrackingDBEntities())
             {
                 var staff = db.T_StaffMaster
                     .FirstOrDefault(x => x.StaffCD == staffCD);
 
-                if (staffCD == null)
+                if (staffCD == null || staffCD == "")
                 {
                     return Json(new
                     {
@@ -290,34 +382,41 @@ namespace EmployeeTrackingSystem.Controllers
                 }
                 //20260514 ttw 
 
-                if (draggedDept != targetDept && targetstaff == null)
+                if (draggedDept != targetDept)
                 {
-                    // old department reorder
-                    var oldList = db.T_StaffMaster
-                        .Where(s =>
-                            s.DepartmentCD == draggedDept &&
-                            s.StaffCD != staffCD &&
-                            s.Enroll != false)
-                        .OrderBy(s => s.SeatNo)
-                        .ToList();
-
-                    int no = 1;
-
-                    foreach (var s in oldList)
+                    if (draggedDept.StartsWith("S") && targetDept.StartsWith("S"))
                     {
-                        s.SeatNo = no++;
+                        staff.DepartmentCD = targetDept;
+                        staff.CurrentShop = int.Parse(targetDept.Substring(1));
                     }
+                    else
+                    {
+                        // old department reorder
+                        var oldList = db.T_StaffMaster
+                            .Where(s =>
+                                s.DepartmentCD == draggedDept &&
+                                s.StaffCD != staffCD &&
+                                s.Enroll != false)
+                            .OrderBy(s => s.SeatNo)
+                            .ToList();
 
-                    // new department max seat
-                    int maxSeatNo = db.T_StaffMaster
-                        .Where(x =>
-                            x.DepartmentCD == targetDept &&
-                            x.Enroll != false)
-                        .Max(x => (int?)x.SeatNo) ?? 0;
+                        int no = 1;
 
-                    // move current staff
-                    staff.DepartmentCD = targetDept;
-                    staff.SeatNo = maxSeatNo + 1;
+                        foreach (var s in oldList)
+                        {
+                            s.SeatNo = no++;
+                        }
+                        // new department max seat
+                        int maxSeatNo = db.T_StaffMaster
+                            .Where(x =>
+                                x.DepartmentCD == targetDept &&
+                                x.Enroll != false)
+                            .Max(x => (int?)x.SeatNo) ?? 0;
+
+                        // move current staff
+                        staff.DepartmentCD = targetDept;
+                        staff.SeatNo = maxSeatNo + 1;
+                    }
                     db.SaveChanges();
                 }
 
