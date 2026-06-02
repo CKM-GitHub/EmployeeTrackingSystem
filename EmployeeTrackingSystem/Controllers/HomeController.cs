@@ -50,8 +50,8 @@ namespace EmployeeTrackingSystem.Controllers
 
             string json_shop3 = Get_DashboardInformation(2, "S03");
             tableshop3 = JsonConvert.DeserializeObject<List<DashboardViewModel>>(json_shop3);
-                
-            var model = new DashboardTablesViewModel
+            ViewBag.CurDate = DateTime.Now.ToString("yyyy-MM-dd");
+           var model = new DashboardTablesViewModel
             {
                 Table1 = table1,
                 Table2 = table2,

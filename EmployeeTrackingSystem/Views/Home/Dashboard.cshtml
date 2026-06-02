@@ -7,7 +7,7 @@
     <div class="row align-items-center mb-12">
         <div class="col-12 col-sm-6 col-md-3">
             <div class="main-title-bar text-center text-md-start">
-                今の出席状況概要
+                @ViewBag.CurDate の出席状況概要
             </div>
         </div>
 
@@ -723,9 +723,12 @@
                     dept2: dept2
                 },
                 success: function (res) {
-                  // Dynamic HTML Refresh
+                    // Dynamic HTML Refresh
+                    if ($("#departmentDropdown").val() == null) {
                         refreshDepartmentTable(dept1);
                         refreshDepartmentTable(dept2);
+                    }
+                      
                 },
                 error: function () {
                     $("#errorMessage").text("Save failed");
