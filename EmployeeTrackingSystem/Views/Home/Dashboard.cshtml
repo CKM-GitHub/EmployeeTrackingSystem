@@ -36,14 +36,14 @@
             </div>
         </div>
 
-        @*<div class="col-12 col-sm-6 col-md-3  tablet-mobile-only">
+        <div class="col-12 col-sm-6 col-md-3  tablet-mobile-only">
             @Html.DropDownList(
                 "SelectedDepartment",
                 new SelectList(Model.Alldepartments, "DepartmentCD", "DepartmentName"),
                 "-- Select Department --",
                 new { @class = "form-control", @id = "departmentDropdown" }
             )
-        </div>*@
+        </div>
     </div>
 
     @model EmployeeTrackingSystem.Models.DashboardTablesViewModel
@@ -213,15 +213,19 @@
         let draggedItem = null;
         let targetItem = null;
         let staffdrop = null;
-        $(document).ready(function () {
-            // check flag after reload
-            //let container = document.querySelector(".tables-container"); // same scrollable div
-            //let savedPos = localStorage.getItem("scrollPos");
+    $(document).ready(function () {
+        // Initial load
+        filterDepartment();
 
-            //if (container && savedPos !== null) {
-            //    container.scrollTop = savedPos;
-            //    localStorage.removeItem("scrollPos"); // clear after use
-            //}
+            $("#departmentDropdown").change(function () {
+
+                filterDepartment();
+            });
+            
+            $(window).resize(function () {
+                filterDepartment();
+            });
+
             $(document).on("click", ".staff-link", function () {
                 // Clear all inputs in the modal form
                 $("#staffForm")[0].reset();
@@ -743,6 +747,35 @@
         function closeErrorBox() {
             $("#errorBox").addClass("hidden");
         }
+    function filterDepartment() {
 
+        var screenWidth = $(window).width();
+        var selectedDept = $("#departmentDropdown").val();
+
+        // Mobile
+        if (screenWidth < 768) {
+
+            $(".department-area").hide();
+
+            if (selectedDept === "") {
+                $(".department-area").show();
+            } else {
+                $(".department-area").hide();
+                $('#dept-container-' + selectedDept).show();
+
+                // Optional: scroll to selected department
+                $('html, body').animate({
+                    scrollTop: $('#dept-container-' + selectedDept).offset().top - 10
+                }, 300);
+            }
+        }
+        // Desktop
+        else {
+            $(".department-area").show();
+        }
+    }
+
+
+   
 </script>
 }
