@@ -118,6 +118,9 @@ namespace EmployeeTrackingSystem.Controllers
                     int.TryParse(model.DepartmentCD.Substring(1, 2), out int shop))
                 {
                     model.CurrentShop = shop;
+                    maxSeatNo = db.T_StaffMaster
+                    .Where(x => x.DepartmentCD.Contains("S0"))
+                    .Max(x => x.SeatNo).GetValueOrDefault();
                 }
                 else
                 {

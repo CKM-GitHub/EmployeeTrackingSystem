@@ -328,22 +328,39 @@ namespace EmployeeTrackingSystem.Controllers
                     var s2 = db.T_StaffMaster
                                .FirstOrDefault(x => x.StaffCD == staff2);
 
-                    if (s1 != null)
+                    //if (s1 != null)
+                    //{
+                    //    seat1 = s1.SeatNo;
+                    //    s1.SeatNo = s2.SeatNo;
+                    //    s1.DepartmentCD = dept2;
+                    //}
+
+                    //if (s2 != null)
+                    //{
+                    //    s2.SeatNo = seat1;
+                    //    s2.DepartmentCD = dept1;
+                    //}
+                    //if(dept1.StartsWith("S") && dept2.StartsWith("S"))
+                    //{                       
+                    //    s1.CurrentShop = int.Parse(s1.DepartmentCD.Substring(1));
+                    //    s2.CurrentShop = int.Parse(s2.DepartmentCD.Substring(1));
+                    //}
+
+                    if (s1 != null && s2 != null)
                     {
+                        if (dept1.StartsWith("S") && dept2.StartsWith("S"))
+                        {
+                            s1.CurrentShop = s2.CurrentShop;    //int.Parse(s2.DepartmentCD.Substring(1));                          
+                            s2.CurrentShop = s1.CurrentShop;    //int.Parse(s1.DepartmentCD.Substring(1));                          
+                        }
+                        else
+                        {                            
+                            s1.DepartmentCD = dept2;
+                            s2.DepartmentCD = dept1;
+                        }
                         seat1 = s1.SeatNo;
                         s1.SeatNo = s2.SeatNo;
-                        s1.DepartmentCD = dept2;
-                    }
-
-                    if (s2 != null)
-                    {
                         s2.SeatNo = seat1;
-                        s2.DepartmentCD = dept1;
-                    }
-                    if(dept1.StartsWith("S") && dept2.StartsWith("S"))
-                    {                       
-                        s1.CurrentShop = int.Parse(s1.DepartmentCD.Substring(1));
-                        s2.CurrentShop = int.Parse(s2.DepartmentCD.Substring(1));
                     }
 
                     db.SaveChanges();
@@ -385,8 +402,7 @@ namespace EmployeeTrackingSystem.Controllers
                 if (draggedDept != targetDept)
                 {
                     if (draggedDept.StartsWith("S") && targetDept.StartsWith("S"))
-                    {
-                        staff.DepartmentCD = targetDept;
+                    {                     
                         staff.CurrentShop = int.Parse(targetDept.Substring(1));
                     }
                     else
