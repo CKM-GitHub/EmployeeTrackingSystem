@@ -761,3 +761,11 @@ body {
             flex-shrink: 0;
         }
 }
+#dashboard_header {
+    display: flex; /*20260603*/
+    flex-wrap: wrap;
+    margin: 10px 0 10px 0;
+    overflow-y: auto; /* enable vertical scroll */
+    overflow-x: hidden; /* enable vertical scroll */
+    padding: 10px;
+}
