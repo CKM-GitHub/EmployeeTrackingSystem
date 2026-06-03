@@ -593,6 +593,19 @@ body {
 
 /* Small tablets */
 @media (max-width: 600px) {
+    .status-legend {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 6px;
+        align-items: center;
+    }
+
+    #departmentDropdown {
+        display: block; /* force next line */
+        width: 91%; /* optional: full width for mobile */
+        min-width: 180px;
+        margin-top: 0.5rem; /* spacing from legend items */
+    }
     .board-table,
     .board-table thead,
     .board-table tbody,
@@ -741,7 +754,7 @@ body {
 @media (max-width: 390px) {
     .status-legend {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 6px;
         align-items: center;
     }

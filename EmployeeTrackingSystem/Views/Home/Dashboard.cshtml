@@ -33,17 +33,18 @@
                     <span class="dot day-off"></span>
                     <span class="label">休み</span>
                 </div>
+                <div class="tablet-mobile-only">
+                    @Html.DropDownList(
+                        "SelectedDepartment",
+                        new SelectList(Model.Alldepartments, "DepartmentCD", "DepartmentName"),
+                        "-- Select Department --",
+                        new { @class = "form-control", @id = "departmentDropdown" }
+                    )
+                </div>
             </div>
         </div>
 
-        <div class="col-12 col-xs-12 col-sm-6 col-md-3  tablet-mobile-only">
-            @Html.DropDownList(
-                "SelectedDepartment",
-                new SelectList(Model.Alldepartments, "DepartmentCD", "DepartmentName"),
-                "-- Select Department --",
-                new { @class = "form-control", @id = "departmentDropdown" }
-            )
-        </div>
+        
     </div>
 
     @model EmployeeTrackingSystem.Models.DashboardTablesViewModel
@@ -214,6 +215,11 @@
         let targetItem = null;
         let staffdrop = null;
     $(document).ready(function () {
+        // Restore saved value from sessionStorage
+        var savedDept = sessionStorage.getItem("selectedDept");
+        if (savedDept) {
+            $("#departmentDropdown").val(savedDept);
+        }
         // Initial load
         filterDepartment();
 
@@ -740,11 +746,18 @@
         // Close functions
         function closeSuccessBox() {
             $("#successBox").addClass("hidden");
-            let container = document.querySelector(".tables-container"); // your scrollable div
-            if (container) {
-                localStorage.setItem("scrollPos", container.scrollTop);
+            //let container = document.querySelector(".tables-container"); // your scrollable div
+            //if (container) {
+            //    localStorage.setItem("scrollPos", container.scrollTop);
+            //}
+            var ddlval = $('#departmentDropdown').val();
+            if (ddlval != '') {
+                sessionStorage.setItem("selectedDept", ddlval);
+                location.reload(); // reload after closing
+            } else {
+                sessionStorage.removeItem("selectedDept");
+                location.reload(); // reload after closing
             }
-            location.reload(); // reload after closing
         }
 
         function closeErrorBox() {
@@ -775,6 +788,7 @@
         // Desktop
         else {
             $(".department-area").show();
+            $('#departmentDropdown').val("");
         }
     }
     
