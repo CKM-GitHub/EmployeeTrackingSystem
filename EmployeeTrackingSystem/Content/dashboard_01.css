@@ -474,7 +474,12 @@ body {
     .tablet-mobile-only {
         display: block;
     }
-
+    #departmentDropdown {
+        min-width: 180px;  
+    }
+    .col-sm-6.sts {
+        width: 100%;
+    }
     .tb1 {
         order: 1;
     }
@@ -522,7 +527,6 @@ body {
     .tablet-mobile-only {
         display: block;
     }
-
     .tb1 {
         order: 1;
     }
