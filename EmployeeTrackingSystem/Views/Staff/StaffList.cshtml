@@ -527,19 +527,19 @@
             $(document).on("click", "#tableStaff tbody .btn-primary", function () {
                 let row = $(this).closest("tr");
 
-                $("#StaffCD").val(row.find("td").eq(0).text().trim());
-                $("#StaffName").val(row.find("td").eq(1).text().trim());
+                $("#StaffCD").val(row.find("td").eq(1).text().trim());
+                $("#StaffName").val(row.find("td").eq(2).text().trim());
                 $("#DepartmentCD").val(row.find(".deptCD").val());
                 $("#Email").val(row.find(".email").val());
                 $("#Remark").val(row.find(".remark").val());
 
-                let joinedText = row.find("td").eq(3).text().trim();
+                let joinedText = row.find("td").eq(4).text().trim();
                 $("#JoinedDate").val(joinedText ? joinedText.replace(/\//g, "/") : "");
-                $("#PhoneNo").val(row.find("td").eq(4).text().trim());
-                $("#EmployeeType").val(row.find("td").eq(5).text().trim());
+                $("#PhoneNo").val(row.find("td").eq(5).text().trim());
+                $("#EmployeeType").val(row.find("td").eq(6).text().trim());
                 $("#oldDeptCD").val(row.find(".deptCD").val());
 
-                let shopName = row.find("td").eq(6).text().trim();
+                let shopName = row.find("td").eq(7).text().trim();
                 let enrollVal = row.find(".enroll").val();
                 $("#editModal input[name='Enroll'][value='" + enrollVal + "']").prop("checked", true);
 
