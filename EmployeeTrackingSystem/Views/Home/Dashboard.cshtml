@@ -228,7 +228,7 @@
                 filterDepartment();
             });
             
-            $(window).resize(function () {
+        $(window).resize(function () {
                 filterDepartment();
             });
 
@@ -780,9 +780,9 @@
                 $('#dept-container-' + selectedDept).show();
 
                 // Optional: scroll to selected department
-                $('html, body').animate({
-                    scrollTop: $('#dept-container-' + selectedDept).offset().top - 10
-                }, 300);
+                //$('html, body').animate({
+                //    scrollTop: $('#dept-container-' + selectedDept).offset().top - 10
+                //}, 300);
             }
         }
         // Desktop
