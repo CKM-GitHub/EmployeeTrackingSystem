@@ -8,6 +8,9 @@
     @section Buttons {
         <button class="btn_search btn" id="btn_search">検索</button>
         <button class="btn_Blue btn btn-primary" id="btn_Excel">Excel</button>
+        &nbsp;&nbsp;&nbsp;
+        <input type="checkbox" id="chkStaff" />
+        <label for="chkStaff">Inactive</label>
     }
 
     <div class="detail-wrapper table-v-scroll table-responsive">
@@ -26,11 +29,11 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td class="truncate-logic" >@item.StaffName</td>
-                        <td >@item.DepartmentName</td>
-                        <td class="th_center" style="background-color:@GetStatusColor(item.Status)" >@item.Status</td>
-                        <td class="th_center" >@(item.StartDateTime.HasValue ? item.StartDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>
-                        <td class="th_center" >@(item.ReturnDateTime.HasValue ? item.ReturnDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>
+                        <td class="truncate-logic">@item.StaffName</td>
+                        <td>@item.DepartmentName</td>
+                        <td class="th_center" style="background-color:@GetStatusColor(item.Status)">@item.Status</td>
+                        <td class="th_center">@(item.StartDateTime.HasValue ? item.StartDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>
+                        <td class="th_center">@(item.ReturnDateTime.HasValue ? item.ReturnDateTime.Value.ToString("yyyy-MM-dd HH:mm") : "")</td>
                         <td>
                             <div class="truncate-logic">
                                 @item.Note
@@ -72,7 +75,8 @@
                 departMent: $('#department').val(),
                 staffName: $('#staff').val(),
                     fromDate: $("input[name='fromDate']").val(),
-                    toDate:   $("input[name='toDate']").val()
+                    toDate: $("input[name='toDate']").val(),
+                    chkstaff : $("#chkStaff").is(":checked") ? 1 : 0
                 };               
                 $.ajax({
                 url: '@Url.Action("GetFilteredData", "Detail")',
