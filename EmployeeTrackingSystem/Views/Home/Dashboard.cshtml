@@ -630,7 +630,7 @@
 
         // 🚨 Staff Code あれば -> SWAP
         if (targetStaffSlot.length > 0 && targetStaffSlot.attr('data-staffcd') && targetStaffSlot[0] !== draggedItem) {
-
+           
             let targetItem = targetStaffSlot[0];
 
             let draggedSeat = $(draggedItem).data('seat');
@@ -640,8 +640,14 @@
             let draggedDept = $(draggedItem).data('dept');
             let targetDept = $(targetItem).data('dept');
           
-            if (!draggedDept || !targetDept) return;
-            if ((draggedDept.startsWith("S") && !targetDept.startsWith("S")) || (!draggedDept.startsWith("S") && targetDept.startsWith("S"))) return;
+            if (!draggedDept || !targetDept) {               
+                return;
+            }
+            if ((draggedDept.startsWith("S") && !targetDept.startsWith("S")) || (!draggedDept.startsWith("S") && targetDept.startsWith("S"))) {
+                $("#errorMessage").text("動きはできません。");
+                $("#errorBox").removeClass("hidden");
+                return;
+            }
             
          
             // HTML Elements　change
@@ -664,9 +670,8 @@
             var newDeptCd = targetDeptArea.attr('data-deptCD');
             let staffCd = $(draggedItem).data("staffcd");
             var oldDeptCd = $(draggedItem).data('dept');
-
+           
             if (!staffCd || !newDeptCd || !oldDeptCd) return;
-           // if (oldDeptCd.startsWith("S") || newDeptCd.startsWith("S")) return;
             if ((oldDeptCd.startsWith("S") && !newDeptCd.startsWith("S")) || (!oldDeptCd.startsWith("S") && newDeptCd.startsWith("S"))) {
                 $("#errorMessage").text("動きはできません。");
                 return;
