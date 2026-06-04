@@ -22,14 +22,15 @@ namespace EmployeeTrackingSystem.Controllers
             var startDate = new DateTime(now.Year, now.Month, 1);
             var endDate = startDate.AddMonths(1).AddDays(-1);
 
+
             var deptParam = new SqlParameter("@Department", (object)DBNull.Value);
             var staffParam = new SqlParameter("@StaffName", (object)DBNull.Value);
             var frmDate = new SqlParameter("@FrmDate", startDate.ToString());
             var toDate = new SqlParameter("@ToDate", endDate.ToString());
-
+            var chkstaffParam = new SqlParameter("@chkstaff","0");
             List<DetailViewModel> list = db.Database.SqlQuery<DetailViewModel>(
-             "EXEC Select_DetailLogging @Department, @StaffName, @FrmDate, @ToDate",
-             deptParam, staffParam, frmDate, toDate
+             "EXEC Select_DetailLogging @Department, @StaffName, @FrmDate, @ToDate, @chkstaff",
+             deptParam, staffParam, frmDate, toDate,chkstaffParam
          ).ToList();
 
 
@@ -40,7 +41,7 @@ namespace EmployeeTrackingSystem.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetFilteredData(string department, string staffname, string fromdate, string todate)
+        public JsonResult GetFilteredData(string department, string staffname, string fromdate, string todate, string chkstaff)
         {
             try
             {
@@ -48,16 +49,17 @@ namespace EmployeeTrackingSystem.Controllers
                 staffname = staffname == "All" || staffname == "" ? null : staffname;
                 fromdate = fromdate == "" ? null : fromdate;
                 todate = todate == "" ? null : todate;
+                
                 // Create SQL parameters to match your Stored Procedure
                 var deptParam = new SqlParameter("@Department", department ?? (object)DBNull.Value);
                 var staffParam = new SqlParameter("@StaffName", staffname ?? (object)DBNull.Value);
                 var frmDate = new SqlParameter("@FrmDate", fromdate ?? (object)DBNull.Value);
-                var toDate = new SqlParameter("@ToDate", todate ?? (object)DBNull.Value);
-
+                var toDate = new SqlParameter("@ToDate", todate ?? (object)DBNull.Value);                
+                var chkstaffParam = new SqlParameter("@chkstaff", string.IsNullOrEmpty(chkstaff) ? 0 : int.Parse(chkstaff));
                 // Execute the SP and map results to your Model
                 List<DetailViewModel> list = db.Database.SqlQuery<DetailViewModel>(
-                "EXEC Select_DetailLogging @Department, @StaffName, @FrmDate, @ToDate",
-                deptParam, staffParam, frmDate, toDate
+                "EXEC Select_DetailLogging @Department, @StaffName, @FrmDate, @ToDate, @chkstaff",
+                deptParam, staffParam, frmDate, toDate, chkstaffParam
                 ).ToList();
 
                 var result = list.Select(x => new {
