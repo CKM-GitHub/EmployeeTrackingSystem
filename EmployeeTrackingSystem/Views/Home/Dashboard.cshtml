@@ -777,7 +777,16 @@
                 $(".department-area").show();
             } else {
                 $(".department-area").hide();
-                $('#dept-container-' + selectedDept).show();
+                
+                if (selectedDept === 'S01' || selectedDept === 'S02' || selectedDept === 'S03') {
+                    // Hide all shop first
+                    $('#dept-container-S01, #dept-container-S02, #dept-container-S03').hide();
+
+                    // Show all shop
+                    $('#dept-container-S01, #dept-container-S02, #dept-container-S03').show();
+                }
+                else
+                    $('#dept-container-' + selectedDept).show();
 
                 // Optional: scroll to selected department
                 //$('html, body').animate({
