@@ -12,18 +12,19 @@ namespace EmployeeTrackingSystem.Controllers
     public class StaffController : BaseController
     {
 
-        public ActionResult StaffList(string department, string staff)
+        public ActionResult StaffList(string department, string staff, string chkstaff)
         {
             ViewBag.ShowDropdown = true;
             LoadDropdowns();
             // JOIN Staff + Department
             var departmentParam = string.IsNullOrEmpty(department) ? (object)DBNull.Value : department;
             var staffParam = string.IsNullOrEmpty(staff) ? (object)DBNull.Value : staff;
-
+            int chkstaffParam = string.IsNullOrEmpty(chkstaff) ? 0 : int.Parse(chkstaff);
             var staffList = db.Database.SqlQuery<staffViewModel>(
-                "EXEC GetStaffList @departmentcd, @staffcd",
+                "EXEC GetStaffList @departmentcd, @staffcd, @chkstaff",
                 new SqlParameter("@departmentcd", departmentParam),
-                new SqlParameter("@staffcd", staffParam)
+                new SqlParameter("@staffcd", staffParam),
+                new SqlParameter("@chkstaff", chkstaffParam)
             ).ToList();
 
 
@@ -182,7 +183,7 @@ namespace EmployeeTrackingSystem.Controllers
             try
             {
                 var staff = db.T_StaffMaster
-                    .FirstOrDefault(x => x.StaffCD == model.StaffCD && x.Enroll == true);
+                    .FirstOrDefault(x => x.StaffCD == model.StaffCD);
 
                 if (staff == null)
                 {
@@ -195,7 +196,7 @@ namespace EmployeeTrackingSystem.Controllers
                 staff.PhoneNo = model.PhoneNo;
                 staff.JoinedDate = model.JoinedDate;
                 staff.EmployeeType = model.EmployeeType;
-                staff.Enroll = model.Enroll;
+                
                 staff.Remark = model.Remark;
 
                 var dept = (model.DepartmentCD ?? "").Trim();
@@ -241,8 +242,23 @@ namespace EmployeeTrackingSystem.Controllers
                     }
                     if (model.Enroll == false)
                         staff.SeatNo = 0;
+                    else if(model.Enroll == true && staff.Enroll == false) // change enroll false to true
+                    {
+                        var stflist = db.T_StaffMaster
+                          .Where(x =>
+                              x.DepartmentCD == model.DepartmentCD && x.Enroll == true).ToList();
+                        // .Max(x => (int?)x.SeatNo) ?? 0;
+                        int no = 1;
+
+                        foreach (var s in stflist)
+                        {
+                            s.SeatNo = no++;
+                        }
+                        staff.SeatNo = stflist.Count + 1;
+                    }
                 }
 
+                staff.Enroll = model.Enroll;
                 staff.UpdateDateTime = DateTime.Now;
 
                 db.SaveChanges();

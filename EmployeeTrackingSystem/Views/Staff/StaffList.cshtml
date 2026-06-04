@@ -3,17 +3,25 @@
 @model List<staffViewModel>
 
 @{ ViewBag.Title = "Staff List"; }
+<style>
+    .inactive-row {
+        background-color: #B5AFAE !important;
+    }
+</style>
 <div class="container-fluid mt-2">
 
     @section Buttons {
-        <div class="d-flex mb-2">
-            <button type="button" id="btnSearch" class="btn_search btn">
-                検索
-            </button>
-            <button type="button" class="btn_Blue btn btn-primary" data-toggle="modal" data-target="#addModal">
-                追加
-            </button>
-        </div>
+    <div class="d-flex mb-2">
+        <button type="button" id="btnSearch" class="btn_search btn">
+            検索
+        </button>
+        <button type="button" class="btn_Blue btn btn-primary" data-toggle="modal" data-target="#addModal">
+            追加
+        </button> &nbsp;&nbsp;&nbsp;
+        <input type="checkbox" id="chkStaff" />
+        <label for="chkStaff">Inactive</label>
+    </div>
+       
     }
 
     <!-- TABLE AREA -->
@@ -37,7 +45,7 @@
                 {
                     foreach (var item in Model)
                     {
-                        <tr>
+                        <tr class="@(item.Enroll ? "" : "inactive-row")">
                             <td class="text-left" width="10%">@item.StaffCD</td>
                             <td class="text-left" width="15%">@item.StaffName</td>
                             <td class="text-left" width="20%">
@@ -281,9 +289,8 @@
             $('#editModal').on('shown.bs.modal', function () {
                 $("#editForm [name='StaffName']").focus();
             });
-
-
-
+            
+          
             $('#addForm [name="StaffCD"]').on('input', function () {
                 this.value = this.value.replace(/[^A-Za-z0-9-]/g, '');
             });
@@ -489,6 +496,7 @@
             $(document).on("click", "#btnSearch", function () {
                 var dept = $("#department").val();
                 var staff = $("#staff").val();
+                var chkstaff = $("#chkStaff").is(":checked") ? 1 : 0;
                 if (dept.startsWith("S")) {
                     $("#btnUpdateSeat").hide();
                     $("#Seat_tr").hide();
@@ -499,7 +507,7 @@
                 $.ajax({
                     url: '@Url.Action("StaffList", "Staff")',
                     type: 'GET',
-                    data: { department: dept, staff: staff },
+                    data: { department: dept, staff: staff, chkstaff: chkstaff },
                     success: function (result) {
                         $("#tableStaff tbody").html($(result).find("#tableStaff tbody").html());
                     },
