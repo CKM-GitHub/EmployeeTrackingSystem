@@ -8419,3 +8419,6 @@ button.close {
 .hidden {
     display: none;
 }
+.inactive-row {
+    background-color: #B5AFAE !important;
+}
