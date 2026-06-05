@@ -15,6 +15,7 @@ body::-webkit-scrollbar {
 }
 
 body {
+    background-color: #ddebf7 !important;
     margin: 0;
 }
 
@@ -6069,10 +6070,10 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .label {
     display: inline;
     padding: 0.2em 0.6em 0.3em;
-    font-size: 75%;
+    font-size: 100%;
     font-weight: 700;
     line-height: 1;
-    color: #fff;
+    /*color: #fff;*/
     text-align: center;
     white-space: nowrap;
     vertical-align: baseline;
@@ -7342,7 +7343,7 @@ button.close {
 
 .modal-content {
     position: relative;
-    background-color: #fff;
+    background-color: #D7F1D0;
     background-clip: padding-box;
     border: 1px solid #999;
     border: 1px solid rgba(0, 0, 0, 0.2);

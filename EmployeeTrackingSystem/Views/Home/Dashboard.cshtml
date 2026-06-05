@@ -5,7 +5,7 @@
 }
 <div class="container-fluid py-3">
     <div class="row align-items-center mb-12 d-flex flex-wrap" id="dashboard_header">
-        <div class="col-12 col-xs-12 col-sm-6 col-md-3 sts" >
+        <div class="col-12 col-xs-12 col-sm-6 col-md-3 sts">
             <div class="main-title-bar text-center text-md-start">
                 @ViewBag.CurDate の出席状況概要
             </div>
@@ -44,42 +44,42 @@
             </div>
         </div>
 
-        
+
     </div>
 
     @model EmployeeTrackingSystem.Models.DashboardTablesViewModel
-       
 
-        <div id="tables-container" class="tables-container d-flex flex-wrap">
-            <!-- Table 1–2–9 -->
-            <div class="col-md-3 col-sm-12 tb1">@Html.Partial("_DashboardTable", Model.Table1)</div>
-            <div class="col-md-6 col-sm-12 tb2">@Html.Partial("_DashboardTable5Col", Model.Table2)</div>
-            <div class="col-md-3 col-sm-12 tb9">@Html.Partial("_DashboardTable", Model.Table9)</div>
 
-            <!-- Table 3–7–10 -->
-            <div class="col-md-3 col-sm-12 tb3">@Html.Partial("_DashboardTable", Model.Table3)</div>
-            <div class="col-md-6 col-sm-12 tb4">@Html.Partial("_DashboardTable5Col", Model.Table7)</div>
-            <div class="col-md-3 col-sm-12 tb10">@Html.Partial("_DashboardTable", Model.Table10)</div>
+    <div id="tables-container" class="tables-container d-flex flex-wrap">
+        <!-- Table 1–2–9 -->
+        <div class="col-md-3 col-sm-12 tb1">@Html.Partial("_DashboardTable", Model.Table1)</div>
+        <div class="col-md-6 col-sm-12 tb2">@Html.Partial("_DashboardTable5Col", Model.Table2)</div>
+        <div class="col-md-3 col-sm-12 tb9">@Html.Partial("_DashboardTable", Model.Table9)</div>
 
-            <!-- Table 6–4–5–11 -->
-            <div class="col-md-3 col-sm-12 tb5">@Html.Partial("_DashboardTable", Model.Table6)</div>
-            @*<div class="col-md-3 col-sm-12 tb6">@Html.Partial("_DashboardTable", Model.Table4)</div>
-                <div class="col-md-3 col-sm-12 tb7">@Html.Partial("_DashboardTable", Model.Table5)</div>*@
-            <div class="col-md-6 col-sm-12 tb6">
-                @*capital & tennic tokyo*@
-                <div class="row no-gap">
-                    <div class="col-md-6 col-sm-12">
-                        @Html.Partial("_DashboardTable", Model.Table4)
-                    </div>
-                    <div class="col-md-6 col-sm-12">
-                        @Html.Partial("_DashboardTable", Model.Table5)
-                    </div>
+        <!-- Table 3–7–10 -->
+        <div class="col-md-3 col-sm-12 tb3">@Html.Partial("_DashboardTable", Model.Table3)</div>
+        <div class="col-md-6 col-sm-12 tb4">@Html.Partial("_DashboardTable5Col", Model.Table7)</div>
+        <div class="col-md-3 col-sm-12 tb10">@Html.Partial("_DashboardTable", Model.Table10)</div>
+
+        <!-- Table 6–4–5–11 -->
+        <div class="col-md-3 col-sm-12 tb5">@Html.Partial("_DashboardTable", Model.Table6)</div>
+        @*<div class="col-md-3 col-sm-12 tb6">@Html.Partial("_DashboardTable", Model.Table4)</div>
+            <div class="col-md-3 col-sm-12 tb7">@Html.Partial("_DashboardTable", Model.Table5)</div>*@
+        <div class="col-md-6 col-sm-12 tb6">
+            @*capital & tennic tokyo*@
+            <div class="row no-gap">
+                <div class="col-md-6 col-sm-12">
+                    @Html.Partial("_DashboardTable", Model.Table4)
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    @Html.Partial("_DashboardTable", Model.Table5)
                 </div>
             </div>
-
-            <div class="col-md-3 col-sm-12 tb11">@Html.Partial("_DashboardTable", Model.Table11)</div>
-            
         </div>
+
+        <div class="col-md-3 col-sm-12 tb11">@Html.Partial("_DashboardTable", Model.Table11)</div>
+
+    </div>
 </div>
 
 
@@ -193,7 +193,7 @@
         </div>
     </div>
 </div>
-    
+
 <!-- Success Message Box -->
 <div id="successBox" class="message-box hidden">
     <div class="message-header">成功!</div>
@@ -209,8 +209,8 @@
 </div>
 
 @section Scripts {
-
-<script>
+    <link rel="stylesheet" href="~/Content/bootstrap.css" />
+    <script>
         let draggedItem = null;
         let targetItem = null;
         let staffdrop = null;
@@ -227,7 +227,7 @@
                 event.preventDefault();
                 filterDepartment();
             });
-            
+
         $(window).resize(function () {
                 filterDepartment();
             });
@@ -630,7 +630,7 @@
 
         // 🚨 Staff Code あれば -> SWAP
         if (targetStaffSlot.length > 0 && targetStaffSlot.attr('data-staffcd') && targetStaffSlot[0] !== draggedItem) {
-           
+
             let targetItem = targetStaffSlot[0];
 
             let draggedSeat = $(draggedItem).data('seat');
@@ -639,8 +639,8 @@
             let targetStaff = $(targetItem).data('staffcd');
             let draggedDept = $(draggedItem).data('dept');
             let targetDept = $(targetItem).data('dept');
-          
-            if (!draggedDept || !targetDept) {               
+
+            if (!draggedDept || !targetDept) {
                 return;
             }
             if ((draggedDept.startsWith("S") && !targetDept.startsWith("S")) || (!draggedDept.startsWith("S") && targetDept.startsWith("S"))) {
@@ -648,8 +648,8 @@
                 $("#errorBox").removeClass("hidden");
                 return;
             }
-            
-         
+
+
             // HTML Elements　change
             let draggedClone = $(draggedItem).clone(false);
             let targetClone = $(targetItem).clone(false);
@@ -670,7 +670,7 @@
             var newDeptCd = targetDeptArea.attr('data-deptCD');
             let staffCd = $(draggedItem).data("staffcd");
             var oldDeptCd = $(draggedItem).data('dept');
-           
+
             if (!staffCd || !newDeptCd || !oldDeptCd) return;
             if ((oldDeptCd.startsWith("S") && !newDeptCd.startsWith("S")) || (!oldDeptCd.startsWith("S") && newDeptCd.startsWith("S"))) {
                 $("#errorMessage").text("動きはできません。");
@@ -739,7 +739,7 @@
                         refreshDepartmentTable(dept1);
                         refreshDepartmentTable(dept2);
                     }
-                      
+
                 },
                 error: function () {
                     $("#errorMessage").text("Save failed");
@@ -782,7 +782,7 @@
                 $(".department-area").show();
             } else {
                 $(".department-area").hide();
-                
+
                 if (selectedDept === 'S01' || selectedDept === 'S02' || selectedDept === 'S03') {
                     // Hide all shop first
                     $('#dept-container-S01, #dept-container-S02, #dept-container-S03').hide();
@@ -805,6 +805,6 @@
             $('#departmentDropdown').val("");
         }
     }
-    
-</script>
+
+    </script>
 }
