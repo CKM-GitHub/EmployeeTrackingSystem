@@ -166,19 +166,68 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    予定の登録 &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;
+                    予定明細 &nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;&nbsp;
                     <span id="displayStaffName"></span>
                 </h5>
             </div>
 
             <div class="modal-body">
-                @*<div style="max-height: 500px; overflow-y: auto;">  schedule-table *@
+                <div class="schedule-panel">
+                    <input type="hidden" id="hdnStaffId" />
+                    <!-- Status -->
+                    <div class="radio-group">
+                        <label><input type="radio" name="lblst" value="外出"> 外出</label>
+                        <label><input type="radio" name="lblst" value="会議"> 会議</label>
+                        <label><input type="radio" name="lblst" value="休み"> 休み</label>
+                        <label><input type="radio" name="lblst" value="直行"> 直行</label>
+                    </div>
+
+                    <!-- Input Row -->
+                    <div class="form-group status-option">
+                        <div class='input-group date' id='datetimepicker-plan'>
+                            <input type='text' name="PlanDateTime" id="PlanDateTime" class="form-control" placeholder="計画日時" autocomplete="off" required />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                        <div class='input-group date' id='datetimepicker-return'>
+                            <input type='text' name="PlanReturnDateTime" id="PlanReturnDateTime" class="form-control" placeholder="帰還日時" autocomplete="off" required />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+
+
+                    <!-- Note -->
+                    <div class="note-add-row">
+                        <input type="text"
+                               id="txtnote"
+                               class="form-control"
+                               placeholder="備考" maxlength="200"
+                               autocomplete="off"
+                               required>
+
+                        <button type="button"
+                                id="btnPlan"
+                                class="btn btn-primary">
+                            追加
+                        </button>
+                    </div>
+
+                </div>
                 <div class="modal-container">
+                    <!-- Table -->
+
                     <table class="table table-bordered" id="Plantable">
                         <thead>
                             <tr>
-                                <th style="display:none">ID</th>
-                                <th>予定日</th>
+                                <th>
+                                    <input type="checkbox" id="chkAll" />
+                                </th>
+                                <th>状態</th>
+                                <th>計画日時</th>
+                                <th>帰還日時</th>
                                 <th>備考</th>
                             </tr>
                         </thead>
@@ -189,6 +238,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                 <button type="button" id="btnSavePlan" class="btn btn-primary">登録</button>
+                <button type="button" id="btnDelPlan" class="btn btn-danger">削除</button> @*20260611*@
             </div>
         </div>
     </div>
@@ -207,13 +257,25 @@
     <div class="message-body" id="errorMessage"></div>
     <button class="message-button error" onclick="closeErrorBox()">はい</button>
 </div>
+<!-- Confirm Message Box //20260611 -->
+<div id="confirmBox" class="message-box hidden">
+    <div class="message-header">確認</div>
+    <div class="message-body" id="confirmMessage">
+        削除してもよろしいですか？
+    </div>
+    <button class="message-button" onclick="confirmYes()">はい</button>
+    <button class="message-button" onclick="closeConfirmBox()">いいえ</button>
+</div>
 
 @section Scripts {
+
     <link rel="stylesheet" href="~/Content/bootstrap.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>
         let draggedItem = null;
         let targetItem = null;
         let staffdrop = null;
+        var focusField = "";
     $(document).ready(function () {
         // Restore saved value from sessionStorage
         var savedDept = sessionStorage.getItem("selectedDept");
@@ -313,9 +375,48 @@
                     showClose: true,
                     minDate: moment().startOf('day')
                 });
+                //20260616
+                $('#datetimepicker-plan').datetimepicker({
+                    format: 'YYYY-MM-DD HH:mm',
+                    showClear: true,
+                    showClose: true,
+                    useCurrent: false,
+                    //minDate: moment().startOf('day'),
+                    defaultDate: moment().startOf('day'), // 00:00
+                    widgetPositioning: {
+                        horizontal: 'left',
+                        vertical: 'bottom'
+                    }
+                });
+
+                //$('#datetimepicker-plan').on('change.datetimepicker', function (e) {
+                //    if (e.date) {
+                //        var date = e.date.clone().startOf('day');
+                //        $(this).datetimepicker('date', date);
+                //    }
+                //});
+                $('#datetimepicker-return').datetimepicker({
+                    format: 'YYYY-MM-DD HH:mm',
+                    showClear: true,
+                    showClose: true,
+                    defaultDate: moment().startOf('day'), // 00:00
+                    widgetPositioning: {
+                        horizontal: 'left',
+                        vertical: 'bottom'
+                    }
+                });
+                //$('#datetimepicker-return').on('change.datetimepicker', function (e) {
+                //    alert(e.date);
+                //    if (e.date) {
+                //        var date = e.date.clone().startOf('day');
+                //        $(this).datetimepicker('date', date);
+                //    }
+                //});
             });
             // When staffModal is shown, initialize the datetimepicker
-            $('#staffModal').on('shown.bs.modal', function (event) {
+        $('#staffModal').on('shown.bs.modal', function (event) {
+
+            
                 var link = $(event.relatedTarget); // this is the <a class="staff-link"> you clicked
                 // Status radio
                 var status = link.data("status");
@@ -372,7 +473,19 @@
                     $("input[name='ReturnDateTime-visit']").prop("disabled", false).prop("required", true);
                     $("#Note-visit").prop("disabled", false).prop("required", true);
                 }
-            });
+        });
+
+        $('#datetimepicker-plan').on('dp.show', function () {
+
+            $(this).data('DateTimePicker')
+                .date(moment().startOf('day'));
+        });
+
+        $('#datetimepicker-retrun').on('dp.show', function () {
+
+            $(this).data('DateTimePicker')
+                .date(moment().startOf('day'));
+        });
 
             $("#staffForm").on("submit", function (e) {
                 // If invalid, let browser show its tooltip
@@ -464,10 +577,28 @@
                 }
             });
 
-            $(document).on("click", ".search-icon", function () {
+        //Searchar Icon click
+        var editingRow = null;
+        $('#searchModal').on('shown.bs.modal', function () {
+
+            // Radio buttons
+            $('input[name="lblst"]').prop('checked', false);
+            $('input[name="lblst"][value="' + "外出" + '"]').prop('checked', true);
+
+            $('input[name="PlanDateTime"]').val('');
+            $('input[name="PlanReturnDateTime"]').val('');
+            $('#txtnote').val('');
+            editingRow = null;
+        });
+
+        $(document).on("click", ".search-icon", function () {
                 var staffId = $(this).attr('id');
+
+                $('#hdnStaffId').val(staffId);
                 // Show the modal
                 $("#searchModal").modal("show");
+                //$('input[type="radio"]').first().prop('checked', true);
+
                 var name = $(this).data('staffname');
 
                 // 2. Insert the name into the span inside the modal
@@ -482,13 +613,15 @@
                         var jsonData = JSON.parse(data);
                         var rows = '';
                         $('#Plantable tbody').empty();
-
                         $.each(jsonData, function (i, item) {
-
                             rows += '<tr>'
-                                + '<td style="display:none">' + (staffId || "") + '</td>'
-                                + '<td class="text-end">' + (formatDate(item.DateValue) || "") + '</td>'
-                                + '<td><input type="text" value="' + (item.Note || "") + '" class="form-control row-note" maxlength="200" /></td>'
+                                + '<td>'
+                                + '<input type="checkbox" class="chkRow" value="' + item.PlanID + '" />  <a href="#" class="editRow" data-id="' + item.PlanID +'"> <i class="fa fa-edit"></i> </a>'
+                                + '</td>'
+                                + '<td class="status">' + (item.Status) + '</td>'
+                                + '<td class="planDate">' + formatDate(item.PlanDateTime) + '</td>'
+                                + '<td class="returnDate">' + formatDate(item.ReturnDateTime) + '</td>'
+                                + '<td class="remark">' + (item.Note) + '</td>'
                                 + '</tr>';
                         });
 
@@ -497,21 +630,29 @@
                 });
             });
 
-            $(document).on("click", "#btnSavePlan", function () {
+        $(document).on("click", "#btnSavePlan", function () {
                 var list = [];
-            $('#Plantable tbody tr').each(function () {
-                var staffid = $(this).find('td:eq(0)').text();
-                var date = $(this).find('td:eq(1)').text();   // Date column
-                var note = $(this).find('input').val();       // Input value
-
-                list.push({
-                    StaffCD: staffid,
-                    PlanDate: date,
-                    Note: note
+                //var selectedIds = [];
+                $(".chkRow:checked").each(function () {
+                   // selectedIds.push($(this).val());
+                    var row = $(this).closest("tr");
+                    list.push({
+                        StaffCD: $('#hdnStaffId').val(), //20260612
+                        Status: row.find(".status").text().trim(),
+                        PlanDateTime: row.find(".planDate").text().trim(),
+                        ReturnDateTime: row.find(".returnDate").text().trim(),
+                        Note: row.find(".remark").text().trim(),
+                        PlanID: row.find(".chkRow").val()
+                    });
                 });
-            });
 
-            // send to server
+                // Check at least one selected
+                if (list.length === 0) {
+                    $("#errorMessage").text("少なくとも1件のレコードを選択してください。");
+                    $("#errorBox").removeClass("hidden");
+                    return;
+                }
+                 // send to server
             $.ajax({
                 url: '@Url.Action("SavePlanData", "Home")',
                 type: 'POST',
@@ -520,13 +661,10 @@
                 success: function (res) {
                     if (res.success)
                     {
-                        //alert('登録しました。');
                         $("#successMessage").text('登録しました。');
                         $("#successBox").removeClass("hidden");
 
                         $("#searchModal").modal("hide");
-                        //window.location.reload();
-                        //$("#staffForm")[0].reset();
                     }
                     else {
                         $("#searchModal").modal("hide");
@@ -535,7 +673,120 @@
             });
             })
 
-            document.addEventListener("mouseover", function (e) {
+        $(document).on('click', '.editRow', function () {
+            $('#Plantable tbody tr').css('background-color', '');
+            editingRow = $(this).closest('tr');
+            var status = editingRow.find('.status').text().trim();
+            var startDate = editingRow.find('.planDate').text().trim();
+            var endDate = editingRow.find('.returnDate').text().trim();
+            var remarks = editingRow.find('.remark').text().trim();
+
+            $('input[name="lblst"][value="' + status + '"]').prop('checked', true);
+            $('#PlanDateTime').val(startDate);
+            $('#PlanReturnDateTime').val(endDate);
+            $('#txtnote').val(remarks);
+            editingRow.css('background-color', '#e9ecef');
+        });
+
+        $(document).on('click', '#btnPlan', function () {
+            var staffId = $('#hdnStaffId').val();
+            var statusflg = $('input[name="lblst"]:checked').val();
+            var startDate = $('input[name="PlanDateTime"]').val();
+            var endDate = $('input[name="PlanReturnDateTime"]').val();
+            var note = $('#txtnote').val();
+            if (!startDate) {
+                $('input[name="PlanDateTime"]')[0].reportValidity();
+                return;
+            }
+            if (!endDate) {
+                $('input[name="PlanReturnDateTime"]')[0].reportValidity();
+                return;
+            }
+            var start = moment(startDate, 'YYYY-MM-DD HH:mm').toDate();
+            var end = moment(endDate, 'YYYY-MM-DD HH:mm').toDate();
+            var now = new Date();
+
+            if (start <= now) {
+                focusField = "PlanDateTime";
+                $("#errorMessage").text("計画日時は現在日時より後でなければなりません。");
+                $("#errorBox").removeClass("hidden");
+                return;
+            }
+
+            if (end <= start) {
+                focusField = "PlanReturnDateTime";
+                $("#errorMessage").text("帰社日時は計画日時より後の日時を入力してください");
+                $("#errorBox").removeClass("hidden");
+                return;
+            }
+            var hasOverlap = false;
+
+            $('#Plantable tbody tr').each(function () {
+                if (editingRow && $(this)[0] === editingRow[0]) {
+                    return true; 
+                }
+
+                var existingStart = moment(
+                    $(this).find('.planDate').text(),
+                    'YYYY-MM-DD HH:mm'
+                ).toDate();
+
+                var existingEnd = moment(
+                    $(this).find('.returnDate').text(),
+                    'YYYY-MM-DD HH:mm'
+                ).toDate();
+
+                if (start < existingEnd && end > existingStart) {
+                    hasOverlap = true;
+                    return false;
+                }
+            });
+
+            if (hasOverlap) {
+                focusField = "PlanDateTime";
+                $("#errorMessage").text("入力した日時は既存の計画と重複しています");
+                $("#errorBox").removeClass("hidden");
+                return;
+            }
+            if (editingRow) {
+
+                // UPDATE EXISTING ROW
+                editingRow.find('.status').text(statusflg);
+                editingRow.find('.planDate').text(startDate);
+                editingRow.find('.returnDate').text(endDate);
+                editingRow.find('.remark').text(note);
+                editingRow.find('.chkRow').prop('checked', true);
+                editingRow = null;
+
+            } else {
+                var row = '<tr>'
+                    + '<td>'
+                    + '<input type="checkbox" class="chkRow" checked value=""> '
+                    + '<a href="#" class="editRow" data-id="">'
+                    + '<i class="fa fa-edit"></i></a>'
+                    + '</td>'
+                    + '<td class="status">' + statusflg + '</td>'
+                    + '<td class="planDate">' + startDate + '</td>'
+                    + '<td class="returnDate">' + endDate + '</td>'
+                    + '<td class="remark">' + note + '</td>'
+                    + '</tr>';
+
+                $('#Plantable tbody').append(row);
+            }
+
+            // Clear inputs
+            $('input[name="lblst"]').prop('checked', false);
+
+            $('input[name="lblst"][value="' + "外出" + '"]').prop('checked', true);
+            $('input[name="PlanDateTime"]').val('');
+            $('input[name="PlanReturnDateTime"]').val('');
+            $('#txtnote').val('');
+
+        });
+
+       
+
+       document.addEventListener("mouseover", function (e) {
                 // Check if the hovered element has our class
                 if (e.target.classList.contains("nested-cell")) {
                     const el = e.target;
@@ -554,82 +805,112 @@
             });
             // drag and drop
 
-            initGlobalDragDrop();
+        initGlobalDragDrop();
 
+        $(document).on("change", "#chkAll", function () {
+            $(".chkRow").prop("checked", this.checked);
+        });
+
+        $(document).on("change", ".chkRow", function () {
+
+            var totalRows = $(".chkRow").length;
+            var checkedRows = $(".chkRow:checked").length;
+
+            $("#chkAll").prop("checked", totalRows === checkedRows);
 
         });
 
+        $(document).on('click', '#btnDelPlan', function () {
+            var selectedIds = [];
+            $(".chkRow:checked").each(function () {
+                selectedIds.push($(this).val());
+            });
+            // Check at least one selected
+            if (selectedIds.length === 0) {
+                $("#errorMessage").text("少なくとも1件のレコードを選択してください。");
+                $("#errorBox").removeClass("hidden");
+                return;
+            }
+            showConfirmBox("削除してもよろしいですか？", function () {
+                $.ajax({
+                    url: '@Url.Action("DeleteSelectedPlan", "Home")',
+                    type: 'POST',
+                    traditional: true,
+                    data: { ids: selectedIds },
+                    success: function (result) {
+                        // Remove checked rows from table
+                        $(".chkRow:checked").closest("tr").remove();
+                        $("#chkAll").prop("checked", false);
+                    },
+                    error: function () {
+                        alert("Delete failed.");
+                    }
+                });
+            });
+        });
 
-        function formatDate(dateString) {
-            var date = new Date(dateString);
-            var day = ("0" + date.getDate()).slice(-2);
-            var month = ("0" + (date.getMonth() + 1)).slice(-2);
-            var year = date.getFullYear();
-            return year+'年'+ month + '月' + day + '日';
-           // return year + "/" + month + "/" + day;
+
+    });
+
+
+        function formatDate(dt) {
+            if (!dt) return "";
+            return dt.replace("T", " ").substring(0, 16);
         }
-
 
         function initGlobalDragDrop() {
+            $(document).off('dragstart dragend dragover dragleave drop', '.staff-slot, .department-area');
+
+            var draggedItem = null;
+            $(document).on('dragstart', '.staff-slot', function (ev) {
+                ev.stopPropagation();
+
+                var staffCd = $(this).attr('data-staffcd');
+
+                if (!staffCd) {
+                    ev.preventDefault();
+                    return;
+                }
+
+                draggedItem = this;
+                ev.originalEvent.dataTransfer.setData("text/plain", staffCd);
+
+                $('.staff-slot').removeClass('is-dragging');
+                $(this).addClass('is-dragging');
+            });
+
+            $(document).on('dragend', '.staff-slot', function () {
+                $(this).removeClass('is-dragging');
+                $('.staff-slot, .department-area').removeClass('drag-over');
+            });
+
+            $(document).on('dragover', '.staff-slot, .department-area', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).addClass('drag-over');
+            });
+
+            $(document).on('dragleave', '.staff-slot, .department-area', function (e) {
+                e.stopPropagation();
+                $(this).removeClass('drag-over');
+            });
+
+            $(document).on('drop', '.staff-slot, .department-area', function (ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+
+                $('.staff-slot, .department-area').removeClass('drag-over');
+
+                if (!draggedItem) return;
 
 
-    $(document).off('dragstart dragend dragover dragleave drop', '.staff-slot, .department-area');
+                var dropTarget = $(ev.target);
 
-    var draggedItem = null;
+                // (SWAP LOGIC check)
+                var targetStaffSlot = dropTarget.closest('.staff-slot');
 
-
-    $(document).on('dragstart', '.staff-slot', function (ev) {
-        ev.stopPropagation();
-
-        var staffCd = $(this).attr('data-staffcd');
-
-        if (!staffCd) {
-            ev.preventDefault();
-            return;
-        }
-
-        draggedItem = this;
-        ev.originalEvent.dataTransfer.setData("text/plain", staffCd);
-
-        $('.staff-slot').removeClass('is-dragging');
-        $(this).addClass('is-dragging');
-    });
-
-
-    $(document).on('dragend', '.staff-slot', function () {
-        $(this).removeClass('is-dragging');
-        $('.staff-slot, .department-area').removeClass('drag-over');
-    });
-
-
-    $(document).on('dragover', '.staff-slot, .department-area', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        $(this).addClass('drag-over');
-    });
-
-    $(document).on('dragleave', '.staff-slot, .department-area', function (e) {
-        e.stopPropagation();
-        $(this).removeClass('drag-over');
-    });
-
-
-    $(document).on('drop', '.staff-slot, .department-area', function (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-
-        $('.staff-slot, .department-area').removeClass('drag-over');
-
-        if (!draggedItem) return;
-
-
-        var dropTarget = $(ev.target);
-
-        // (SWAP LOGIC check)
-        var targetStaffSlot = dropTarget.closest('.staff-slot');
-
-        // 🚨 Staff Code あれば -> SWAP
-        if (targetStaffSlot.length > 0 && targetStaffSlot.attr('data-staffcd') && targetStaffSlot[0] !== draggedItem) {
+                // 🚨 Staff Code あれば -> SWAP
+                if (targetStaffSlot.length > 0 && targetStaffSlot.attr('data-staffcd') && targetStaffSlot[0] !== draggedItem) {
 
             let targetItem = targetStaffSlot[0];
 
@@ -664,30 +945,30 @@
                 saveSeatChange(draggedStaff, targetSeat, targetStaff, draggedSeat, draggedDept, targetDept);
             }
         }
-        // 🚨  MOVE Process
-        else {
-            var targetDeptArea = dropTarget.closest('.department-area');
-            var newDeptCd = targetDeptArea.attr('data-deptCD');
-            let staffCd = $(draggedItem).data("staffcd");
-            var oldDeptCd = $(draggedItem).data('dept');
+                // 🚨  MOVE Process
+                else {
+                    var targetDeptArea = dropTarget.closest('.department-area');
+                    var newDeptCd = targetDeptArea.attr('data-deptCD');
+                    let staffCd = $(draggedItem).data("staffcd");
+                    var oldDeptCd = $(draggedItem).data('dept');
 
-            if (!staffCd || !newDeptCd || !oldDeptCd) return;
-            if ((oldDeptCd.startsWith("S") && !newDeptCd.startsWith("S")) || (!oldDeptCd.startsWith("S") && newDeptCd.startsWith("S"))) {
+                    if (!staffCd || !newDeptCd || !oldDeptCd) return;
+                    if ((oldDeptCd.startsWith("S") && !newDeptCd.startsWith("S")) || (!oldDeptCd.startsWith("S") && newDeptCd.startsWith("S"))) {
                 $("#errorMessage").text("動きはできません。");
                 return;
             }
-            if (oldDeptCd === newDeptCd) return;
+                    if (oldDeptCd === newDeptCd) return;
 
-            // Database Update
-            $.ajax({
-                url: '@Url.Action("ChangeDepartment", "Home")',
-                type: 'POST',
-                data: {
+                    // Database Update
+                    $.ajax({
+                        url: '@Url.Action("ChangeDepartment", "Home")',
+                        type: 'POST',
+                        data: {
                     staffCd: staffCd,
                     draggedDept: oldDeptCd,
                     targetDept: newDeptCd
                 },
-                success: function (response) {
+                        success: function (response) {
                     if (response.success) {
                         // Dynamic HTML Refresh
                         refreshDepartmentTable(oldDeptCd);
@@ -696,13 +977,13 @@
                         alert("Error: " + response.message);
                     }
                 },
-                error: function() {
+                        error: function() {
                     alert("Error!");
+                }
+                    });
                 }
             });
         }
-    });
-}
 
 
          function refreshDepartmentTable(deptCd) {
@@ -722,7 +1003,6 @@
 
         function saveSeatChange(staff1, seat1, staff2, seat2, dept1, dept2) {
             $.ajax({
-
                 url: '@Url.Action("UpdateSeatChange", "Home")',
                 type: 'POST',
                 data: {
@@ -751,10 +1031,6 @@
         // Close functions
         function closeSuccessBox() {
             $("#successBox").addClass("hidden");
-            //let container = document.querySelector(".tables-container"); // your scrollable div
-            //if (container) {
-            //    localStorage.setItem("scrollPos", container.scrollTop);
-            //}
             var ddlval = $('#departmentDropdown').val();
             if (ddlval != '') {
                 sessionStorage.setItem("selectedDept", ddlval);
@@ -766,9 +1042,22 @@
         }
 
         function closeErrorBox() {
+
             $("#errorBox").addClass("hidden");
+           
+            setTimeout(function () {
+
+                if (focusField === "PlanDateTime") {
+                    $("#searchModal [name='PlanDateTime']").focus();
+                }
+                else if (focusField === "PlanReturnDateTime") {
+                    $("#searchModal [name='PlanReturnDateTime']").focus();
+                }
+
+            }, 50);
+
         }
-    function filterDepartment() {
+        function filterDepartment() {
 
         var screenWidth = $(window).width();
         var selectedDept = $("#departmentDropdown").val();
@@ -805,6 +1094,24 @@
             $('#departmentDropdown').val("");
         }
     }
+        @* 20260611 *@
+        function confirmYes() {
+                $("#confirmBox").addClass("hidden");
 
+                if (confirmCallback) {
+                    confirmCallback();
+                }
+            }
+
+        function closeConfirmBox() {
+            $("#confirmBox").addClass("hidden");
+        }
+        var confirmCallback = null;
+
+        function showConfirmBox(message, callback) {
+            $("#confirmMessage").text(message);
+            $("#confirmBox").removeClass("hidden");
+            confirmCallback = callback;
+        }
     </script>
 }

@@ -9,7 +9,10 @@ namespace EmployeeTrackingSystem.Models
     {
         public int PlanID { get; set; }
         public string StaffCD { get; set; }
-        public System.DateTime PlanDate { get; set; }
+        public string Status { get; set; }
+        public System.DateTime PlanDateTime { get; set; }
+
+        public System.DateTime ReturnDateTime { get; set; }
         public string Note { get; set; }
         public Nullable<System.DateTime> InsertDateTime { get; set; }
         public Nullable<System.DateTime> UpdateDateTime { get; set; }

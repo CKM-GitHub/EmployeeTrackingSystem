@@ -281,19 +281,16 @@ namespace EmployeeTrackingSystem.Controllers
         {
             foreach (var item in list)
             {
-                var existingRecord = db.T_Plan.FirstOrDefault(p => p.PlanDate == item.PlanDate && p.StaffCD == item.StaffCD);
+                var existingRecord = db.T_Plan.FirstOrDefault(p => p.PlanID == item.PlanID);
                 if (existingRecord != null)
                 {
-                    if (string.IsNullOrEmpty(item.Note))
-                    {
-                        db.T_Plan.Remove(existingRecord);
-                    }
-                    else
-                    {
-                        // UPDATE: Record exists, just change the remark
-                        existingRecord.Note = item.Note;
-                        existingRecord.UpdateDateTime = DateTime.Now;
-                    }
+                    // UPDATE: Record exists, just change the data
+                    existingRecord.PlanDateTime = item.PlanDateTime;
+                    existingRecord.ReturnDateTime = item.ReturnDateTime;
+                    existingRecord.Note = item.Note;
+                    existingRecord.Status = item.Status;
+                    existingRecord.UpdateDateTime = DateTime.Now;
+
                 }
                 else if (item.Note != null)
                 {
@@ -301,19 +298,35 @@ namespace EmployeeTrackingSystem.Controllers
                     db.T_Plan.Add(new T_Plan
                     {
                         StaffCD = item.StaffCD,
-                        PlanDate = item.PlanDate,
+                        PlanDateTime = item.PlanDateTime,
+                        ReturnDateTime = item.ReturnDateTime,
+                        Status = item.Status,
                         Note = item.Note,
                         InsertDateTime = DateTime.Now
                     });
                 }
             }
-            int sv = db.SaveChanges();
-            bool res = false;
-            if (sv > 0)
-                res = true;
-            return Json(new { success = res });
+
+            try
+            {
+
+                int sv = db.SaveChanges();
+                bool res = false;
+                if (sv > 0)
+                    res = true;
+                return Json(new { success = res });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = ex.Message,
+                    detail = ex.InnerException?.Message
+                });
+            }
         }
-        
+
 
         [HttpPost]
         public JsonResult UpdateSeatChange(string staff1,int? seat1,string staff2,int? seat2,string dept1, string dept2)
@@ -442,6 +455,24 @@ namespace EmployeeTrackingSystem.Controllers
                 });
             }
         }
-        
+        [HttpPost]
+        public ActionResult DeleteSelectedPlan(List<string> ids)
+        {
+            using (var db = new EmployeeTrackingDBEntities())
+            {
+                for (int i = 0; i < ids.Count; i++)
+                {
+                    if (!string.IsNullOrEmpty(ids[i]))
+                    {
+                        int planid = int.Parse(ids[i].ToString());
+                        var Plantd = db.T_Plan
+                          .FirstOrDefault(x => x.PlanID == planid);
+                        Plantd.DeleteDateTime = DateTime.Now;
+                    }
+                }
+                db.SaveChanges();
+            }
+            return Json(new { success = true });
+        }
     }
 }

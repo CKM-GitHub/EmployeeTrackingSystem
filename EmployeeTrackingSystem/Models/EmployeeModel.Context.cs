@@ -27,7 +27,7 @@ namespace EmployeeTrackingSystem.Models
     
         public DbSet<T_Department> T_Department { get; set; }
         public DbSet<T_Logging> T_Logging { get; set; }
-        public DbSet<T_Plan> T_Plan { get; set; }
         public DbSet<T_StaffMaster> T_StaffMaster { get; set; }
+        public DbSet<T_Plan> T_Plan { get; set; }
     }
 }

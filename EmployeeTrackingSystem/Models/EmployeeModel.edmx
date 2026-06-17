@@ -35,11 +35,13 @@
           </Key>
           <Property Name="PlanID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="StaffCD" Type="varchar" MaxLength="5" Nullable="false" />
-          <Property Name="PlanDate" Type="datetime" Nullable="false" />
-          <Property Name="Note" Type="varchar" MaxLength="200" />
+          <Property Name="PlanDateTime" Type="datetime" Nullable="false" />
+          <Property Name="Note" Type="nvarchar" MaxLength="200" />
           <Property Name="InsertDateTime" Type="datetime" />
           <Property Name="UpdateDateTime" Type="datetime" />
           <Property Name="DeleteDateTime" Type="datetime" />
+          <Property Name="ReturnDateTime" Type="datetime" Nullable="false" />
+          <Property Name="Status" Type="varchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <EntityType Name="T_StaffMaster">
           <Key>
@@ -99,18 +101,6 @@
           <Property Name="InsertDateTime" Type="DateTime" Precision="3" />
           <Property Name="DeleteDateTime" Type="DateTime" Precision="3" />
         </EntityType>
-        <EntityType Name="T_Plan">
-          <Key>
-            <PropertyRef Name="PlanID" />
-          </Key>
-          <Property Name="PlanID" Type="Int32" Nullable="false" />
-          <Property Name="StaffCD" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="PlanDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Note" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="InsertDateTime" Type="DateTime" Precision="3" />
-          <Property Name="UpdateDateTime" Type="DateTime" Precision="3" />
-          <Property Name="DeleteDateTime" Type="DateTime" Precision="3" />
-        </EntityType>
         <EntityType Name="T_StaffMaster">
           <Key>
             <PropertyRef Name="StaffCD" />
@@ -138,9 +128,23 @@
         <EntityContainer Name="EmployeeTrackingDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="T_Department" EntityType="Self.T_Department" />
           <EntitySet Name="T_Logging" EntityType="Self.T_Logging" />
-          <EntitySet Name="T_Plan" EntityType="Self.T_Plan" />
           <EntitySet Name="T_StaffMaster" EntityType="Self.T_StaffMaster" />
+          <EntitySet Name="T_Plan" EntityType="EmployeeTrackingDBModel.T_Plan" />
         </EntityContainer>
+        <EntityType Name="T_Plan">
+          <Key>
+            <PropertyRef Name="PlanID" />
+          </Key>
+          <Property Name="PlanID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StaffCD" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="PlanDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Note" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="InsertDateTime" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDateTime" Type="DateTime" Precision="3" />
+          <Property Name="DeleteDateTime" Type="DateTime" Precision="3" />
+          <Property Name="ReturnDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -173,19 +177,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="T_Plan">
-            <EntityTypeMapping TypeName="EmployeeTrackingDBModel.T_Plan">
-              <MappingFragment StoreEntitySet="T_Plan">
-                <ScalarProperty Name="PlanID" ColumnName="PlanID" />
-                <ScalarProperty Name="StaffCD" ColumnName="StaffCD" />
-                <ScalarProperty Name="PlanDate" ColumnName="PlanDate" />
-                <ScalarProperty Name="Note" ColumnName="Note" />
-                <ScalarProperty Name="InsertDateTime" ColumnName="InsertDateTime" />
-                <ScalarProperty Name="UpdateDateTime" ColumnName="UpdateDateTime" />
-                <ScalarProperty Name="DeleteDateTime" ColumnName="DeleteDateTime" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="T_StaffMaster">
             <EntityTypeMapping TypeName="EmployeeTrackingDBModel.T_StaffMaster">
               <MappingFragment StoreEntitySet="T_StaffMaster">
@@ -208,6 +199,21 @@
                 <ScalarProperty Name="InsertDateTime" ColumnName="InsertDateTime" />
                 <ScalarProperty Name="UpdateDateTime" ColumnName="UpdateDateTime" />
                 <ScalarProperty Name="DeleteDateTime" ColumnName="DeleteDateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_Plan">
+            <EntityTypeMapping TypeName="EmployeeTrackingDBModel.T_Plan">
+              <MappingFragment StoreEntitySet="T_Plan">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ReturnDateTime" ColumnName="ReturnDateTime" />
+                <ScalarProperty Name="DeleteDateTime" ColumnName="DeleteDateTime" />
+                <ScalarProperty Name="UpdateDateTime" ColumnName="UpdateDateTime" />
+                <ScalarProperty Name="InsertDateTime" ColumnName="InsertDateTime" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="PlanDateTime" ColumnName="PlanDateTime" />
+                <ScalarProperty Name="StaffCD" ColumnName="StaffCD" />
+                <ScalarProperty Name="PlanID" ColumnName="PlanID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

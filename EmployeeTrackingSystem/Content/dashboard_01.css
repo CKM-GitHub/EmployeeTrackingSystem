@@ -368,16 +368,100 @@
     max-width: 80px;
 }
 
-#searchModal input,
+/*#searchModal input,
 #searchModal select,
 #searchModal textarea {
     max-width: 400px;
-}
+}*/
 
 .bootstrap-datetimepicker-widget {
     z-index: 2000 !important; /* higher than modal */
 }
 
+
+
+
+.schedule-panel {
+    border: 1px solid #6c8f6c;
+    padding: 12px;
+    background: #d7f1d0;
+    margin-bottom: 15px;
+}
+
+.radio-group {
+    margin-bottom: 10px;
+}
+
+    .radio-group label {
+        margin-right: 15px;
+    }
+
+.table-wrapper {
+    border: 1px solid #666;
+    height: 250px;
+    overflow-y: auto;
+    background: #fff;
+}
+
+#Plantable thead th {
+    position: sticky;
+    top: 0;
+    background: #8fd18f;
+    z-index: 2;
+    text-align: center;
+    padding: 8px;
+}
+
+/*#Plantable td {
+        padding: 8px;
+}*/
+#Plantable {
+    table-layout: auto;
+    width: 100%;
+}
+
+    /*#Plantable th:nth-child(1), 
+    #Plantable td:nth-child(1) {
+        width: 30px;
+    }
+
+    #Plantable th:nth-child(3),
+    #Plantable td:nth-child(3) {
+        width: 50px;
+    }
+
+    #Plantable th:nth-child(4),
+    #Plantable td:nth-child(4),
+    #Plantable th:nth-child(5),
+    #Plantable td:nth-child(5) {
+        width: 133px;
+    }*/
+
+    #Plantable td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+.note-add-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+    .note-add-row #txtnote {
+        flex: 1;
+    }
+
+    .note-add-row #btnPlan {
+        width: 80px;
+        height: 34px;
+    }
+
+.modal-footer {
+    justify-content: center;
+}
 /*20260409 added by ttw*/
 /* Container for the whole bar */
 .status-legend {
@@ -453,7 +537,7 @@
     .modal-container thead th {
         position: sticky;
         top: 0;
-        background: #6990C7;
+        /*background: #6990C7;*/
         z-index: 2;
     }
 
@@ -474,12 +558,15 @@
     .tablet-mobile-only {
         display: block;
     }
+
     #departmentDropdown {
-        min-width: 180px;  
+        min-width: 180px;
     }
+
     .col-sm-6.sts {
         width: 100%;
     }
+
     .tb1 {
         order: 1;
     }
@@ -527,6 +614,7 @@
     .tablet-mobile-only {
         display: block;
     }
+
     .tb1 {
         order: 1;
     }
@@ -610,6 +698,7 @@
         min-width: 180px;
         margin-top: 0.5rem; /* spacing from legend items */
     }
+
     .board-table,
     .board-table thead,
     .board-table tbody,
@@ -778,6 +867,7 @@
             flex-shrink: 0;
         }
 }
+
 #dashboard_header {
     display: flex; /*20260603*/
     flex-wrap: wrap;
@@ -785,4 +875,15 @@
     overflow-y: auto; /* enable vertical scroll */
     overflow-x: hidden; /* enable vertical scroll */
     padding: 10px;
+}
+
+.chkRow,
+.editRow {
+    vertical-align: middle;
+}
+
+.editRow {
+    margin-left: 8px;
+    color: #007bff;
+    cursor: pointer;
 }
