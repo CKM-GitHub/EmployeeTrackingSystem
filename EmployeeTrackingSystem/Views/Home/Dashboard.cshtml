@@ -381,7 +381,7 @@
                     showClear: true,
                     showClose: true,
                     useCurrent: false,
-                    //minDate: moment().startOf('day'),
+                    minDate: moment().startOf('day'),
                     defaultDate: moment().startOf('day'), // 00:00
                     widgetPositioning: {
                         horizontal: 'left',
@@ -481,7 +481,7 @@
                 .date(moment().startOf('day'));
         });
 
-        $('#datetimepicker-retrun').on('dp.show', function () {
+        $('#datetimepicker-return').on('dp.show', function () {
 
             $(this).data('DateTimePicker')
                 .date(moment().startOf('day'));
