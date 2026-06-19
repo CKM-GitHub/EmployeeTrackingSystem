@@ -389,12 +389,6 @@
                     }
                 });
 
-                //$('#datetimepicker-plan').on('change.datetimepicker', function (e) {
-                //    if (e.date) {
-                //        var date = e.date.clone().startOf('day');
-                //        $(this).datetimepicker('date', date);
-                //    }
-                //});
                 $('#datetimepicker-return').datetimepicker({
                     format: 'YYYY-MM-DD HH:mm',
                     showClear: true,
@@ -406,13 +400,7 @@
                         vertical: 'bottom'
                     }
                 });
-                //$('#datetimepicker-return').on('change.datetimepicker', function (e) {
-                //    alert(e.date);
-                //    if (e.date) {
-                //        var date = e.date.clone().startOf('day');
-                //        $(this).datetimepicker('date', date);
-                //    }
-                //});
+                
             });
             // When staffModal is shown, initialize the datetimepicker
         $('#staffModal').on('shown.bs.modal', function (event) {
@@ -474,18 +462,6 @@
                     $("input[name='ReturnDateTime-visit']").prop("disabled", false).prop("required", true);
                     $("#Note-visit").prop("disabled", false).prop("required", true);
                 }
-        });
-
-        $('#datetimepicker-plan').on('dp.show', function () {
-
-            $(this).data('DateTimePicker')
-                .date(moment().startOf('day'));
-        });
-
-        $('#datetimepicker-return').on('dp.show', function () {
-
-            $(this).data('DateTimePicker')
-                .date(moment().startOf('day'));
         });
 
             $("#staffForm").on("submit", function (e) {
@@ -581,14 +557,20 @@
         //Searchar Icon click
         var editingRow = null;
         $('#searchModal').on('shown.bs.modal', function () {
-
+            $('#chkAll').prop('checked', false);
             // Radio buttons
             $('input[name="lblst"]').prop('checked', false);
             $('input[name="lblst"][value="' + "外出" + '"]').prop('checked', true);
-
+            
             $('input[name="PlanDateTime"]').val('');
+            $('#datetimepicker-plan').data('DateTimePicker').date(moment().startOf('day'));
+            $('input[name="PlanDateTime"]').val('');
+
+            $('input[name="PlanReturnDateTime"]').val('');
+            $('#datetimepicker-return').data('DateTimePicker').date(moment().startOf('day'));
             $('input[name="PlanReturnDateTime"]').val('');
             $('#txtnote').val('');
+           
             editingRow = null;
         });
 
@@ -686,6 +668,7 @@
             $('#PlanDateTime').val(startDate);
             $('#PlanReturnDateTime').val(endDate);
             $('#txtnote').val(remarks);
+           
             editingRow.css('background-color', '#e9ecef');
         });
 
@@ -779,9 +762,14 @@
             $('input[name="lblst"]').prop('checked', false);
 
             $('input[name="lblst"][value="' + "外出" + '"]').prop('checked', true);
+           
+            $('#txtnote').val('');
+            $('input[name="PlanDateTime"]').val('');
+            $('#datetimepicker-plan').data('DateTimePicker').date(moment().startOf('day'));
             $('input[name="PlanDateTime"]').val('');
             $('input[name="PlanReturnDateTime"]').val('');
-            $('#txtnote').val('');
+            $('#datetimepicker-return').data('DateTimePicker').date(moment().startOf('day'));
+            $('input[name="PlanReturnDateTime"]').val('');
 
         });
 
