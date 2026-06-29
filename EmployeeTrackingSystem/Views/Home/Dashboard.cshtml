@@ -400,12 +400,12 @@
                         vertical: 'bottom'
                     }
                 });
-                
+
             });
             // When staffModal is shown, initialize the datetimepicker
         $('#staffModal').on('shown.bs.modal', function (event) {
 
-            
+
                 var link = $(event.relatedTarget); // this is the <a class="staff-link"> you clicked
                 // Status radio
                 var status = link.data("status");
@@ -526,7 +526,6 @@
                         $("#errorMessage").text("An error occurred while saving.");
                         $("#errorBox").removeClass("hidden");
                     }
-
                 });
             });
 
@@ -561,7 +560,7 @@
             // Radio buttons
             $('input[name="lblst"]').prop('checked', false);
             $('input[name="lblst"][value="' + "外出" + '"]').prop('checked', true);
-            
+
             $('input[name="PlanDateTime"]').val('');
             $('#datetimepicker-plan').data('DateTimePicker').date(moment().startOf('day'));
             $('input[name="PlanDateTime"]').val('');
@@ -570,7 +569,7 @@
             $('#datetimepicker-return').data('DateTimePicker').date(moment().startOf('day'));
             $('input[name="PlanReturnDateTime"]').val('');
             $('#txtnote').val('');
-           
+
             editingRow = null;
         });
 
@@ -668,7 +667,7 @@
             $('#PlanDateTime').val(startDate);
             $('#PlanReturnDateTime').val(endDate);
             $('#txtnote').val(remarks);
-           
+
             editingRow.css('background-color', '#e9ecef');
         });
 
@@ -688,93 +687,101 @@
             }
             var start = moment(startDate, 'YYYY-MM-DD HH:mm').toDate();
             var end = moment(endDate, 'YYYY-MM-DD HH:mm').toDate();
-            var now = new Date();
 
-            if (start <= now) {
-                focusField = "PlanDateTime";
-                $("#errorMessage").text("計画日時は現在日時より後でなければなりません。");
-                $("#errorBox").removeClass("hidden");
-                return;
-            }
+            $.ajax({
+            url: '@Url.Action("GetServerTime","Home")',
+            type: 'GET',
+            success: function (sqlTime) {
 
-            if (end <= start) {
-                focusField = "PlanReturnDateTime";
-                $("#errorMessage").text("帰社日時は計画日時より後の日時を入力してください");
-                $("#errorBox").removeClass("hidden");
-                return;
-            }
-            var hasOverlap = false;
+                var now = moment(sqlTime, 'YYYY-MM-DD HH:mm:ss').toDate();
 
-            $('#Plantable tbody tr').each(function () {
-                if (editingRow && $(this)[0] === editingRow[0]) {
-                    return true; 
+                if (start <= now) {
+                    focusField = "PlanDateTime";
+                    $("#errorMessage").text("計画日時は現在日時より後でなければなりません。");
+                    $("#errorBox").removeClass("hidden");
+                    return;
                 }
 
-                var existingStart = moment(
-                    $(this).find('.planDate').text(),
-                    'YYYY-MM-DD HH:mm'
-                ).toDate();
+                if (end <= start) {
+                    focusField = "PlanReturnDateTime";
+                    $("#errorMessage").text("帰社日時は計画日時より後の日時を入力してください");
+                    $("#errorBox").removeClass("hidden");
+                    return;
+                }
 
-                var existingEnd = moment(
-                    $(this).find('.returnDate').text(),
-                    'YYYY-MM-DD HH:mm'
-                ).toDate();
+                var hasOverlap = false;
 
-                if (start < existingEnd && end > existingStart) {
-                    hasOverlap = true;
-                    return false;
+                $('#Plantable tbody tr').each(function () {
+
+                    if (editingRow && $(this)[0] === editingRow[0]) {
+                        return true;
+                    }
+
+                    var existingStart = moment(
+                        $(this).find('.planDate').text(),
+                        'YYYY-MM-DD HH:mm'
+                    ).toDate();
+
+                    var existingEnd = moment(
+                        $(this).find('.returnDate').text(),
+                        'YYYY-MM-DD HH:mm'
+                    ).toDate();
+
+                    if (start < existingEnd && end > existingStart) {
+                        hasOverlap = true;
+                        return false;
+                    }
+                });
+
+                if (hasOverlap) {
+                    focusField = "PlanDateTime";
+                    $("#errorMessage").text("入力した日時は既存の計画と重複しています");
+                    $("#errorBox").removeClass("hidden");
+                    return;
+                }
+
+                if (editingRow) {
+
+                    // UPDATE EXISTING ROW
+                    editingRow.find('.status').text(statusflg);
+                    editingRow.find('.planDate').text(startDate);
+                    editingRow.find('.returnDate').text(endDate);
+                    editingRow.find('.remark').text(note);
+                    editingRow.find('.chkRow').prop('checked', true);
+                    editingRow = null;
+
+                } else {
+                    var row = '<tr>'
+                        + '<td>'
+                        + '<input type="checkbox" class="chkRow" checked value=""> '
+                        + '<a href="#" class="editRow" data-id="">'
+                        + '<i class="fa fa-edit"></i></a>'
+                        + '</td>'
+                        + '<td class="status">' + statusflg + '</td>'
+                        + '<td class="planDate">' + startDate + '</td>'
+                        + '<td class="returnDate">' + endDate + '</td>'
+                        + '<td class="remark">' + note + '</td>'
+                        + '</tr>';
+
+                    $('#Plantable tbody').append(row);
+                }
+
+                // Clear inputs
+                $('input[name="lblst"]').prop('checked', false);
+
+                $('input[name="lblst"][value="' + "外出" + '"]').prop('checked', true);
+
+                $('#txtnote').val('');
+                $('input[name="PlanDateTime"]').val('');
+                $('#datetimepicker-plan').data('DateTimePicker').date(moment().startOf('day'));
+                $('input[name="PlanDateTime"]').val('');
+                $('input[name="PlanReturnDateTime"]').val('');
+                $('#datetimepicker-return').data('DateTimePicker').date(moment().startOf('day'));
+                $('input[name="PlanReturnDateTime"]').val('');
+        
                 }
             });
-
-            if (hasOverlap) {
-                focusField = "PlanDateTime";
-                $("#errorMessage").text("入力した日時は既存の計画と重複しています");
-                $("#errorBox").removeClass("hidden");
-                return;
-            }
-            if (editingRow) {
-
-                // UPDATE EXISTING ROW
-                editingRow.find('.status').text(statusflg);
-                editingRow.find('.planDate').text(startDate);
-                editingRow.find('.returnDate').text(endDate);
-                editingRow.find('.remark').text(note);
-                editingRow.find('.chkRow').prop('checked', true);
-                editingRow = null;
-
-            } else {
-                var row = '<tr>'
-                    + '<td>'
-                    + '<input type="checkbox" class="chkRow" checked value=""> '
-                    + '<a href="#" class="editRow" data-id="">'
-                    + '<i class="fa fa-edit"></i></a>'
-                    + '</td>'
-                    + '<td class="status">' + statusflg + '</td>'
-                    + '<td class="planDate">' + startDate + '</td>'
-                    + '<td class="returnDate">' + endDate + '</td>'
-                    + '<td class="remark">' + note + '</td>'
-                    + '</tr>';
-
-                $('#Plantable tbody').append(row);
-            }
-
-            // Clear inputs
-            $('input[name="lblst"]').prop('checked', false);
-
-            $('input[name="lblst"][value="' + "外出" + '"]').prop('checked', true);
-           
-            $('#txtnote').val('');
-            $('input[name="PlanDateTime"]').val('');
-            $('#datetimepicker-plan').data('DateTimePicker').date(moment().startOf('day'));
-            $('input[name="PlanDateTime"]').val('');
-            $('input[name="PlanReturnDateTime"]').val('');
-            $('#datetimepicker-return').data('DateTimePicker').date(moment().startOf('day'));
-            $('input[name="PlanReturnDateTime"]').val('');
-
         });
-
-       
-
        document.addEventListener("mouseover", function (e) {
                 // Check if the hovered element has our class
                 if (e.target.classList.contains("nested-cell")) {
@@ -1033,7 +1040,7 @@
         function closeErrorBox() {
 
             $("#errorBox").addClass("hidden");
-           
+
             setTimeout(function () {
 
                 if (focusField === "PlanDateTime") {

@@ -474,5 +474,24 @@ namespace EmployeeTrackingSystem.Controllers
             }
             return Json(new { success = true });
         }
+
+
+        
+
+
+        [HttpGet]
+        public JsonResult GetServerTime()
+        {
+            using (SqlConnection con = new SqlConnection(conStr))
+            {
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand("SELECT GETDATE()", con);
+                DateTime sqlTime = (DateTime)cmd.ExecuteScalar();
+
+                return Json(sqlTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                    JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }
